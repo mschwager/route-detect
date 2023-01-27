@@ -1,1 +1,0 @@
-SEMGREP_RULES = []

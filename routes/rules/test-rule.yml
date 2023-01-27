@@ -1,0 +1,6 @@
+rules:
+  - id: test-route-detect
+    pattern: $X == $X
+    message: Found '$X == $X', your route-detect installation is working correctly
+    languages: [python]
+    severity: INFO

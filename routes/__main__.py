@@ -1,6 +1,6 @@
 import argparse
 
-from routes import const
+from routes import rules
 
 
 def parse_args():
@@ -14,7 +14,9 @@ def parse_args():
     which_parser = subparsers.add_parser(
         "which", help="Output path of supported Semgrep rule"
     )
-    which_parser.add_argument("rule", choices=const.SEMGREP_RULES, help="Semgrep rule")
+    which_parser.add_argument(
+        "rule", choices=list(rules.ALL_RULES.keys()), help="Semgrep rule"
+    )
 
     args = p.parse_args()
 
