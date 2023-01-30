@@ -19,13 +19,15 @@ def parse_args(args=None):
         "rule", choices=list(rules.ALL_RULES.keys()), help="Semgrep rule"
     )
 
+    subparsers.add_parser("viz", help="Route visualization tool")
+
     return p.parse_args(args=args)
 
 
 def main():
     args = parse_args()
 
-    command_dispatch = {"which": commands.which.main}
+    command_dispatch = {"which": commands.which.main, "viz": commands.viz.main}
     command = command_dispatch.get(args.command)
     if command is None:
         print(f"Command unavailable: {args.command}")
