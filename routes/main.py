@@ -2,6 +2,7 @@ import argparse
 
 from routes import commands
 from routes import rules
+from routes import templates
 
 
 def parse_args(args=None):
@@ -19,7 +20,29 @@ def parse_args(args=None):
         "rule", choices=list(rules.ALL_RULES.keys()), help="Semgrep rule"
     )
 
-    subparsers.add_parser("viz", help="Route visualization tool")
+    viz_parser = subparsers.add_parser("viz", help="Route visualization tool")
+    viz_parser.add_argument(
+        "input",
+        action="store",
+        type=argparse.FileType("r"),
+        help="Semgrep JSON output file",
+    )
+    viz_parser.add_argument(
+        "-o",
+        "--output",
+        action="store",
+        default=templates.ROUTES_HTML,
+        type=argparse.FileType("w"),
+        help="Routes HTML output file",
+    )
+    viz_parser.add_argument(
+        "-t",
+        "--template",
+        action="store",
+        default=str(templates.ROUTES_HTML_TEMPLATE),
+        type=argparse.FileType("r"),
+        help="Routes HTML template file",
+    )
 
     return p.parse_args(args=args)
 
