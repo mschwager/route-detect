@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>HTTP Routes</title>
   </head>
-  <body>
+  <body id="body">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
       // Copyright 2021 Observable, Inc.
@@ -121,10 +121,13 @@
       }
 
       const semgrepData = {SEMGREP_DATA};
+
       const chart = Tree(semgrepData, {
         label: d => d.name,
         width: 1920,
       });
+
+      document.getElementById("body").appendChild(chart);
     </script>
   </body>
 </html>

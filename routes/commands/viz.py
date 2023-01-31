@@ -7,9 +7,10 @@ def compact_dumps(data):
 
 def main(args):
     output_buff = args.template.read()
-    data = compact_dumps({"foo": "bar", "baz": "qux"})
+    data = compact_dumps(json.load(args.input))
     output_buff = output_buff.replace("{SEMGREP_DATA}", data)
 
-    args.output.write(output_buff)
+    written = args.output.write(output_buff)
+    success = len(output_buff) == written
 
-    return 0
+    return 0 if success else 1
