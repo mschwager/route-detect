@@ -25,7 +25,7 @@
         height, // outer height, in pixels
         r = 3, // radius of nodes
         padding = 1, // horizontal padding for first and last column
-        fill = "#999", // fill for nodes
+        fill, // given a node d, its fill
         fillOpacity, // fill opacity for nodes
         stroke = "#555", // stroke for links
         strokeWidth = 1.5, // stroke width for links
@@ -102,7 +102,7 @@
             .attr("transform", d => `translate(${d.y},${d.x})`);
 
         node.append("circle")
-            .attr("fill", d => d.children ? stroke : fill)
+            .attr("fill", d => d.children ? stroke : fill(d.data, d))
             .attr("r", r);
 
         if (title != null) node.append("title")
@@ -124,6 +124,7 @@
 
       const chart = Tree(semgrepData, {
         label: d => d.name,
+        fill: d => d.fill,
         width: 1920,
       });
 
