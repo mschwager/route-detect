@@ -152,7 +152,9 @@ def test_viz_basic(data, expected):
     input = io.StringIO(json.dumps(data))
     output = io.StringIO()
     template = io.StringIO(const.DEFAULT_TEMPLATE_KEY)
-    args = argparse.Namespace(input=input, output=output, template=template)
+    args = argparse.Namespace(
+        input=input, output=output, template=template, no_browser=True
+    )
 
     code = commands.viz.main(args)
     result = json.loads(output.getvalue())
@@ -176,7 +178,9 @@ def test_viz_multiple_root():
     input = io.StringIO(json.dumps(data))
     output = io.StringIO()
     template = io.StringIO(const.DEFAULT_TEMPLATE_KEY)
-    args = argparse.Namespace(input=input, output=output, template=template)
+    args = argparse.Namespace(
+        input=input, output=output, template=template, no_browser=True
+    )
 
     with pytest.raises(ValueError):
         commands.viz.main(args)

@@ -1,5 +1,6 @@
 import json
 import pathlib
+import webbrowser
 
 from routes import const
 
@@ -64,5 +65,9 @@ def main(args):
 
     written = args.output.write(output_buff)
     success = len(output_buff) == written
+
+    if not args.no_browser:
+        output_uri = pathlib.Path(args.output.name).resolve().as_uri()
+        webbrowser.open(output_uri)
 
     return 0 if success else 1
