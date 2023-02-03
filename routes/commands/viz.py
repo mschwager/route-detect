@@ -18,9 +18,11 @@ def d3ify(parts, output, result):
         new_node["children"] = new_output
         d3ify(parts, new_output, result)
     else:
+        check_id = result["check_id"]
         route_detect_metadata = result["extra"]["metadata"].get("route_detect", {})
         fill = route_detect_metadata.get("fill", const.DEFAULT_FILL_COLOR)
-        new_node["fill"] = fill
+        check_node = {"name": check_id, "fill": fill}
+        new_node.setdefault("children", []).append(check_node)
 
     output.append(new_node)
 
@@ -28,7 +30,7 @@ def d3ify(parts, output, result):
 def merge_d3_results(d1s, d2s):
     for d2 in d2s:
         matching_d1 = next((d1 for d1 in d1s if d1["name"] == d2["name"]), None)
-        if matching_d1 is None:
+        if matching_d1 is None or "children" not in d2:
             d1s.append(d2)
         elif "children" in matching_d1 and "children" in d2:
             merge_d3_results(matching_d1["children"], d2["children"])

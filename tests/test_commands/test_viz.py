@@ -8,11 +8,11 @@ from routes import commands
 from routes import const
 
 
-def make_result(path, metadata=None):
+def make_result(check_id, path, metadata=None):
     if metadata is None:
         metadata = {}
 
-    return {"path": path, "extra": {"metadata": metadata}}
+    return {"check_id": check_id, "path": path, "extra": {"metadata": metadata}}
 
 
 def make_edge_node(name):
@@ -25,26 +25,90 @@ def make_edge_node(name):
         (
             {
                 "results": [
-                    make_result("a/b.py"),
-                    make_result("a/c.py"),
-                    make_result("a/d.py"),
+                    make_result("c1", "a/b.py"),
+                    make_result("c2", "a/c.py"),
                 ],
             },
             {
                 "name": "a",
                 "children": [
-                    make_edge_node("b.py"),
-                    make_edge_node("c.py"),
-                    make_edge_node("d.py"),
+                    {"name": "b.py", "children": [make_edge_node("c1")]},
+                    {"name": "c.py", "children": [make_edge_node("c2")]},
                 ],
             },
         ),
         (
             {
                 "results": [
-                    make_result("a/b/c/d/e.py"),
-                    make_result("a/b/f.py"),
-                    make_result("a/b/c/g/h.py"),
+                    make_result("c1", "a/b.py"),
+                    make_result("c1", "a/c.py"),
+                ],
+            },
+            {
+                "name": "a",
+                "children": [
+                    {"name": "b.py", "children": [make_edge_node("c1")]},
+                    {"name": "c.py", "children": [make_edge_node("c1")]},
+                ],
+            },
+        ),
+        (
+            {
+                "results": [
+                    make_result("c1", "a/b.py"),
+                    make_result("c1", "a/b.py"),
+                ],
+            },
+            {
+                "name": "a",
+                "children": [
+                    {
+                        "name": "b.py",
+                        "children": [
+                            make_edge_node("c1"),
+                            make_edge_node("c1"),
+                        ],
+                    },
+                ],
+            },
+        ),
+        (
+            {
+                "results": [
+                    make_result("c1", "a/b.py"),
+                    make_result("c2", "a/b.py"),
+                ],
+            },
+            {
+                "name": "a",
+                "children": [
+                    {
+                        "name": "b.py",
+                        "children": [
+                            make_edge_node("c1"),
+                            make_edge_node("c2"),
+                        ],
+                    },
+                ],
+            },
+        ),
+        (
+            {
+                "results": [
+                    make_result("c1", "a.py"),
+                ],
+            },
+            {
+                "name": "a.py",
+                "children": [make_edge_node("c1")],
+            },
+        ),
+        (
+            {
+                "results": [
+                    make_result("c1", "a/b/c/d/e.py"),
+                    make_result("c1", "a/b/f.py"),
+                    make_result("c1", "a/b/c/g/h.py"),
                 ]
             },
             {
@@ -59,18 +123,24 @@ def make_edge_node(name):
                                     {
                                         "name": "d",
                                         "children": [
-                                            make_edge_node("e.py"),
+                                            {
+                                                "name": "e.py",
+                                                "children": [make_edge_node("c1")],
+                                            },
                                         ],
                                     },
                                     {
                                         "name": "g",
                                         "children": [
-                                            make_edge_node("h.py"),
+                                            {
+                                                "name": "h.py",
+                                                "children": [make_edge_node("c1")],
+                                            },
                                         ],
                                     },
                                 ],
                             },
-                            make_edge_node("f.py"),
+                            {"name": "f.py", "children": [make_edge_node("c1")]},
                         ],
                     },
                 ],
@@ -98,8 +168,8 @@ def test_viz_basic(data, expected):
 def test_viz_multiple_root():
     data = {
         "results": [
-            make_result("a/b.py"),
-            make_result("c/d.py"),
+            make_result("c1", "a/b.py"),
+            make_result("c1", "c/d.py"),
         ]
     }
 
