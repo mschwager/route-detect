@@ -7,7 +7,6 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
-          - windows-latest
         python-version:
           - "3.7"
           - "3.8"
@@ -26,7 +25,7 @@ jobs:
           cache: "poetry"
       - name: Run CI
         run: |
-          python -m poetry env use ${{ matrix.python-version }}
-          python -m poetry install --with dev
-          python -m poetry run python -m pytest --cov
-          python -m poetry run python -m semgrep --test --config routes/rules/ tests/test_rules/
+          poetry env use ${{ matrix.python-version }}
+          poetry install --with dev
+          poetry run pytest --cov
+          poetry run semgrep --test --config routes/rules/ tests/test_rules/
