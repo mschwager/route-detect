@@ -11,6 +11,7 @@ packages = [{include = "routes"}]
 
 [tool.poetry.dependencies]
 python = "^3.7"
+semgrep = "^1.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.1"

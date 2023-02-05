@@ -29,3 +29,4 @@ jobs:
           poetry env use ${{ matrix.python-version }}
           poetry install --with dev
           poetry run pytest --cov
+          poetry run semgrep --test --config routes/rules/ tests/test_rules/

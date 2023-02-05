@@ -8,15 +8,19 @@ from routes import commands
 from routes import const
 
 
-def make_result(check_id, path, metadata=None):
+def make_result(lines, path, metadata=None):
     if metadata is None:
         metadata = {}
 
-    return {"check_id": check_id, "path": path, "extra": {"metadata": metadata}}
+    return {
+        "path": path,
+        "extra": {"metadata": metadata, "lines": lines},
+        "start": {"line": 0},
+    }
 
 
 def make_edge_node(name):
-    return {"name": name, "fill": "white"}
+    return {"name": f"ln 0: {name}", "fill": "white"}
 
 
 @pytest.mark.parametrize(

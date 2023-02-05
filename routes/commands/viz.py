@@ -19,10 +19,16 @@ def d3ify(parts, output, result):
         new_node["children"] = new_output
         d3ify(parts, new_output, result)
     else:
-        check_id = result["check_id"]
-        route_detect_metadata = result["extra"]["metadata"].get("route_detect", {})
+        start_line_no = result["start"]["line"]
+        lines = result["extra"]["lines"]
+        newline = lines.find("\n")
+        first_line = lines[:newline] if newline != -1 else lines
+        name = f"ln {start_line_no}: {first_line}"
+
+        route_detect_metadata = result["extra"]["metadata"].get("route-detect", {})
         fill = route_detect_metadata.get("fill", const.DEFAULT_FILL_COLOR)
-        check_node = {"name": check_id, "fill": fill}
+
+        check_node = {"name": name, "fill": fill}
         new_node.setdefault("children", []).append(check_node)
 
     output.append(new_node)
@@ -49,7 +55,7 @@ def main(args):
 
     root_paths = [n[0]["name"] for n in d3_results if n]
     all_same_root = len(set(root_paths)) == 1
-    if not all_same_root:
+    if root_paths and not all_same_root:
         raise ValueError(f"Broken invariant, different root paths: {root_paths}")
 
     d3_tree = []

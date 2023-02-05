@@ -1,0 +1,47 @@
+rules:
+  - id: flask-route-authenticated
+    pattern-either:
+      - pattern: |
+          @$APP.route($PATH, ...)
+          @auth_required
+          def $FUNC(...):
+            ...
+      - pattern: |
+          @$APP.route($PATH, ...)
+          @login_required
+          def $FUNC(...):
+            ...
+    message: Found authenticated Flask route
+    metadata:
+      references:
+        - https://flask.palletsprojects.com/en/2.2.x/quickstart/#routing
+        - https://flask-login.readthedocs.io/en/latest/
+      route-detect:
+        fill: green
+    languages: [python]
+    severity: INFO
+  - id: flask-route-unauthenticated
+    patterns:
+      - pattern: |
+          @$APP.route($PATH, ...)
+          def $FUNC(...):
+            ...
+      - pattern-not: |
+          @$APP.route($PATH, ...)
+          @auth_required
+          def $FUNC(...):
+            ...
+      - pattern-not: |
+          @$APP.route($PATH, ...)
+          @login_required
+          def $FUNC(...):
+            ...
+    message: Found unauthenticated Flask route
+    metadata:
+      references:
+        - https://flask.palletsprojects.com/en/2.2.x/quickstart/#routing
+        - https://flask-login.readthedocs.io/en/latest/
+      route-detect:
+        fill: red
+    languages: [python]
+    severity: INFO
