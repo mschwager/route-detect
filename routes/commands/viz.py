@@ -46,24 +46,34 @@ def merge_d3_results(d1s, d2s):
 def main(args):
     data = json.load(args.input)
 
+    root_paths = set()
     d3_results = []
     for result in data["results"]:
         path = pathlib.PurePath(result["path"])
+        root, *_ = path.parts
+        root_paths.add(root)
         output = []
         d3ify(list(path.parts), output, result)
         d3_results.append(output)
 
-    root_paths = [n[0]["name"] for n in d3_results if n]
-    all_same_root = len(set(root_paths)) == 1
+    all_same_root = len(root_paths) == 1
     if root_paths and not all_same_root:
-        raise ValueError(f"Broken invariant, different root paths: {root_paths}")
+        raise ValueError(
+            f"Tree assumes a common root ({root_paths}), please only specify a single directory"
+        )
 
     d3_tree = []
     for d3_result in d3_results:
         merge_d3_results(d3_tree, d3_result)
 
     # Since all paths share the same root we can start our tree there
-    d3_tree = d3_tree[0]
+    d3_tree = d3_tree[0] if d3_tree else {}
+
+    if not d3_tree:
+        print(
+            "No results found, please ensure your framework is supported or "
+            "file an issue at https://github.com/mschwager/route-detect/issues"
+        )
 
     output_buff = args.template.read()
     template_data = compact_dumps(d3_tree)

@@ -11,6 +11,11 @@ rules:
           @login_required
           def $FUNC(...):
             ...
+      - pattern: |
+          @$APP.route($PATH, ...)
+          @requires_authentication
+          def $FUNC(...):
+            ...
     message: Found authenticated Flask route
     metadata:
       references:
@@ -34,6 +39,11 @@ rules:
       - pattern-not: |
           @$APP.route($PATH, ...)
           @login_required
+          def $FUNC(...):
+            ...
+      - pattern-not: |
+          @$APP.route($PATH, ...)
+          @requires_authentication
           def $FUNC(...):
             ...
     message: Found unauthenticated Flask route

@@ -150,6 +150,12 @@ def make_edge_node(name):
                 ],
             },
         ),
+        (
+            {
+                "results": [],
+            },
+            {},
+        ),
     ],
 )
 def test_viz_basic(data, expected):

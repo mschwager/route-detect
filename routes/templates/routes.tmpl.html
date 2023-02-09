@@ -73,7 +73,7 @@
         if (typeof curve !== "function") throw new Error(`Unsupported curve`);
 
         const svg = d3.create("svg")
-            .attr("viewBox", [-dy * padding / 3, x0 - dx, width, height])
+            .attr("viewBox", [-dy * padding / 4, x0 - dx, width + 200, height])
             .attr("width", width)
             .attr("height", height)
             .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
@@ -126,7 +126,9 @@
       const chart = Tree(semgrepData, {
         label: d => d.name,
         fill: d => d.fill,
-        width: 1920,
+        width: window.innerWidth,
+        height: window.innerHeight,
+        padding: 3,
       });
 
       document.getElementById("container").appendChild(chart);
