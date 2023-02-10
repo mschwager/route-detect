@@ -1,0 +1,76 @@
+rules:
+  - id: django-rest-framework-route-authenticated
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern: |
+                  @rest_framework.decorators.action(...)
+                  def $FUNC(...):
+                    ...
+              - pattern-inside: |
+                  class $CLASS:
+                    ...
+                    permission_classes = $PERMISSIONS_CLASSES
+                    ...
+          - pattern: |
+              @rest_framework.decorators.api_view(...)
+              @rest_framework.decorators.permission_classes($PERMISSIONS_CLASSES)
+              def $FUNC(...):
+                ...
+      - metavariable-pattern:
+          metavariable: $PERMISSIONS_CLASSES
+          pattern-either:
+            - pattern: "(..., rest_framework.permissions.IsAuthenticated, ...)"
+            - pattern: "[..., rest_framework.permissions.IsAuthenticated, ...]"
+    message: Found authenticated Django Rest Framework route
+    metadata:
+      references:
+        - https://www.django-rest-framework.org/api-guide/views/
+        - https://www.django-rest-framework.org/api-guide/viewsets/
+        - https://www.django-rest-framework.org/api-guide/authentication/
+      route-detect:
+        fill: green
+    languages: [python]
+    severity: INFO
+  - id: django-rest-framework-route-unauthenticated
+    pattern-either:
+      - patterns:
+          - pattern: |
+              @rest_framework.decorators.action(...)
+              def $FUNC(...):
+                ...
+          - pattern-not-inside: |
+              class $CLASS:
+                ...
+                permission_classes = (..., rest_framework.permissions.IsAuthenticated, ...)
+                ...
+          - pattern-not-inside: |
+              class $CLASS:
+                ...
+                permission_classes = [..., rest_framework.permissions.IsAuthenticated, ...]
+                ...
+      - patterns:
+          - pattern: |
+              @rest_framework.decorators.api_view(...)
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @rest_framework.decorators.api_view(...)
+              @rest_framework.decorators.permission_classes((..., rest_framework.permissions.IsAuthenticated, ...))
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @rest_framework.decorators.api_view(...)
+              @rest_framework.decorators.permission_classes([..., rest_framework.permissions.IsAuthenticated, ...])
+              def $FUNC(...):
+                ...
+    message: Found unauthenticated Django Rest Framework route
+    metadata:
+      references:
+        - https://www.django-rest-framework.org/api-guide/views/
+        - https://www.django-rest-framework.org/api-guide/viewsets/
+        - https://www.django-rest-framework.org/api-guide/authentication/
+      route-detect:
+        fill: red
+    languages: [python]
+    severity: INFO

@@ -24,6 +24,13 @@ def hello_world():
 
 # ruleid: flask-route-authenticated
 @app.route("/")
+@requires_authentication
+def hello_world():
+    return "<p>Hello, World!</p>"
+
+
+# ruleid: flask-route-authenticated
+@app.route("/")
 @foobar
 @auth_required
 def hello_world():
@@ -34,5 +41,13 @@ def hello_world():
 @app.route("/")
 @foobar
 @login_required
+def hello_world():
+    return "<p>Hello, World!</p>"
+
+
+# ruleid: flask-route-authenticated
+@app.route("/")
+@foobar
+@requires_authentication
 def hello_world():
     return "<p>Hello, World!</p>"
