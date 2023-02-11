@@ -6,6 +6,7 @@ TEST_ROUTE_DETECT = CURDIR / "test-route-detect.yml"
 FLASK = CURDIR / "flask.yml"
 DJANGO = CURDIR / "django.yml"
 DJANGO_REST_FRAMEWORK = CURDIR / "django-rest-framework.yml"
+SANIC = CURDIR / "sanic.yml"
 
 ALL_RULES = {
     str(rule.with_suffix("").name): str(rule.resolve())
@@ -14,5 +15,6 @@ ALL_RULES = {
         FLASK,
         DJANGO,
         DJANGO_REST_FRAMEWORK,
+        SANIC,
     ]
 }

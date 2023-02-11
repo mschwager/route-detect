@@ -1,0 +1,40 @@
+rules:
+  - id: sanic-route-unauthenticated
+    pattern-either:
+      - pattern: |
+          @$APP.route($PATH, ...)
+          async def $FUNC(...):
+            ...
+      - patterns:
+          - pattern: |
+              $APP.$ADD_ROUTE($HANDLER, $PATH, ...)
+          - metavariable-pattern:
+              metavariable: $ADD_ROUTE
+              pattern-either:
+                - pattern: add_route
+                - pattern: add_websocket_route
+      - patterns:
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              async def $FUNC(...):
+                ...
+          - metavariable-pattern:
+              metavariable: $METHOD
+              pattern-either:
+                - pattern: get
+                - pattern: post
+                - pattern: put
+                - pattern: patch
+                - pattern: delete
+                - pattern: head
+                - pattern: options
+                - pattern: websocket
+    message: Found unauthenticated Sanic route
+    metadata:
+      references:
+        - https://sanic.dev/en/guide/basics/routing.html
+        - https://sanic.dev/en/guide/how-to/authentication.html
+      route-detect:
+        fill: red
+    languages: [python]
+    severity: INFO
