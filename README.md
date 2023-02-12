@@ -2,7 +2,7 @@
 
 Web application authentication (authn) and authorization (authz) bugs are some of the most common security issues found today. The 2021 OWASP Top 10 lists [Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/) and [Identification and Authentication Failures](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/) (formerly Broken Authentication) as its 1st and 7th most critical web application security risks, respectively. Further, the 2019 OWASP API Top 10 lists [Broken User Authentication](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa2-broken-user-authentication.md) and [Broken Function Level Authorization](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa5-broken-function-level-authorization.md) as its 2nd and 5th most critical risks.
 
-`route-detect` seeks to automate detection of these issues.
+**`route-detect` seeks to automate detection of these issues.**
 
 Supported web frameworks (`route-detect` IDs in parentheses):
 
