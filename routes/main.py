@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 from routes import commands
 from routes import rules
@@ -65,4 +66,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

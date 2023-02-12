@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "route-detect"
 version = "0.5.0"
-description = "TODO"
+description = "Find web application HTTP route authn and authz security bugs in your code."
 authors = []
 license = "BSD-3-Clause"
 readme = "README.md"
@@ -22,7 +22,7 @@ pre-commit = "^2.21.0"
 optional = true
 
 [tool.poetry.scripts]
-routes = "routes.__main__:main"
+routes = "routes.main:main"
 
 [tool.coverage.run]
 source = ["routes"]
