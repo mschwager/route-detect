@@ -78,7 +78,11 @@
             .attr("height", height)
             .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
             .attr("font-family", "sans-serif")
-            .attr("font-size", 10);
+            .attr("font-size", 10)
+            .attr("pointer-events", "all")
+            .call(d3.zoom().on("zoom", function (e) {
+                svg.attr("transform", e.transform)
+            }));
 
         svg.append("g")
             .attr("fill", "none")
