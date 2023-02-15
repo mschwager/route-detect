@@ -1,0 +1,81 @@
+rules:
+  - id: laravel-route-unauthenticated
+    patterns:
+      - pattern: Route::$METHOD(...);
+      - pattern-not: Route::$METHOD(...)->middleware("=~/^auth.*/");
+      - pattern-not: Route::$METHOD(...)->middleware("=~/^can:.*/");
+      - pattern-not: Route::$METHOD(...)->can(...);
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: get
+            - pattern: post
+            - pattern: put
+            - pattern: patch
+            - pattern: delete
+            - pattern: options
+            - pattern: match
+            - pattern: any
+            - pattern: fallback
+    message: Found unauthenticated Laravel route
+    metadata:
+      references:
+        - https://laravel.com/docs/9.x/routing
+        - https://laravel.com/docs/9.x/authentication#protecting-routes
+        - https://laravel.com/docs/9.x/authorization#via-middleware
+      route-detect:
+        fill: red
+    languages: [php]
+    severity: INFO
+  - id: laravel-route-authenticated
+    patterns:
+      - pattern: Route::$METHOD(...)->middleware("=~/^auth.*/");
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: get
+            - pattern: post
+            - pattern: put
+            - pattern: patch
+            - pattern: delete
+            - pattern: options
+            - pattern: match
+            - pattern: any
+            - pattern: fallback
+    message: Found authenticated Laravel route
+    metadata:
+      references:
+        - https://laravel.com/docs/9.x/routing
+        - https://laravel.com/docs/9.x/authentication#protecting-routes
+        - https://laravel.com/docs/9.x/authorization#via-middleware
+      route-detect:
+        fill: green
+    languages: [php]
+    severity: INFO
+  - id: laravel-route-authorized
+    patterns:
+      - pattern-either:
+          - pattern: Route::$METHOD(...)->middleware("=~/^can:.*/");
+          - pattern: Route::$METHOD(...)->can(...);
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: get
+            - pattern: post
+            - pattern: put
+            - pattern: patch
+            - pattern: delete
+            - pattern: options
+            - pattern: match
+            - pattern: any
+            - pattern: fallback
+    message: Found authenticated Laravel route
+    metadata:
+      references:
+        - https://laravel.com/docs/9.x/routing
+        - https://laravel.com/docs/9.x/authentication#protecting-routes
+        - https://laravel.com/docs/9.x/authorization#via-middleware
+      route-detect:
+        fill: yellow
+    languages: [php]
+    severity: INFO
