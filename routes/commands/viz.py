@@ -1,8 +1,12 @@
+import collections
 import json
+import logging
 import pathlib
 import webbrowser
 
 from routes import const
+
+logger = logging.getLogger(__name__)
 
 
 def compact_dumps(data):
@@ -44,12 +48,20 @@ def merge_d3_results(d1s, d2s):
 
 
 def main(args):
+    logger.info("Reading input file %s", args.input.name)
     data = json.load(args.input)
+
+    counts = collections.Counter([r["check_id"] for r in data["results"]])
+    count_output = " ".join(f"{k}={v}" for k, v in counts.items())
+    logger.info("Finding rule counts: %s", count_output)
 
     root_paths = set()
     d3_results = []
     for result in data["results"]:
         path = pathlib.PurePath(result["path"])
+        logger.debug(
+            "Processing %s %s %s", result["check_id"], path, result["start"]["line"]
+        )
         root, *_ = path.parts
         root_paths.add(root)
         output = []
@@ -70,19 +82,22 @@ def main(args):
     d3_tree = d3_tree[0] if d3_tree else {}
 
     if not d3_tree:
-        print(
+        logging.error(
             "No results found, please ensure your framework is supported or "
             "file an issue at https://github.com/mschwager/route-detect/issues"
         )
 
+    logger.info("Formatting template %s", args.template.name)
     output_buff = args.template.read()
     template_data = compact_dumps(d3_tree)
     output_buff = output_buff.replace(const.DEFAULT_TEMPLATE_KEY, template_data)
 
+    logger.info("Writing output file %s", args.output.name)
     written = args.output.write(output_buff)
     success = len(output_buff) == written
 
     if not args.no_browser:
+        logger.info("Opening output file in browser")
         output_uri = pathlib.Path(args.output.name).resolve().as_uri()
         webbrowser.open(output_uri)
 

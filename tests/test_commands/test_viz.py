@@ -8,11 +8,18 @@ from routes import commands
 from routes import const
 
 
+def make_file(data, name):
+    result = io.StringIO(data)
+    result.name = name
+    return result
+
+
 def make_result(lines, path, metadata=None):
     if metadata is None:
         metadata = {}
 
     return {
+        "check_id": "test_check_id",
         "path": path,
         "extra": {"metadata": metadata, "lines": lines},
         "start": {"line": 0},
@@ -159,9 +166,9 @@ def make_edge_node(name):
     ],
 )
 def test_viz_basic(data, expected):
-    input = io.StringIO(json.dumps(data))
-    output = io.StringIO()
-    template = io.StringIO(const.DEFAULT_TEMPLATE_KEY)
+    input = make_file(json.dumps(data), "test_input")
+    output = make_file("", "test_output")
+    template = make_file(const.DEFAULT_TEMPLATE_KEY, "test_template")
     args = argparse.Namespace(
         input=input, output=output, template=template, no_browser=True
     )
@@ -185,12 +192,16 @@ def test_viz_multiple_root():
         ]
     }
 
-    input = io.StringIO(json.dumps(data))
-    output = io.StringIO()
-    template = io.StringIO(const.DEFAULT_TEMPLATE_KEY)
+    input = make_file(json.dumps(data), "test_input")
+    output = make_file("", "test_output")
+    template = make_file(const.DEFAULT_TEMPLATE_KEY, "test_template")
     args = argparse.Namespace(
         input=input, output=output, template=template, no_browser=True
     )
 
     with pytest.raises(ValueError):
         commands.viz.main(args)
+
+    input.close()
+    output.close()
+    template.close()

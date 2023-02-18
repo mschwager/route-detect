@@ -1,15 +1,25 @@
 import argparse
+import logging
 import sys
 
 from routes import commands
+from routes import log
 from routes import rules
 from routes import templates
+
+logger = logging.getLogger(__name__)
 
 
 def parse_args(args=None):
     p = argparse.ArgumentParser(
         description="TODO",
         formatter_class=argparse.RawTextHelpFormatter,
+    )
+    p.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Set logging level to debug",
     )
 
     subparsers = p.add_subparsers(dest="command", help="Command help")
@@ -56,13 +66,19 @@ def parse_args(args=None):
 def main():
     args = parse_args()
 
+    log.init_logging(level=logging.DEBUG if args.verbose else logging.INFO)
+
     command_dispatch = {"which": commands.which.main, "viz": commands.viz.main}
     command = command_dispatch.get(args.command)
     if command is None:
         print(f"Command unavailable: {args.command}")
         return 1
 
-    return command(args)
+    logger.info("Starting command %s", args.command)
+    result = command(args)
+    logger.info("Finished command %s", args.command)
+
+    return result
 
 
 if __name__ == "__main__":
