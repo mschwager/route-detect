@@ -2,6 +2,7 @@ rules:
   - id: symfony-route-unauthenticated
     pattern-either:
       - pattern: Symfony\Component\Routing\Annotation\Route($PATH, ...)
+      - pattern: new Symfony\Component\Routing\Route($PATH, ...)
       - patterns:
           - pattern: $ROUTES->add($NAME, $PATH, ...);
           - pattern-inside: function (Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator $ROUTES) { ... }
@@ -9,28 +10,48 @@ rules:
     metadata:
       references:
         - https://symfony.com/doc/current/routing.html
+        - https://symfony.com/doc/current/create_framework/routing.html
+        - https://symfony.com/doc/current/security.html
       route-detect:
         fill: red
     languages: [php]
     severity: INFO
   - id: symfony-route-unauthenticated-yaml
-    pattern: |
-      $NAME:
-        ...
-        path: $PATH
-        ...
-        controller: $CONTROLLER
-        ...
-    paths:
-      include:
-        - "symfony.test.yaml" # For testing purposes only
-        - "routes.yaml"
-        - "routes.yml"
+    pattern-either:
+      - pattern: |
+          $NAME:
+            ...
+            path: $PATH
+            ...
+            controller: $CONTROLLER
+            ...
+      - pattern: |
+          $NAME:
+            ...
+            path: $PATH
+            ...
+            defaults:
+              ...
+              _controller: $CONTROLLER
+              ...
+            ...
     message: Found unauthenticated Symfony route
     metadata:
       references:
         - https://symfony.com/doc/current/routing.html
+        - https://symfony.com/doc/current/create_framework/routing.html
+        - https://symfony.com/doc/current/security.html
       route-detect:
         fill: red
     languages: [yaml]
+    severity: INFO
+  - id: symfony-route-unauthenticated-annotation
+    pattern: "@Route(...)"
+    message: Found unauthenticated Symfony route
+    metadata:
+      references:
+        - https://symfony.com/doc/4.1/routing.html
+      route-detect:
+        fill: red
+    languages: [generic]
     severity: INFO

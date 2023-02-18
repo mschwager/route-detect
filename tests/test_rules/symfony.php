@@ -5,14 +5,25 @@ namespace App\Controller;
 use App\Controller\BlogApiController;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Annotation\Route as RouteAttribute;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 class BlogController extends AbstractController
 {
     // ruleid: symfony-route-unauthenticated
-    #[Route('/blog', name: 'blog_list')]
+    #[RouteAttribute('/blog', name: 'blog_list')]
     public function list(): Response
+    {
+        // ...
+    }
+
+    /**
+     // ruleid: symfony-route-unauthenticated-annotation
+     * @Route("/")
+     */
+    public function index()
     {
         // ...
     }
@@ -29,3 +40,13 @@ return function (RoutingConfigurator $routes) {
         ->controller([BlogApiController::class, 'edit'])
         ->methods(['PUT']);
 };
+
+function test()
+{
+    $routeCollection = new RouteCollection();
+
+    // ruleid: symfony-route-unauthenticated
+    $routeCollection->add('test', new Route('/path', [
+        'foo' => 'Bar',
+    ]));
+}
