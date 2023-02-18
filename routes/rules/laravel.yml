@@ -5,6 +5,9 @@ rules:
       - pattern-not: Route::$METHOD(...)->middleware("=~/^auth.*/");
       - pattern-not: Route::$METHOD(...)->middleware("=~/^can:.*/");
       - pattern-not: Route::$METHOD(...)->can(...);
+      - pattern-not-inside: Route::group(["middleware" => [..., "=~/.*auth.*/", ...]], function () { ... });
+      - pattern-not-inside: Route::middleware([..., "=~/.*auth.*/", ...])-> ... ->group(function () { ... });
+      - pattern-not-inside: Route::middleware("=~/.*auth.*/")-> ... ->group(function () { ... });
       - metavariable-pattern:
           metavariable: $METHOD
           pattern-either:
@@ -29,7 +32,14 @@ rules:
     severity: INFO
   - id: laravel-route-authenticated
     patterns:
-      - pattern: Route::$METHOD(...)->middleware("=~/^auth.*/");
+      - pattern-either:
+          - pattern: Route::$METHOD(...)->middleware("=~/^auth.*/");
+          - patterns:
+              - pattern: Route::$METHOD(...);
+              - pattern-either:
+                  - pattern-inside: Route::group(["middleware" => [..., "=~/.*auth.*/", ...]], function () { ... });
+                  - pattern-inside: Route::middleware([..., "=~/.*auth.*/", ...])-> ... ->group(function () { ... });
+                  - pattern-inside: Route::middleware("=~/.*auth.*/")-> ... ->group(function () { ... });
       - metavariable-pattern:
           metavariable: $METHOD
           pattern-either:

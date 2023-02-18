@@ -7,6 +7,8 @@ FLASK = CURDIR / "flask.yml"
 DJANGO = CURDIR / "django.yml"
 DJANGO_REST_FRAMEWORK = CURDIR / "django-rest-framework.yml"
 SANIC = CURDIR / "sanic.yml"
+LARAVEL = CURDIR / "laravel.yml"
+SYMFONY = CURDIR / "symfony.yml"
 
 ALL_RULES = {
     str(rule.with_suffix("").name): str(rule.resolve())
@@ -16,5 +18,7 @@ ALL_RULES = {
         DJANGO,
         DJANGO_REST_FRAMEWORK,
         SANIC,
+        LARAVEL,
+        SYMFONY,
     ]
 }
