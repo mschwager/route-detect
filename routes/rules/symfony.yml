@@ -1,22 +1,22 @@
 rules:
-  - id: symfony-route-unauthenticated
+  - id: symfony-route-php
     pattern-either:
       - pattern: Symfony\Component\Routing\Annotation\Route($PATH, ...)
       - pattern: new Symfony\Component\Routing\Route($PATH, ...)
       - patterns:
           - pattern: $ROUTES->add($NAME, $PATH, ...);
           - pattern-inside: function (Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator $ROUTES) { ... }
-    message: Found unauthenticated Symfony route
+    message: Found Symfony route
     metadata:
       references:
         - https://symfony.com/doc/current/routing.html
         - https://symfony.com/doc/current/create_framework/routing.html
         - https://symfony.com/doc/current/security.html
       route-detect:
-        fill: red
+        fill: grey
     languages: [php]
     severity: INFO
-  - id: symfony-route-unauthenticated-yaml
+  - id: symfony-route-yaml
     pattern-either:
       - pattern: |
           $NAME:
@@ -35,23 +35,23 @@ rules:
               _controller: $CONTROLLER
               ...
             ...
-    message: Found unauthenticated Symfony route
+    message: Found Symfony route
     metadata:
       references:
         - https://symfony.com/doc/current/routing.html
         - https://symfony.com/doc/current/create_framework/routing.html
         - https://symfony.com/doc/current/security.html
       route-detect:
-        fill: red
+        fill: grey
     languages: [yaml]
     severity: INFO
-  - id: symfony-route-unauthenticated-annotation
+  - id: symfony-route-annotation
     pattern: "@Route(...)"
-    message: Found unauthenticated Symfony route
+    message: Found Symfony route
     metadata:
       references:
         - https://symfony.com/doc/4.1/routing.html
       route-detect:
-        fill: red
+        fill: grey
     languages: [generic]
     severity: INFO

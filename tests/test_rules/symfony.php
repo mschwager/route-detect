@@ -12,7 +12,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class BlogController extends AbstractController
 {
-    // ruleid: symfony-route-unauthenticated
+    // ruleid: symfony-route-php
     #[RouteAttribute('/blog', name: 'blog_list')]
     public function list(): Response
     {
@@ -20,7 +20,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     // ruleid: symfony-route-unauthenticated-annotation
+     // ruleid: symfony-route-annotation
      * @Route("/")
      */
     public function index()
@@ -30,12 +30,12 @@ class BlogController extends AbstractController
 }
 
 return function (RoutingConfigurator $routes) {
-    // ruleid: symfony-route-unauthenticated
+    // ruleid: symfony-route-php
     $routes->add('api_post_show', '/api/posts/{id}')
         ->controller([BlogApiController::class, 'show'])
         ->methods(['GET', 'HEAD']);
 
-    // ruleid: symfony-route-unauthenticated
+    // ruleid: symfony-route-php
     $routes->add('api_post_edit', '/api/posts/{id}')
         ->controller([BlogApiController::class, 'edit'])
         ->methods(['PUT']);
@@ -45,7 +45,7 @@ function test()
 {
     $routeCollection = new RouteCollection();
 
-    // ruleid: symfony-route-unauthenticated
+    // ruleid: symfony-route-php
     $routeCollection->add('test', new Route('/path', [
         'foo' => 'Bar',
     ]));
