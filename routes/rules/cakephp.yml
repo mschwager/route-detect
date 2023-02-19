@@ -1,0 +1,27 @@
+rules:
+  - id: cakephp-route-unauthenticated
+    patterns:
+      - pattern: $ROUTES->$METHOD($PATH, ...);
+      - pattern-inside: function (Cake\Routing\RouteBuilder $ROUTES) { ... };
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: connect
+            - pattern: get
+            - pattern: post
+            - pattern: put
+            - pattern: patch
+            - pattern: delete
+            - pattern: options
+            - pattern: head
+            - pattern: fallbacks
+    message: Found unauthenticated CakePHP route
+    metadata:
+      references:
+        - https://book.cakephp.org/4/en/development/routing.html
+        - https://book.cakephp.org/authentication/2/en/index.html
+        - https://book.cakephp.org/authorization/2/en/index.html
+      route-detect:
+        fill: red
+    languages: [php]
+    severity: INFO

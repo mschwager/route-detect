@@ -9,6 +9,7 @@ DJANGO_REST_FRAMEWORK = CURDIR / "django-rest-framework.yml"
 SANIC = CURDIR / "sanic.yml"
 LARAVEL = CURDIR / "laravel.yml"
 SYMFONY = CURDIR / "symfony.yml"
+CAKEPHP = CURDIR / "cakephp.yml"
 
 ALL_RULES = {
     str(rule.with_suffix("").name): str(rule.resolve())
@@ -20,5 +21,6 @@ ALL_RULES = {
         SANIC,
         LARAVEL,
         SYMFONY,
+        CAKEPHP,
     ]
 }
