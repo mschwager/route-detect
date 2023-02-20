@@ -1,12 +1,27 @@
 # route-detect
 
-Web application authentication (authn) and authorization (authz) bugs are some of the most common security issues found today. The 2021 OWASP Top 10 lists [Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/) and [Identification and Authentication Failures](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/) (formerly Broken Authentication) as its 1st and 7th most critical web application security risks, respectively. Further, the 2019 OWASP API Top 10 lists [Broken User Authentication](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa2-broken-user-authentication.md) and [Broken Function Level Authorization](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa5-broken-function-level-authorization.md) as its 2nd and 5th most critical risks.
+Web application HTTP route authentication and authorization bugs are some of the most common security issues found today.
+
+This is highlighted in the following locations:
+
+- 2021 OWASP Top 10 #1 - [Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+- 2021 OWASP Top 10 #7 - [Identification and Authentication Failures](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/) (formerly Broken Authentication)
+- 2019 OWASP API Top 10 #2 - [Broken User Authentication](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa2-broken-user-authentication.md)
+- 2019 OWASP API Top 10 #5 - [Broken Function Level Authorization](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa5-broken-function-level-authorization.md)
+- 2022 CWE Top 25 #14 - [CWE-287: Improper Authentication](https://cwe.mitre.org/data/definitions/1387.html)
+- 2022 CWE Top 25 #16 - [CWE-862: Missing Authorization](https://cwe.mitre.org/data/definitions/1387.html)
+- 2022 CWE Top 25 #18 - [CWE-306: Missing Authentication for Critical Function](https://cwe.mitre.org/data/definitions/1387.html)
+- #21 most CVEs by CWE - [CWE-284: Access Control (Authorization) Issues](https://www.cvedetails.com/cwe-definitions.php)
+- #47 most CVEs by CWE - [CWE-639: Access Control Bypass Through User-Controlled Key](https://www.cvedetails.com/cwe-definitions.php)
 
 **`route-detect` seeks to automate detection of these issues.**
+
+![Routes demo](routes-demo.png?raw=true)
 
 Supported web frameworks (`route-detect` IDs in parentheses):
 
 - Python: Django (`django`, `django-rest-framework`), Flask (`flask`), Sanic (`sanic`)
+- PHP: Laravel (`laravel`), Symfony (`symfony`), CakePHP (`cakephp`)
 
 # Installing
 
