@@ -1,8 +1,6 @@
 # route-detect
 
-Web application HTTP route authentication and authorization bugs are some of the most common security issues found today.
-
-This is highlighted in the following locations:
+Web application HTTP route authentication (authn) and authorization (authz) bugs are some of the most common security issues found today. These industry standard resources highlight the severity of the issue:
 
 - 2021 OWASP Top 10 #1 - [Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
 - 2021 OWASP Top 10 #7 - [Identification and Authentication Failures](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/) (formerly Broken Authentication)
@@ -14,9 +12,13 @@ This is highlighted in the following locations:
 - #21 most CVEs by CWE - [CWE-284: Access Control (Authorization) Issues](https://www.cvedetails.com/cwe-definitions.php)
 - #47 most CVEs by CWE - [CWE-639: Access Control Bypass Through User-Controlled Key](https://www.cvedetails.com/cwe-definitions.php)
 
-**`route-detect` seeks to automate detection of these issues.**
+Of course, not all authn and authz bugs are due to route issues, but **`route-detect` seeks to automate detection of this vulnerability subclass.**
 
 ![Routes demo](routes-demo.png?raw=true)
+
+<p align="center">
+    <i>Routes from <code><a href="https://github.com/koel/koel">koel<a></code> streaming server</i>
+</p>
 
 Supported web frameworks (`route-detect` IDs in parentheses):
 
