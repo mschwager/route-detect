@@ -87,7 +87,8 @@ def main(args):
             "file an issue at https://github.com/mschwager/route-detect/issues"
         )
 
-    logger.info("Formatting template %s", args.template.name)
+    template_name = pathlib.PurePath(args.template.name).name
+    logger.info("Formatting template %s", template_name)
     output_buff = args.template.read()
     template_data = compact_dumps(d3_tree)
     output_buff = output_buff.replace(const.DEFAULT_TEMPLATE_KEY, template_data)

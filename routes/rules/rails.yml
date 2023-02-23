@@ -1,0 +1,56 @@
+rules:
+  - id: rails-route
+    patterns:
+      - pattern: $FUNC ...
+      - pattern-inside: |
+          $APPLICATION.routes.draw do
+            ...
+          end
+      - metavariable-pattern:
+          metavariable: $FUNC
+          pattern-either:
+            - pattern: resource
+            - pattern: resources
+            - pattern: get
+            - pattern: patch
+            - pattern: put
+            - pattern: post
+            - pattern: delete
+            - pattern: match
+    message: Found Rails route
+    metadata:
+      references:
+        - https://guides.rubyonrails.org/routing.html
+      route-detect:
+        fill: grey
+    languages: [ruby]
+    severity: INFO
+  - id: rails-route-subdirectory
+    patterns:
+      - pattern: $FUNC ...
+      - pattern-inside: |
+          namespace ... do
+            ...
+          end
+      - metavariable-pattern:
+          metavariable: $FUNC
+          pattern-either:
+            - pattern: resource
+            - pattern: resources
+            - pattern: get
+            - pattern: patch
+            - pattern: put
+            - pattern: post
+            - pattern: delete
+            - pattern: match
+    paths:
+      include:
+        - "config/routes/**/*.rb"
+    message: Found Rails route
+    metadata:
+      references:
+        - https://guides.rubyonrails.org/routing.html
+      route-detect:
+        fill: grey
+    languages: [ruby]
+    severity: INFO

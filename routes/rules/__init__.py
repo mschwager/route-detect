@@ -10,6 +10,7 @@ SANIC = CURDIR / "sanic.yml"
 LARAVEL = CURDIR / "laravel.yml"
 SYMFONY = CURDIR / "symfony.yml"
 CAKEPHP = CURDIR / "cakephp.yml"
+RAILS = CURDIR / "rails.yml"
 
 ALL_RULES = {
     str(rule.with_suffix("").name): str(rule.resolve())
@@ -22,5 +23,6 @@ ALL_RULES = {
         LARAVEL,
         SYMFONY,
         CAKEPHP,
+        RAILS,
     ]
 }
