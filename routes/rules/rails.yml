@@ -1,11 +1,22 @@
 rules:
   - id: rails-route
     patterns:
-      - pattern: $FUNC ...
-      - pattern-inside: |
-          $APPLICATION.routes.draw do
-            ...
-          end
+      - pattern-either:
+          - pattern: "$FUNC $CONTROLLER"
+          - pattern: "$FUNC $CONTROLLER, ..."
+          - pattern: '$FUNC "$PATH" => "$CONTROLLER"'
+          - pattern: '$FUNC "$PATH" => "$CONTROLLER", ...'
+          - pattern: '$FUNC "$PATH", ..., to: "$CONTROLLER"'
+          - pattern: '$FUNC "$PATH", ..., to: "$CONTROLLER", ...'
+      - pattern-either:
+          - pattern-inside: |
+              $APPLICATION.routes.draw do
+                ...
+              end
+          - pattern-inside: |
+              namespace ... do
+                ...
+              end
       - metavariable-pattern:
           metavariable: $FUNC
           pattern-either:
@@ -22,35 +33,91 @@ rules:
       references:
         - https://guides.rubyonrails.org/routing.html
       route-detect:
+        type: route
+        normalizer: rails
         fill: grey
+        connect-on: $CONTROLLER
     languages: [ruby]
     severity: INFO
-  - id: rails-route-subdirectory
+  - id: rails-controller-authenticated
     patterns:
-      - pattern: $FUNC ...
-      - pattern-inside: |
-          namespace ... do
-            ...
-          end
-      - metavariable-pattern:
-          metavariable: $FUNC
-          pattern-either:
-            - pattern: resource
-            - pattern: resources
-            - pattern: get
-            - pattern: patch
-            - pattern: put
-            - pattern: post
-            - pattern: delete
-            - pattern: match
-    paths:
-      include:
-        - "config/routes/**/*.rb"
-    message: Found Rails route
+      - pattern-either:
+          - pattern: |
+              class $CLASSNAME < $PARENTNAME
+                ...
+                before_action :authenticate_user!
+                ...
+              end
+          - pattern: |
+              class $CLASSNAME < $PARENTNAME
+                ...
+                before_action :authenticate_user!, ...
+                ...
+              end
+          - pattern: |
+              class $CLASSNAME < $PARENTNAME
+                ...
+                requires_login(...)
+                ...
+              end
+      - metavariable-regex:
+          metavariable: $CLASSNAME
+          regex: ".*Controller$"
+      - metavariable-regex:
+          metavariable: $PARENTNAME
+          regex: ".*Controller$"
+    message: Found Rails controller
     metadata:
       references:
         - https://guides.rubyonrails.org/routing.html
+        - https://medium.com/rubyinside/a-deep-dive-into-routing-and-controller-dispatch-in-rails-8bf58c2cf3b5
+        - https://gist.github.com/iangreenleaf/b206d09c587e8fc6399e#controllers
       route-detect:
-        fill: grey
+        type: connector
+        fill: green
+        connect-on: $CLASSNAME
+    languages: [ruby]
+    severity: INFO
+  - id: rails-controller-unauthenticated
+    patterns:
+      - patterns:
+          - pattern: |
+              class $CLASSNAME < $PARENTNAME
+                ...
+              end
+          - pattern-not: |
+              class $CLASSNAME < $PARENTNAME
+                ...
+                before_action :authenticate_user!
+                ...
+              end
+          - pattern-not: |
+              class $CLASSNAME < $PARENTNAME
+                ...
+                before_action :authenticate_user!, ...
+                ...
+              end
+          - pattern-not: |
+              class $CLASSNAME < $PARENTNAME
+                ...
+                requires_login(...)
+                ...
+              end
+      - metavariable-regex:
+          metavariable: $CLASSNAME
+          regex: ".*Controller$"
+      - metavariable-regex:
+          metavariable: $PARENTNAME
+          regex: ".*Controller$"
+    message: Found Rails controller
+    metadata:
+      references:
+        - https://guides.rubyonrails.org/routing.html
+        - https://medium.com/rubyinside/a-deep-dive-into-routing-and-controller-dispatch-in-rails-8bf58c2cf3b5
+        - https://gist.github.com/iangreenleaf/b206d09c587e8fc6399e#controllers
+      route-detect:
+        type: connector
+        fill: red
+        connect-on: $CLASSNAME
     languages: [ruby]
     severity: INFO

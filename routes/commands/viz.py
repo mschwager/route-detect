@@ -2,18 +2,55 @@ import collections
 import json
 import logging
 import pathlib
+import re
 import webbrowser
 
 from routes import const
+from routes import types
+from routes import util
 
 logger = logging.getLogger(__name__)
 
+RAIL_SYMBOL_RE = re.compile(r":(?P<name>[a-z_]+)")
+RAIL_CONTROLLER_RE = re.compile(r"(?P<controller>[a-z_]+)#(?P<action>[a-z_]+)")
 
-def compact_dumps(data):
-    return json.dumps(data, separators=(",", ":"))
+
+def rails_route_to_controller(result):
+    content = result.metavar_content(result.rd_connect_on)
+
+    # Symbol route, e.g. ":user"
+    symbol_match = re.match(RAIL_SYMBOL_RE, content)
+    if symbol_match is not None:
+        return util.pascal_case(symbol_match.group("name")) + "Controller"
+
+    # Controller name, e.g. "user#action"
+    controller_match = re.search(RAIL_CONTROLLER_RE, content)
+    if controller_match is not None:
+        return util.pascal_case(controller_match.group("controller")) + "Controller"
+
+    # Else try content itself even though it's unlikely to work
+    return content
 
 
-def d3ify(parts, output, result):
+NORMALIZERS = {types.Framework.RAILS.value: rails_route_to_controller}
+
+
+def get_connectors(connector_results):
+    def connector_key(result):
+        return result.metavar_content(result.rd_connect_on)
+
+    results = {}
+    for key, group in util.sorted_groupby(connector_results, key=connector_key):
+        group_list = list(group)
+        if len(group_list) > 1:
+            logger.warning("Grouping on %s is ambiguous", key)
+            continue
+        results[key] = group_list[0]
+
+    return results
+
+
+def d3ify(parts, output, result, connectors):
     part = parts.pop(0)
 
     new_node = {"name": part}
@@ -21,16 +58,17 @@ def d3ify(parts, output, result):
     if parts:
         new_output = []
         new_node["children"] = new_output
-        d3ify(parts, new_output, result)
+        d3ify(parts, new_output, result, connectors)
     else:
-        start_line_no = result["start"]["line"]
-        lines = result["extra"]["lines"]
-        newline = lines.find("\n")
-        first_line = lines[:newline] if newline != -1 else lines
-        name = f"ln {start_line_no}: {first_line}"
+        name = f"ln {result.start_line}: {result.first_line}"
 
-        route_detect_metadata = result["extra"]["metadata"].get("route-detect", {})
-        fill = route_detect_metadata.get("fill", const.DEFAULT_FILL_COLOR)
+        if result.rd_normalizer:
+            normalizer = NORMALIZERS.get(result.rd_normalizer)
+            normalized = normalizer(result)
+            connector = connectors.get(normalized)
+            fill = connector.rd_fill if connector else result.rd_fill
+        else:
+            fill = result.rd_fill
 
         check_node = {"name": name, "fill": fill}
         new_node.setdefault("children", []).append(check_node)
@@ -51,21 +89,28 @@ def main(args):
     logger.info("Reading input file %s", args.input.name)
     data = json.load(args.input)
 
-    counts = collections.Counter([r["check_id"] for r in data["results"]])
+    semgrep_results = [types.SemgrepResult(r) for r in data["results"]]
+    counts = collections.Counter([r.check_id for r in semgrep_results])
     count_output = " ".join(f"{k}={v}" for k, v in counts.items())
     logger.info("Finding rule counts: %s", count_output)
 
+    results_by_type = {
+        key: list(group)
+        for key, group in util.sorted_groupby(semgrep_results, key=lambda r: r.rd_type)
+    }
+
+    connector_results = results_by_type.get(types.ResultType.CONNECTOR.value, {})
+    connectors = get_connectors(connector_results)
+
     root_paths = set()
     d3_results = []
-    for result in data["results"]:
-        path = pathlib.PurePath(result["path"])
-        logger.debug(
-            "Processing %s %s %s", result["check_id"], path, result["start"]["line"]
-        )
+    for result in results_by_type.get(types.ResultType.ROUTE.value, []):
+        path = pathlib.PurePath(result.path)
+        logger.debug("Processing %s %s %s", result.check_id, path, result.start_line)
         root, *_ = path.parts
         root_paths.add(root)
         output = []
-        d3ify(list(path.parts), output, result)
+        d3ify(list(path.parts), output, result, connectors)
         d3_results.append(output)
 
     all_same_root = len(root_paths) == 1
@@ -90,7 +135,7 @@ def main(args):
     template_name = pathlib.PurePath(args.template.name).name
     logger.info("Formatting template %s", template_name)
     output_buff = args.template.read()
-    template_data = compact_dumps(d3_tree)
+    template_data = util.compact_dumps(d3_tree)
     output_buff = output_buff.replace(const.DEFAULT_TEMPLATE_KEY, template_data)
 
     logger.info("Writing output file %s", args.output.name)
