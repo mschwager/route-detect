@@ -1,11 +1,30 @@
 rules:
-  - id: grape-route
+  - id: grape-route-authenticated
     patterns:
-      - pattern: $FUNC ...
-      - pattern-inside: |
-          class $CLASS < $PARENT
-            ...
-          end
+      - pattern-either:
+          - patterns:
+              - pattern: $FUNC ...
+              - pattern-inside: |
+                  class $CLASS < $PARENT
+                    ...
+                    before do
+                      ...
+                      $BEFORE_FUNC(...)
+                      ...
+                    end
+                    ...
+                  end
+          - patterns:
+              - pattern: |
+                  $FUNC ... do
+                    ...
+                    $BEFORE_FUNC(...)
+                    ...
+                  end
+              - pattern-inside: |
+                  class $CLASS < $PARENT
+                    ...
+                  end
       - metavariable-pattern:
           metavariable: $FUNC
           pattern-either:
@@ -22,11 +41,14 @@ rules:
             - pattern: Grape::API
             - pattern: Grape::API::Instance
             - pattern: ::API::Base
-    message: Found Grape route
+      - metavariable-regex:
+          metavariable: $BEFORE_FUNC
+          regex: ".*authenticate.*"
+    message: Found authenticated Grape route
     metadata:
       references:
         - https://github.com/ruby-grape/grape
       route-detect:
-        fill: grey
+        fill: green
     languages: [ruby]
     severity: INFO
