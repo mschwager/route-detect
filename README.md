@@ -25,6 +25,7 @@ Supported web frameworks (`route-detect` IDs in parentheses):
 - Python: Django (`django`, `django-rest-framework`), Flask (`flask`), Sanic (`sanic`)
 - PHP: Laravel (`laravel`), Symfony (`symfony`), CakePHP (`cakephp`)
 - Ruby: Rails (`rails`), Grape (`grape`)
+- Java: JAX-RS (`jax-rs`)
 
 # Installing
 

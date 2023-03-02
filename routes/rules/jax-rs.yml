@@ -1,0 +1,88 @@
+rules:
+  - id: jaxrs-route-authenticated
+    patterns:
+      - pattern-either:
+          - pattern-either:
+              - pattern: |
+                  @$METHOD
+                  @Secured
+                  public $RETURNTYPE $FUNC(...) {
+                    ...
+                  }
+              - pattern: |
+                  @$METHOD
+                  @javax.annotation.security.RolesAllowed(...)
+                  public $RETURNTYPE $FUNC(...) {
+                    ...
+                  }
+          - patterns:
+              - pattern: |
+                  @$METHOD
+                  public $RETURNTYPE $FUNC(...) {
+                    ...
+                  }
+              - pattern-inside: |
+                  @io.swagger.annotations.Api(..., authorizations = $AUTHZ, ...)
+                  public class $CLASS {
+                    ...
+                  }
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: javax.ws.rs.GET
+            - pattern: javax.ws.rs.HEAD
+            - pattern: javax.ws.rs.DELETE
+            - pattern: javax.ws.rs.OPTIONS
+            - pattern: javax.ws.rs.POST
+            - pattern: javax.ws.rs.PUT
+    message: Found authenticated JAX-RS route
+    metadata:
+      references:
+        - https://docs.oracle.com/javaee/7/api/javax/ws/rs/package-summary.html
+        - https://stackoverflow.com/questions/26777083/how-to-implement-rest-token-based-authentication-with-jax-rs-and-jersey
+      route-detect:
+        fill: green
+    languages: [java]
+    severity: INFO
+  - id: jaxrs-route-unauthenticated
+    patterns:
+      - pattern: |
+          @$METHOD
+          public $RETURNTYPE $FUNC(...) {
+            ...
+          }
+      - pattern-not: |
+          @$METHOD
+          @Secured
+          public $RETURNTYPE $FUNC(...) {
+            ...
+          }
+      - pattern-not: |
+          @$METHOD
+          @javax.annotation.security.RolesAllowed(...)
+          public $RETURNTYPE $FUNC(...) {
+            ...
+          }
+      - pattern-not-inside: |
+          @io.swagger.annotations.Api(..., authorizations = $AUTHZ, ...)
+          public class $CLASS {
+            ...
+          }
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: javax.ws.rs.GET
+            - pattern: javax.ws.rs.HEAD
+            - pattern: javax.ws.rs.DELETE
+            - pattern: javax.ws.rs.OPTIONS
+            - pattern: javax.ws.rs.POST
+            - pattern: javax.ws.rs.PUT
+    message: Found unauthenticated JAX-RS route
+    metadata:
+      references:
+        - https://docs.oracle.com/javaee/7/api/javax/ws/rs/package-summary.html
+        - https://stackoverflow.com/questions/26777083/how-to-implement-rest-token-based-authentication-with-jax-rs-and-jersey
+      route-detect:
+        fill: red
+    languages: [java]
+    severity: INFO

@@ -12,6 +12,7 @@ SYMFONY = CURDIR / "symfony.yml"
 CAKEPHP = CURDIR / "cakephp.yml"
 RAILS = CURDIR / "rails.yml"
 GRAPE = CURDIR / "grape.yml"
+JAXRS = CURDIR / "jax-rs.yml"
 
 ALL_RULES = {
     str(rule.with_suffix("").name): str(rule.resolve())
@@ -26,5 +27,6 @@ ALL_RULES = {
         CAKEPHP,
         RAILS,
         GRAPE,
+        JAXRS,
     ]
 }
