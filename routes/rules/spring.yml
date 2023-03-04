@@ -1,0 +1,85 @@
+rules:
+  - id: spring-route-authenticated
+    patterns:
+      - pattern-either:
+          - pattern: |
+              @$METHOD(...)
+              @org.springframework.security.access.prepost.PreAuthorize(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.springframework.security.access.prepost.PreAuthorize(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @Secured(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @Secured(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @javax.annotation.security.RolesAllowed(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @javax.annotation.security.RolesAllowed(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: RequestMapping
+    message: Found authenticated Spring route
+    metadata:
+      references:
+        - https://www.baeldung.com/spring-security-method-security
+        - https://www.digitalocean.com/community/tutorials/spring-requestmapping-requestparam-pathvariable-example
+      route-detect:
+        fill: green
+    languages: [java]
+    severity: INFO
+  - id: spring-route-unauthenticated
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern: |
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @org.springframework.security.access.prepost.PreAuthorize(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @org.springframework.security.access.prepost.PreAuthorize(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @Secured(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @Secured(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @javax.annotation.security.RolesAllowed(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @javax.annotation.security.RolesAllowed(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: RequestMapping
+    message: Found unauthenticated Spring route
+    metadata:
+      references:
+        - https://www.baeldung.com/spring-security-method-security
+        - https://www.digitalocean.com/community/tutorials/spring-requestmapping-requestparam-pathvariable-example
+      route-detect:
+        fill: red
+    languages: [java]
+    severity: INFO
