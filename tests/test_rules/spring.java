@@ -16,6 +16,12 @@ public class ExampleResource {
         return Response.ok().build();
     }
 
+    // ruleid: spring-route-unauthenticated
+    @DeleteMapping(value = "/test")
+    public Response myUnsecuredMethod(@PathParam("id") Long id) {
+        return Response.ok().build();
+    }
+
     // ruleid: spring-route-authenticated
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @Secured
@@ -40,6 +46,16 @@ public class ExampleResource {
     // ruleid: spring-route-authenticated
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @PreAuthorize("#oauth2.hasScope('server')")
+    public Response mySecuredMethod(@PathParam("id") Long id) {
+        return Response.ok().build();
+    }
+}
+
+@PreAuthorize("hasRole('ROLE_ADMIN')")
+public class ExampleResource {
+
+    // ruleid: spring-route-authenticated
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
     public Response mySecuredMethod(@PathParam("id") Long id) {
         return Response.ok().build();
     }

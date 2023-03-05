@@ -26,15 +26,37 @@ rules:
               @javax.annotation.security.RolesAllowed(...)
               @$METHOD(...)
               $RETURNTYPE $FUNC(...) { ... }
+          - patterns:
+              - pattern: |
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-either:
+                  - pattern-inside: |
+                      @org.springframework.security.access.prepost.PreAuthorize(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @Secured(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @javax.annotation.security.RolesAllowed(...)
+                      class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD
           pattern-either:
             - pattern: RequestMapping
+            - pattern: DeleteMapping
+            - pattern: GetMapping
+            - pattern: PatchMapping
+            - pattern: PostMapping
+            - pattern: PutMapping
     message: Found authenticated Spring route
     metadata:
       references:
         - https://www.baeldung.com/spring-security-method-security
+        - https://www.baeldung.com/spring-security-prefilter-postfilter
         - https://www.digitalocean.com/community/tutorials/spring-requestmapping-requestparam-pathvariable-example
+        - https://github.com/spring-projects/spring-security/issues/8804
+        - https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
       route-detect:
         fill: green
     languages: [java]
@@ -70,15 +92,32 @@ rules:
                   @javax.annotation.security.RolesAllowed(...)
                   @$METHOD(...)
                   $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not-inside: |
+                  @org.springframework.security.access.prepost.PreAuthorize(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @Secured(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @javax.annotation.security.RolesAllowed(...)
+                  class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD
           pattern-either:
             - pattern: RequestMapping
+            - pattern: DeleteMapping
+            - pattern: GetMapping
+            - pattern: PatchMapping
+            - pattern: PostMapping
+            - pattern: PutMapping
     message: Found unauthenticated Spring route
     metadata:
       references:
         - https://www.baeldung.com/spring-security-method-security
+        - https://www.baeldung.com/spring-security-prefilter-postfilter
         - https://www.digitalocean.com/community/tutorials/spring-requestmapping-requestparam-pathvariable-example
+        - https://github.com/spring-projects/spring-security/issues/8804
+        - https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
       route-detect:
         fill: red
     languages: [java]
