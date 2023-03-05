@@ -3,8 +3,9 @@ rules:
     patterns:
       - pattern-either:
           - pattern-inside: $URLPATTERNS = [...]
+          - pattern-inside: $URLPATTERNS = $SOMETHING + [...]
           - pattern-inside: $URLPATTERNS += [...]
-      - pattern: $FUNC(...)
+      - pattern: $FUNC($PATH, django.contrib.auth.decorators.login_required(...), ...)
       - metavariable-pattern:
           metavariable: $FUNC
           pattern-either:
@@ -15,7 +16,54 @@ rules:
       references:
         - https://docs.djangoproject.com/en/4.1/ref/urls/
         - https://docs.djangoproject.com/en/4.1/topics/auth/default
+        - https://docs.djangoproject.com/en/4.1/topics/class-based-views/intro/
       route-detect:
         fill: green
+    languages: [python]
+    severity: INFO
+  - id: django-route-authorized
+    patterns:
+      - pattern-either:
+          - pattern-inside: $URLPATTERNS = [...]
+          - pattern-inside: $URLPATTERNS = $SOMETHING + [...]
+          - pattern-inside: $URLPATTERNS += [...]
+      - pattern: $FUNC($PATH, django.contrib.auth.decorators.permission_required(...)(...), ...)
+      - metavariable-pattern:
+          metavariable: $FUNC
+          pattern-either:
+            - pattern: django.urls.path
+            - pattern: django.urls.re_path
+    message: Found authorized Django route
+    metadata:
+      references:
+        - https://docs.djangoproject.com/en/4.1/ref/urls/
+        - https://docs.djangoproject.com/en/4.1/topics/auth/default
+        - https://docs.djangoproject.com/en/4.1/topics/class-based-views/intro/
+      route-detect:
+        fill: green
+    languages: [python]
+    severity: INFO
+  - id: django-route-unauthenticated
+    patterns:
+      - pattern-either:
+          - pattern-inside: $URLPATTERNS = [...]
+          - pattern-inside: $URLPATTERNS = $SOMETHING + [...]
+          - pattern-inside: $URLPATTERNS += [...]
+      - pattern: $FUNC($PATH, $VIEW, ...)
+      - pattern-not: $FUNC($PATH, django.contrib.auth.decorators.login_required(...), ...)
+      - pattern-not: $FUNC($PATH, django.contrib.auth.decorators.permission_required(...)(...), ...)
+      - metavariable-pattern:
+          metavariable: $FUNC
+          pattern-either:
+            - pattern: django.urls.path
+            - pattern: django.urls.re_path
+    message: Found unauthenticated Django route
+    metadata:
+      references:
+        - https://docs.djangoproject.com/en/4.1/ref/urls/
+        - https://docs.djangoproject.com/en/4.1/topics/auth/default
+        - https://docs.djangoproject.com/en/4.1/topics/class-based-views/intro/
+      route-detect:
+        fill: red
     languages: [python]
     severity: INFO
