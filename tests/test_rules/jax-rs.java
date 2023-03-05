@@ -55,3 +55,16 @@ public class ExampleResource extends AbstractExampleResource {
         return Response.ok().build();
     }
 }
+
+@Path("/v1/path")
+@Secured
+public class ExampleResource extends AbstractExampleResource {
+
+    // ruleid: jaxrs-route-authenticated
+    @DELETE
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response mySecuredMethod(@PathParam("id") Long id) {
+        return Response.ok().build();
+    }
+}

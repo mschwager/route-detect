@@ -2,30 +2,36 @@ rules:
   - id: jaxrs-route-authenticated
     patterns:
       - pattern-either:
-          - pattern-either:
-              - pattern: |
-                  @$METHOD
-                  @Secured
-                  public $RETURNTYPE $FUNC(...) {
-                    ...
-                  }
-              - pattern: |
-                  @$METHOD
-                  @javax.annotation.security.RolesAllowed(...)
-                  public $RETURNTYPE $FUNC(...) {
-                    ...
-                  }
+          - pattern: |
+              @$METHOD
+              @Secured(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @Secured(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @javax.annotation.security.RolesAllowed(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @javax.annotation.security.RolesAllowed(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
           - patterns:
               - pattern: |
                   @$METHOD
-                  public $RETURNTYPE $FUNC(...) {
-                    ...
-                  }
-              - pattern-inside: |
-                  @io.swagger.annotations.Api(..., authorizations = $AUTHZ, ...)
-                  public class $CLASS {
-                    ...
-                  }
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-either:
+                  - pattern-inside: |
+                      @io.swagger.annotations.Api(..., authorizations = $AUTHZ, ...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @Secured(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @javax.annotation.security.RolesAllowed
+                      class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD
           pattern-either:
@@ -48,26 +54,32 @@ rules:
     patterns:
       - pattern: |
           @$METHOD
-          public $RETURNTYPE $FUNC(...) {
-            ...
-          }
+          $RETURNTYPE $FUNC(...) { ... }
       - pattern-not: |
           @$METHOD
           @Secured
-          public $RETURNTYPE $FUNC(...) {
-            ...
-          }
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @Secured
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
       - pattern-not: |
           @$METHOD
           @javax.annotation.security.RolesAllowed(...)
-          public $RETURNTYPE $FUNC(...) {
-            ...
-          }
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @javax.annotation.security.RolesAllowed(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
       - pattern-not-inside: |
           @io.swagger.annotations.Api(..., authorizations = $AUTHZ, ...)
-          public class $CLASS {
-            ...
-          }
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @Secured(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @javax.annotation.security.RolesAllowed(...)
+          class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD
           pattern-either:
