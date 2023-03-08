@@ -1,0 +1,294 @@
+rules:
+  - id: gin-route-authenticated
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern: $ROUTER.$METHOD($PATH, $CALLBACK)
+              - pattern-either:
+                  - patterns:
+                      - pattern-either:
+                          - pattern-inside: |
+                              $ROUTER := $GININIT(...)
+                              ...
+                              $ROUTER.Use($AUTHNMIDDLEWARE(...))
+                              ...
+                          - pattern-inside: |
+                              $PARENT := $GININIT(...)
+                              ...
+                              $ROUTER := $PARENT. ... .Group(...). ... .Use($AUTHNMIDDLEWARE(...)). ...
+                              ...
+                          - pattern-inside: |
+                              $PARENT := $GININIT(...)
+                              ...
+                              $ROUTER := $PARENT. ... .Group(...). ...
+                              ...
+                              $ROUTER.Use($AUTHNMIDDLEWARE(...))
+                              ...
+                      - metavariable-pattern:
+                          metavariable: $GININIT
+                          pattern-either:
+                            - pattern: gin.New
+                            - pattern: gin.Default
+                  - patterns:
+                      - pattern-either:
+                          - pattern-inside: |
+                              func $FUNC(..., $ROUTER *$GINTYPE, ...) {
+                                ...
+                                $ROUTER.Use($AUTHNMIDDLEWARE(...))
+                                ...
+                              }
+                          - pattern-inside: |
+                              func $FUNC(..., $PARENT *$GINTYPE, ...) {
+                                ...
+                                $ROUTER := $PARENT. ... .Group(...). ... .Use($AUTHNMIDDLEWARE(...)). ...
+                                ...
+                              }
+                          - pattern-inside: |
+                              func $FUNC(..., $PARENT *$GINTYPE, ...) {
+                                ...
+                                $ROUTER := $PARENT. ... .Group(...). ...
+                                ...
+                                $ROUTER.Use($AUTHNMIDDLEWARE(...))
+                                ...
+                              }
+                      - metavariable-pattern:
+                          metavariable: $GINTYPE
+                          pattern-either:
+                            - pattern: gin.Engine
+                            - pattern: gin.RouterGroup
+              - metavariable-pattern:
+                  metavariable: $AUTHNMIDDLEWARE
+                  pattern-either:
+                    - pattern: authMiddleware.MiddlewareFunc
+          - patterns:
+              - pattern: $ROUTER.$METHOD($PATH, $CALLBACK)
+              - pattern-either:
+                  - patterns:
+                      - pattern-either:
+                          - pattern-inside: |
+                              $ROUTER := $GININIT(...)
+                              ...
+                          - pattern-inside: |
+                              $PARENT := $GININIT(...)
+                              ...
+                              $ROUTER := $PARENT. ... .Group(...). ...
+                              ...
+                      - metavariable-pattern:
+                          metavariable: $GININIT
+                          pattern-either:
+                            - pattern: gin.New
+                            - pattern: gin.Default
+                  - patterns:
+                      - pattern-either:
+                          - pattern-inside: |
+                              func $FUNC(..., $ROUTER *$GINTYPE, ...) {
+                                ...
+                              }
+                          - pattern-inside: |
+                              func $FUNC(..., $PARENT *$GINTYPE, ...) {
+                                ...
+                                $ROUTER := $PARENT. ... .Group(...). ...
+                                ...
+                              }
+                      - metavariable-pattern:
+                          metavariable: $GINTYPE
+                          pattern-either:
+                            - pattern: gin.Engine
+                            - pattern: gin.RouterGroup
+              - metavariable-pattern:
+                  metavariable: $CALLBACK
+                  pattern-either:
+                    - pattern: |
+                        func(...) {
+                          ...
+                          Auth(...)
+                        }
+                    - pattern: |
+                        func(...) {
+                          ...
+                          AuthAny(...)
+                        }
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: Any
+            - pattern: Handle
+            - pattern: Static
+            - pattern: StaticFS
+            - pattern: StaticFile
+            - pattern: Handle
+            - pattern: DELETE
+            - pattern: GET
+            - pattern: HEAD
+            - pattern: OPTIONS
+            - pattern: PATCH
+            - pattern: POST
+            - pattern: PUT
+    message: Found authenticated Gin route
+    metadata:
+      references:
+        - https://gin-gonic.com/docs/quickstart/
+        - https://gin-gonic.com/docs/examples/grouping-routes/
+        - https://gin-gonic.com/docs/examples/using-basicauth-middleware/
+      route-detect:
+        fill: green
+    languages: [go]
+    severity: INFO
+  - id: gin-route-unauthenticated
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern: $ROUTER.$METHOD($PATH, $CALLBACK)
+              - pattern-not: $ROUTER.$METHOD($PATH, func(...) { ... })
+              - pattern-either:
+                  - patterns:
+                      - pattern-either:
+                          - patterns:
+                              - pattern-inside: |
+                                  $ROUTER := $GININIT(...)
+                                  ...
+                              - pattern-not-inside: |
+                                  $ROUTER := $GININIT(...)
+                                  ...
+                                  $ROUTER.Use(authMiddleware.MiddlewareFunc(...))
+                                  ...
+                          - patterns:
+                              - pattern-inside: |
+                                  $PARENT := $GININIT(...)
+                                  ...
+                                  $ROUTER := $PARENT. ... .Group(...). ...
+                                  ...
+                              - pattern-not-inside: |
+                                  $PARENT := $GININIT(...)
+                                  ...
+                                  $ROUTER := $PARENT. ... .Group(...). ... .Use(authMiddleware.MiddlewareFunc(...)). ...
+                                  ...
+                              - pattern-not-inside: |
+                                  $PARENT := $GININIT(...)
+                                  ...
+                                  $ROUTER := $PARENT. ... .Group(...). ...
+                                  ...
+                                  $ROUTER.Use(authMiddleware.MiddlewareFunc(...))
+                                  ...
+                      - metavariable-pattern:
+                          metavariable: $GININIT
+                          pattern-either:
+                            - pattern: gin.New
+                            - pattern: gin.Default
+                  - patterns:
+                      - pattern-either:
+                          - patterns:
+                              - pattern-inside: |
+                                  func $FUNC(..., $ROUTER *$GINTYPE, ...) {
+                                    ...
+                                  }
+                              - pattern-not-inside: |
+                                  func $FUNC(..., $ROUTER *$GINTYPE, ...) {
+                                    ...
+                                    $ROUTER.Use(authMiddleware.MiddlewareFunc(...))
+                                    ...
+                                  }
+                          - patterns:
+                              - pattern-inside: |
+                                  func $FUNC(..., $PARENT *$GINTYPE, ...) {
+                                    ...
+                                    $ROUTER := $PARENT. ... .Group(...). ...
+                                    ...
+                                  }
+                              - pattern-not-inside: |
+                                  func $FUNC(..., $PARENT *$GINTYPE, ...) {
+                                    ...
+                                    $ROUTER := $PARENT. ... .Group(...). ... .Use(authMiddleware.MiddlewareFunc(...)). ...
+                                    ...
+                                  }
+                              - pattern-not-inside: |
+                                  func $FUNC(..., $PARENT *$GINTYPE, ...) {
+                                    ...
+                                    $ROUTER := $PARENT. ... .Group(...). ...
+                                    ...
+                                    $ROUTER.Use(authMiddleware.MiddlewareFunc(...))
+                                    ...
+                                  }
+                      - metavariable-pattern:
+                          metavariable: $GINTYPE
+                          pattern-either:
+                            - pattern: gin.Engine
+                            - pattern: gin.RouterGroup
+          - patterns:
+              - pattern: $ROUTER.$METHOD($PATH, $CALLBACK)
+              - pattern-either:
+                  - patterns:
+                      - pattern-either:
+                          - pattern-inside: |
+                              $ROUTER := $GININIT(...)
+                              ...
+                          - pattern-inside: |
+                              $PARENT := $GININIT(...)
+                              ...
+                              $ROUTER := $PARENT. ... .Group(...). ...
+                              ...
+                      - metavariable-pattern:
+                          metavariable: $GININIT
+                          pattern-either:
+                            - pattern: gin.New
+                            - pattern: gin.Default
+                  - patterns:
+                      - pattern-either:
+                          - pattern-inside: |
+                              func $FUNC(..., $ROUTER *$GINTYPE, ...) {
+                                ...
+                              }
+                          - pattern-inside: |
+                              func $FUNC(..., $PARENT *$GINTYPE, ...) {
+                                ...
+                                $ROUTER := $PARENT. ... .Group(...). ...
+                                ...
+                              }
+                      - metavariable-pattern:
+                          metavariable: $GINTYPE
+                          pattern-either:
+                            - pattern: gin.Engine
+                            - pattern: gin.RouterGroup
+              - metavariable-pattern:
+                  metavariable: $CALLBACK
+                  patterns:
+                    - pattern: |
+                        func(...) {
+                          ...
+                        }
+                    - pattern-not: |
+                        func(...) {
+                          ...
+                          Auth(...)
+                        }
+                    - pattern-not: |
+                        func(...) {
+                          ...
+                          AuthAny(...)
+                        }
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: Any
+            - pattern: Handle
+            - pattern: Static
+            - pattern: StaticFS
+            - pattern: StaticFile
+            - pattern: Handle
+            - pattern: DELETE
+            - pattern: GET
+            - pattern: HEAD
+            - pattern: OPTIONS
+            - pattern: PATCH
+            - pattern: POST
+            - pattern: PUT
+    message: Found unauthenticated Gin route
+    metadata:
+      references:
+        - https://gin-gonic.com/docs/quickstart/
+        - https://gin-gonic.com/docs/examples/grouping-routes/
+        - https://gin-gonic.com/docs/examples/using-basicauth-middleware/
+      route-detect:
+        fill: red
+    languages: [go]
+    severity: INFO

@@ -15,6 +15,7 @@ GRAPE = CURDIR / "grape.yml"
 JAXRS = CURDIR / "jax-rs.yml"
 SPRING = CURDIR / "spring.yml"
 GORILLA = CURDIR / "gorilla.yml"
+GIN = CURDIR / "gin.yml"
 
 ALL_RULES = {
     str(rule.with_suffix("").name): str(rule.resolve())
@@ -32,5 +33,6 @@ ALL_RULES = {
         JAXRS,
         SPRING,
         GORILLA,
+        GIN,
     ]
 }
