@@ -1,0 +1,182 @@
+rules:
+  - id: chi-route-authenticated
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern-either:
+                  - pattern-inside: |
+                      $ROUTER := $CHIINIT(...)
+                      ...
+                      $ROUTER.Use(jwtauth.Verifier(...))
+                      ...
+                  - pattern-inside: |
+                      $ROUTER := $CHIINIT(...)
+                      ...
+                      $ROUTER.Use(oauth.Authorize(...))
+                      ...
+                  - pattern-inside: |
+                      $ROUTER := $CHIINIT(...)
+                      ...
+                      $ROUTER.Use(middleware.BasicAuth(...))
+                      ...
+              - metavariable-pattern:
+                  metavariable: $CHIINIT
+                  pattern-either:
+                    - pattern: chi.NewRouter
+          - patterns:
+              - pattern-either:
+                  - pattern-inside: |
+                      func($ROUTER $CHITYPE) {
+                        ...
+                        $ROUTER.Use(jwtauth.Verifier(...))
+                        ...
+                      }
+                  - pattern-inside: |
+                      func($ROUTER $CHITYPE) {
+                        ...
+                        $ROUTER.Use(oauth.Authorize(...))
+                        ...
+                      }
+                  - pattern-inside: |
+                      func($ROUTER $CHITYPE) {
+                        ...
+                        $ROUTER.Use(middleware.BasicAuth(...))
+                        ...
+                      }
+              - metavariable-pattern:
+                  metavariable: $CHITYPE
+                  pattern-either:
+                    - pattern: chi.Router
+      - pattern: $ROUTER. ... .$METHOD(...)
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: Handle
+            - pattern: HandleFunc
+            - pattern: Method
+            - pattern: MethodFunc
+            - pattern: Connect
+            - pattern: Delete
+            - pattern: Get
+            - pattern: Head
+            - pattern: Options
+            - pattern: Patch
+            - pattern: Post
+            - pattern: Put
+            - pattern: Trace
+    message: Found authenticated Chi route
+    metadata:
+      references:
+        - https://github.com/go-chi/chi
+        - https://github.com/go-chi/chi/blob/master/middleware/basic_auth.go
+        - https://go-chi.io/#/pages/routing
+        - https://github.com/go-chi/jwtauth
+        - https://github.com/go-chi/oauth
+      route-detect:
+        fill: green
+    languages: [go]
+    severity: INFO
+  - id: chi-route-unauthenticated
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern-inside: |
+                  $ROUTER := $CHIINIT(...)
+                  ...
+              - pattern-not-inside: |
+                  $ROUTER := $CHIINIT(...)
+                  ...
+                  $ROUTER.Use(jwtauth.Verifier(...))
+                  ...
+              - pattern-not-inside: |
+                  $ROUTER := $CHIINIT(...)
+                  ...
+                  $ROUTER.Use(oauth.Authorize(...))
+                  ...
+              - pattern-not-inside: |
+                  $ROUTER := $CHIINIT(...)
+                  ...
+                  $ROUTER.Use(middleware.BasicAuth(...))
+                  ...
+              - metavariable-pattern:
+                  metavariable: $CHIINIT
+                  pattern-either:
+                    - pattern: chi.NewRouter
+          - patterns:
+              - pattern-inside: |
+                  func($ROUTER $CHITYPE) {
+                    ...
+                  }
+              - pattern-not-inside: |
+                  func($ROUTER $CHITYPE) {
+                    ...
+                    $ROUTER.Use(jwtauth.Verifier(...))
+                    ...
+                  }
+              - pattern-not-inside: |
+                  func($ROUTER $CHITYPE) {
+                    ...
+                    $ROUTER.Use(oauth.Authorize(...))
+                    ...
+                  }
+              - pattern-not-inside: |
+                  func($ROUTER $CHITYPE) {
+                    ...
+                    $ROUTER.Use(middleware.BasicAuth(...))
+                    ...
+                  }
+              - metavariable-pattern:
+                  metavariable: $CHITYPE
+                  pattern-either:
+                    - pattern: chi.Router
+      - pattern: $ROUTER. ... .$METHOD(...)
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: Handle
+            - pattern: HandleFunc
+            - pattern: Method
+            - pattern: MethodFunc
+            - pattern: Connect
+            - pattern: Delete
+            - pattern: Get
+            - pattern: Head
+            - pattern: Options
+            - pattern: Patch
+            - pattern: Post
+            - pattern: Put
+            - pattern: Trace
+    message: Found unauthenticated Chi route
+    metadata:
+      references:
+        - https://github.com/go-chi/chi
+        - https://github.com/go-chi/chi/blob/master/middleware/basic_auth.go
+        - https://go-chi.io/#/pages/routing
+        - https://github.com/go-chi/jwtauth
+        - https://github.com/go-chi/oauth
+      route-detect:
+        fill: red
+    languages: [go]
+    severity: INFO
+  - id: chi-route-korifi-authenticated
+    patterns:
+      - pattern-inside: "func AuthenticatedRoutes(...) { ... }"
+      - pattern-inside: "[]routing.Route{ ... }"
+      - pattern: "{ ..., Pattern: $PATTERN, ... }"
+    message: Found Chi route
+    metadata:
+      route-detect:
+        fill: green
+    languages: [go]
+    severity: INFO
+  - id: chi-route-korifi-unauthenticated
+    patterns:
+      - pattern-inside: "func UnauthenticatedRoutes(...) { ... }"
+      - pattern-inside: "[]routing.Route{ ... }"
+      - pattern: "{ ..., Pattern: $PATTERN, ... }"
+    message: Found Chi route
+    metadata:
+      route-detect:
+        fill: red
+    languages: [go]
+    severity: INFO

@@ -26,7 +26,7 @@ Supported web frameworks (`route-detect` IDs in parentheses):
 - PHP: Laravel (`laravel`), Symfony (`symfony`), CakePHP (`cakephp`)
 - Ruby: Rails (`rails`), Grape (`grape`)
 - Java: JAX-RS (`jax-rs`), Spring (`spring`)
-- Go: Gorilla (`gorilla`), Gin (`gin`)
+- Go: Gorilla (`gorilla`), Gin (`gin`), Chi (`chi`)
 
 # Installing
 
