@@ -27,6 +27,7 @@ Supported web frameworks (`route-detect` IDs in parentheses):
 - Ruby: Rails (`rails`), Grape (`grape`)
 - Java: JAX-RS (`jax-rs`), Spring (`spring`)
 - Go: Gorilla (`gorilla`), Gin (`gin`), Chi (`chi`)
+- JavaScript/TypeScript: Express (`express`)
 
 # Installing
 

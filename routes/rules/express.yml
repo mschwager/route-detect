@@ -1,0 +1,71 @@
+rules:
+  - id: express-route
+    patterns:
+      - pattern-either:
+          - pattern-inside: |
+              $EXPRESS = require("express")
+              ...
+              $APP = $EXPRESS(...)
+              ...
+          - pattern-inside: |
+              $EXPRESS = require("express")
+              ...
+              $APP = $EXPRESS.Router(...)
+              ...
+          - pattern-inside: |
+              import express from "express";
+              ...
+              $APP = express.Router(...)
+              ...
+          - pattern-inside: |
+              import { Router } from "express";
+              ...
+              $APP = Router(...)
+              ...
+          - pattern-inside: |
+              import express, { Router } from "express";
+              ...
+              $APP = express.Router(...)
+              ...
+      - pattern-either:
+          # The "delete" operator makes including this in metavariable-pattern impossible
+          - pattern: $APP.delete(...)
+          - patterns:
+              - pattern: $APP.$METHOD(...)
+              - metavariable-pattern:
+                  metavariable: $METHOD
+                  pattern-either:
+                    - pattern: get
+                    - pattern: head
+                    - pattern: options
+                    - pattern: patch
+                    - pattern: post
+                    - pattern: put
+                    - pattern: all
+                    - pattern: route
+    message: Found Express route
+    metadata:
+      references:
+        - https://expressjs.com/en/guide/routing.html
+        - https://expressjs.com/en/4x/api.html#app.METHOD
+      route-detect:
+        fill: grey
+    languages: [javascript, typescript]
+    severity: INFO
+  - id: express-route-payload
+    patterns:
+      - pattern-either:
+          - pattern-inside: $ARR.push(...)
+          - pattern-inside: $ARR.concat(...)
+      - pattern: "{..., path: $PATH, ...}"
+      - pattern: "{..., method: $METHOD, ...}"
+      - pattern: "{..., handler: $HANDLER, ...}"
+    message: Found Express route
+    metadata:
+      references:
+        - https://expressjs.com/en/guide/routing.html
+        - https://expressjs.com/en/4x/api.html#app.METHOD
+      route-detect:
+        fill: grey
+    languages: [javascript, typescript]
+    severity: INFO
