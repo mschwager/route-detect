@@ -18,6 +18,7 @@ GORILLA = CURDIR / "gorilla.yml"
 GIN = CURDIR / "gin.yml"
 CHI = CURDIR / "chi.yml"
 EXPRESS = CURDIR / "express.yml"
+REACT = CURDIR / "react.yml"
 
 ALL_RULES = {
     str(rule.with_suffix("").name): str(rule.resolve())
@@ -38,5 +39,6 @@ ALL_RULES = {
         GIN,
         CHI,
         EXPRESS,
+        REACT,
     ]
 }

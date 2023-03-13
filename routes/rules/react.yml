@@ -1,0 +1,33 @@
+rules:
+  - id: react-route
+    pattern-either:
+      - pattern: <Route ... path=$PATH .../>
+      - patterns:
+          - pattern-either:
+              - pattern-inside: |
+                  import { createBrowserRouter } from "react-router-dom";
+                  ...
+                  createBrowserRouter([...])
+              - pattern-inside: |
+                  import { createMemoryRouter } from "react-router-dom";
+                  ...
+                  createMemoryRouter([...])
+              - pattern-inside: |
+                  import { createHashRouter } from "react-router-dom";
+                  ...
+                  createHashRouter([...])
+              - pattern-inside: |
+                  routes = [...]
+              - pattern-inside: |
+                  routes.push(...)
+          - pattern: "{..., path: $PATH, ...}"
+    message: Found React route
+    metadata:
+      references:
+        - https://reactrouter.com/en/main/route/route
+        - https://reactrouter.com/en/main/start/tutorial
+        - https://reactrouter.com/en/main/routers/picking-a-router
+      route-detect:
+        fill: grey
+    languages: [javascript, typescript]
+    severity: INFO
