@@ -1,0 +1,49 @@
+rules:
+  - id: angular-route-authenticated
+    patterns:
+      - pattern-either:
+          - pattern: "{..., path: $PATH, ..., canActivate: ..., ...}"
+          - pattern: "{..., path: $PATH, ..., canActivateChild: ..., ...}"
+          - pattern: "{..., path: $PATH, ..., canDeactivate: ..., ...}"
+          - pattern: "{..., path: $PATH, ..., canMatch: ..., ...}"
+          - pattern: "{..., path: $PATH, ..., canLoad: ..., ...}"
+          - patterns:
+              - pattern: "{..., path: $PATH, ...}"
+              - pattern-inside: "{..., children: [...], ..., canActivateChild: ..., ...}"
+      - focus-metavariable: $PATH
+      - pattern-inside: |
+          import { Routes } from "@angular/router";
+          ...
+          const $ROUTES: Routes = [...];
+    message: Found authenticated Angular route
+    metadata:
+      references:
+        - https://angular.io/guide/routing-overview
+        - https://angular.io/guide/router#preventing-unauthorized-access
+      route-detect:
+        fill: green
+    languages: [javascript, typescript]
+    severity: INFO
+  - id: angular-route-unauthenticated
+    patterns:
+      - pattern: "{..., path: $PATH, ...}"
+      - pattern-not: "{..., path: $PATH, ..., canActivate: ..., ...}"
+      - pattern-not: "{..., path: $PATH, ..., canActivateChild: ..., ...}"
+      - pattern-not: "{..., path: $PATH, ..., canDeactivate: ..., ...}"
+      - pattern-not: "{..., path: $PATH, ..., canMatch: ..., ...}"
+      - pattern-not: "{..., path: $PATH, ..., canLoad: ..., ...}"
+      - pattern-not-inside: "{..., children: [...], ..., canActivateChild: ..., ...}"
+      - focus-metavariable: $PATH
+      - pattern-inside: |
+          import { Routes } from "@angular/router";
+          ...
+          const $ROUTES: Routes = [...];
+    message: Found unauthenticated Angular route
+    metadata:
+      references:
+        - https://angular.io/guide/routing-overview
+        - https://angular.io/guide/router#preventing-unauthorized-access
+      route-detect:
+        fill: red
+    languages: [javascript, typescript]
+    severity: INFO
