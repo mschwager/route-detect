@@ -31,6 +31,12 @@ Supported web frameworks (`route-detect` IDs in parentheses):
 
 # Installing
 
+Use `pip` to install `route-detect`:
+
+```
+$ python -m pip install --upgrade route-detect
+```
+
 You can check that `route-detect` is installed correctly with the following command:
 
 ```
