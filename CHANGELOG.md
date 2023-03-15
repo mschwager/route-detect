@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `flask_login`, `flask_httpauth`, `flask_jwt_extended` and `flask_praetorian` authn coverage for Flask
+- Class-based views support for Flask
+
 ## [0.5.0] - 2023-03-14
 
 ### Added

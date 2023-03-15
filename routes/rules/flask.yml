@@ -3,54 +3,191 @@ rules:
     pattern-either:
       - pattern: |
           @$APP.route($PATH, ...)
-          @auth_required
+          @auth_required(...)
           def $FUNC(...):
             ...
       - pattern: |
           @$APP.route($PATH, ...)
-          @login_required
+          @$AUTH.auth_required(...)
           def $FUNC(...):
             ...
       - pattern: |
           @$APP.route($PATH, ...)
-          @requires_authentication
+          @login_required(...)
           def $FUNC(...):
             ...
+      - pattern: |
+          @$APP.route($PATH, ...)
+          @$AUTH.login_required(...)
+          def $FUNC(...):
+            ...
+      - pattern: |
+          @$APP.route($PATH, ...)
+          @fresh_login_required(...)
+          def $FUNC(...):
+            ...
+      - pattern: |
+          @$APP.route($PATH, ...)
+          @requires_authentication(...)
+          def $FUNC(...):
+            ...
+      - pattern: |
+          @$APP.route($PATH, ...)
+          @jwt_required(...)
+          def $FUNC(...):
+            ...
+      - patterns:
+          - pattern-either:
+              - pattern: |
+                  class $CLASS(..., $VIEW, ...):
+                    ...
+                    decorators = [..., auth_required, ...]
+                    ...
+              - pattern: |
+                  class $CLASS(..., $VIEW, ...):
+                    ...
+                    decorators = [..., $AUTH.auth_required, ...]
+                    ...
+              - pattern: |
+                  class $CLASS(..., $VIEW, ...):
+                    ...
+                    decorators = [..., login_required, ...]
+                    ...
+              - pattern: |
+                  class $CLASS(..., $VIEW, ...):
+                    ...
+                    decorators = [..., $AUTH.login_required, ...]
+                    ...
+              - pattern: |
+                  class $CLASS(..., $VIEW, ...):
+                    ...
+                    decorators = [..., fresh_login_required, ...]
+                    ...
+              - pattern: |
+                  class $CLASS(..., $VIEW, ...):
+                    ...
+                    decorators = [..., requires_authentication, ...]
+                    ...
+              - pattern: |
+                  class $CLASS(..., $VIEW, ...):
+                    ...
+                    decorators = [..., jwt_required, ...]
+                    ...
+          - metavariable-pattern:
+              metavariable: $VIEW
+              pattern-either:
+                - pattern: flask.views.View
+                - pattern: flask.views.MethodView
     message: Found authenticated Flask route
     metadata:
       references:
         - https://flask.palletsprojects.com/en/2.2.x/quickstart/#routing
+        - https://flask.palletsprojects.com/en/2.2.x/views/
         - https://flask-login.readthedocs.io/en/latest/
+        - https://flask-httpauth.readthedocs.io/en/latest/
+        - https://flask-jwt-extended.readthedocs.io/en/stable/
+        - https://pythonhosted.org/Flask-JWT/
+        - https://flask-praetorian.readthedocs.io/en/latest/index.html
       route-detect:
         fill: green
     languages: [python]
     severity: INFO
   - id: flask-route-unauthenticated
-    patterns:
-      - pattern: |
-          @$APP.route($PATH, ...)
-          def $FUNC(...):
-            ...
-      - pattern-not: |
-          @$APP.route($PATH, ...)
-          @auth_required
-          def $FUNC(...):
-            ...
-      - pattern-not: |
-          @$APP.route($PATH, ...)
-          @login_required
-          def $FUNC(...):
-            ...
-      - pattern-not: |
-          @$APP.route($PATH, ...)
-          @requires_authentication
-          def $FUNC(...):
-            ...
+    pattern-either:
+      - patterns:
+          - pattern: |
+              @$APP.route($PATH, ...)
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.route($PATH, ...)
+              @auth_required(...)
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.route($PATH, ...)
+              @$AUTH.auth_required(...)
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.route($PATH, ...)
+              @login_required(...)
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.route($PATH, ...)
+              @fresh_login_required(...)
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.route($PATH, ...)
+              @requires_authentication(...)
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.route($PATH, ...)
+              @$AUTH.login_required(...)
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.route($PATH, ...)
+              @jwt_required(...)
+              def $FUNC(...):
+                ...
+      - patterns:
+          - pattern: |
+              class $CLASS(..., $VIEW, ...):
+                ...
+          - pattern-not: |
+              class $CLASS(..., $VIEW, ...):
+                ...
+                decorators = [..., auth_required, ...]
+                ...
+          - pattern-not: |
+              class $CLASS(..., $VIEW, ...):
+                ...
+                decorators = [..., $AUTH.auth_required, ...]
+                ...
+          - pattern-not: |
+              class $CLASS(..., $VIEW, ...):
+                ...
+                decorators = [..., login_required, ...]
+                ...
+          - pattern-not: |
+              class $CLASS(..., $VIEW, ...):
+                ...
+                decorators = [..., $AUTH.login_required, ...]
+                ...
+          - pattern-not: |
+              class $CLASS(..., $VIEW, ...):
+                ...
+                decorators = [..., fresh_login_required, ...]
+                ...
+          - pattern-not: |
+              class $CLASS(..., $VIEW, ...):
+                ...
+                decorators = [..., requires_authentication, ...]
+                ...
+          - pattern-not: |
+              class $CLASS(..., $VIEW, ...):
+                ...
+                decorators = [..., jwt_required, ...]
+                ...
+          - metavariable-pattern:
+              metavariable: $VIEW
+              pattern-either:
+                - pattern: flask.views.View
+                - pattern: flask.views.MethodView
     message: Found unauthenticated Flask route
     metadata:
       references:
         - https://flask.palletsprojects.com/en/2.2.x/quickstart/#routing
+        - https://flask.palletsprojects.com/en/2.2.x/views/
         - https://flask-login.readthedocs.io/en/latest/
+        - https://flask-httpauth.readthedocs.io/en/latest/
+        - https://flask-jwt-extended.readthedocs.io/en/stable/
+        - https://pythonhosted.org/Flask-JWT/
+        - https://flask-praetorian.readthedocs.io/en/latest/index.html
       route-detect:
         fill: red
     languages: [python]
