@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `flask_login`, `flask_httpauth`, `flask_jwt_extended` and `flask_praetorian` authn coverage for Flask
+- `sanic_jwt_extended`, `sanic_token_auth`, `sanic_httpauth`, `sanic_auth`, `sanic_beskar`, and `sanicapikey` authn coverage for Sanic
 - Class-based views support for Flask
 
 ## [0.5.0] - 2023-03-14

@@ -3,41 +3,6 @@ rules:
     pattern-either:
       - patterns:
           - pattern: |
-              @$APP.route($PATH, ...)
-              async def $FUNC(...):
-                ...
-          - pattern-not: |
-              @$APP.route($PATH, ...)
-              @sanic_jwt.decorators.protected(...)
-              async def $FUNC(...):
-                ...
-          - pattern-not: |
-              @$APP.route($PATH, ...)
-              @sanicjwt.protected(...)
-              async def $FUNC(...):
-                ...
-          - pattern-not: |
-              @$APP.route($PATH, ...)
-              @sanic_security.authentication.requires_authentication(...)
-              async def $FUNC(...):
-                ...
-          - pattern-not: |
-              @$APP.route($PATH, ...)
-              @owllook.fetcher.decorators.authenticator(...)
-              async def $FUNC(...):
-                ...
-          - pattern-not: |
-              @$APP.route($PATH, ...)
-              @sanic_ext.openapi.secured(...)
-              async def $FUNC(...):
-                ...
-          - pattern-not: |
-              @$APP.route($PATH, ...)
-              @sanic_ext.openapi.definition(..., secured=..., ...)
-              async def $FUNC(...):
-                ...
-      - patterns:
-          - pattern: |
               $APP.$ADD_ROUTE($HANDLER, $PATH, ...)
           - metavariable-pattern:
               metavariable: $ADD_ROUTE
@@ -61,6 +26,11 @@ rules:
                 ...
           - pattern-not: |
               @$APP.$METHOD($PATH, ...)
+              @sanic_jwt_extended.jwt_required(...)
+              async def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.$METHOD($PATH, ...)
               @sanic_security.authentication.requires_authentication(...)
               async def $FUNC(...):
                 ...
@@ -79,6 +49,21 @@ rules:
               @sanic_ext.openapi.definition(..., secured=..., ...)
               async def $FUNC(...):
                 ...
+          - pattern-not: |
+              @$APP.$METHOD($PATH, ...)
+              @$AUTH.auth_required(...)
+              async def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.$METHOD($PATH, ...)
+              @$AUTH.login_required(...)
+              async def $FUNC(...):
+                ...
+          - pattern-not: |
+              @$APP.$METHOD($PATH, ...)
+              @$AUTH.key_required(...)
+              async def $FUNC(...):
+                ...
           - metavariable-pattern:
               metavariable: $METHOD
               pattern-either:
@@ -90,69 +75,71 @@ rules:
                 - pattern: head
                 - pattern: options
                 - pattern: websocket
+                - pattern: route
     message: Found unauthenticated Sanic route
     metadata:
       references:
         - https://sanic.dev/en/guide/basics/routing.html
         - https://sanic.dev/en/guide/how-to/authentication.html
+        - https://sanic.dev/en/guide/advanced/class-based-views.html#decorators
         - https://sanic.dev/en/plugins/sanic-ext/openapi/security.html
         - https://sanic-jwt.readthedocs.io/en/latest/pages/protected.html
+        - https://sanic-jwt-extended.seonghyeon.dev/usage/basic.html
+        - https://sanic-beskar.readthedocs.io/en/latest/
         - https://github.com/na-stewart/sanic-security
+        - https://github.com/saabeilin/sanic-token-auth
+        - https://github.com/MihaiBalint/Sanic-HTTPAuth
+        - https://github.com/yusufusta/sanicapikey
       route-detect:
         fill: red
     languages: [python]
     severity: INFO
   - id: sanic-route-authenticated
-    pattern-either:
-      - patterns:
-          - pattern: |
-              @$APP.route($PATH, ...)
-              @$AUTH_DECORATOR(...)
-              async def $FUNC(...):
-                ...
-          - metavariable-pattern:
-              metavariable: $AUTH_DECORATOR
-              pattern-either:
-                - pattern: sanic_jwt.decorators.protected
-                - pattern: sanicjwt.protected
-                - pattern: sanic_security.authentication.requires_authentication
-                - pattern: owllook.fetcher.decorators.authenticator
-                - pattern: sanic_ext.openapi.secured
-                - pattern: sanic_ext.openapi.definition
-      - patterns:
-          - pattern: |
-              @$APP.$METHOD($PATH, ...)
-              @$AUTH_DECORATOR(...)
-              async def $FUNC(...):
-                ...
-          - metavariable-pattern:
-              metavariable: $AUTH_DECORATOR
-              pattern-either:
-                - pattern: sanic_jwt.decorators.protected
-                - pattern: sanicjwt.protected
-                - pattern: sanic_security.authentication.requires_authentication
-                - pattern: owllook.fetcher.decorators.authenticator
-                - pattern: sanic_ext.openapi.secured
-                - pattern: sanic_ext.openapi.definition
-          - metavariable-pattern:
-              metavariable: $METHOD
-              pattern-either:
-                - pattern: get
-                - pattern: post
-                - pattern: put
-                - pattern: patch
-                - pattern: delete
-                - pattern: head
-                - pattern: options
-                - pattern: websocket
+    patterns:
+      - pattern: |
+          @$APP.$METHOD($PATH, ...)
+          @$AUTH_DECORATOR(...)
+          async def $FUNC(...):
+            ...
+      - metavariable-pattern:
+          metavariable: $AUTH_DECORATOR
+          pattern-either:
+            - pattern: sanic_jwt.decorators.protected
+            - pattern: sanicjwt.protected
+            - pattern: sanic_jwt_extended.jwt_required
+            - pattern: sanic_security.authentication.requires_authentication
+            - pattern: owllook.fetcher.decorators.authenticator
+            - pattern: sanic_ext.openapi.secured
+            - pattern: sanic_ext.openapi.definition
+            - pattern: $AUTH.auth_required
+            - pattern: $AUTH.login_required
+            - pattern: $AUTH.key_required
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: get
+            - pattern: post
+            - pattern: put
+            - pattern: patch
+            - pattern: delete
+            - pattern: head
+            - pattern: options
+            - pattern: websocket
+            - pattern: route
     message: Found authenticated Sanic route
     metadata:
       references:
         - https://sanic.dev/en/guide/basics/routing.html
         - https://sanic.dev/en/guide/how-to/authentication.html
+        - https://sanic.dev/en/guide/advanced/class-based-views.html#decorators
         - https://sanic.dev/en/plugins/sanic-ext/openapi/security.html
         - https://sanic-jwt.readthedocs.io/en/latest/pages/protected.html
+        - https://sanic-jwt-extended.seonghyeon.dev/usage/basic.html
+        - https://sanic-beskar.readthedocs.io/en/latest/
         - https://github.com/na-stewart/sanic-security
+        - https://github.com/saabeilin/sanic-token-auth
+        - https://github.com/MihaiBalint/Sanic-HTTPAuth
+        - https://github.com/yusufusta/sanicapikey
       route-detect:
         fill: green
     languages: [python]
