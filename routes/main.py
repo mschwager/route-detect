@@ -61,9 +61,9 @@ def parse_args(args=None):
         help="Routes HTML template file",
     )
     viz_parser.add_argument(
-        "--no-browser",
+        "--browser",
         action="store_true",
-        help="Do not open HTML output file in browser",
+        help="Open HTML output file in browser",
     )
 
     return p.parse_args(args=args)

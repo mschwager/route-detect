@@ -170,7 +170,7 @@ def test_viz_basic(data, expected):
     output = make_file("", "test_output")
     template = make_file(const.DEFAULT_TEMPLATE_KEY, "test_template")
     args = argparse.Namespace(
-        input=input, output=output, template=template, no_browser=True
+        input=input, output=output, template=template, browser=False
     )
 
     code = commands.viz.main(args)
@@ -196,7 +196,7 @@ def test_viz_multiple_root():
     output = make_file("", "test_output")
     template = make_file(const.DEFAULT_TEMPLATE_KEY, "test_template")
     args = argparse.Namespace(
-        input=input, output=output, template=template, no_browser=True
+        input=input, output=output, template=template, browser=False
     )
 
     with pytest.raises(ValueError):

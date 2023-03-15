@@ -142,7 +142,7 @@ def main(args):
     written = args.output.write(output_buff)
     success = len(output_buff) == written
 
-    if not args.no_browser:
+    if args.browser:
         logger.info("Opening output file in browser")
         output_uri = pathlib.Path(args.output.name).resolve().as_uri()
         webbrowser.open(output_uri)
