@@ -69,7 +69,7 @@ Use the `viz` command to visualize route information in your browser:
 
 ```
 $ semgrep --json --config $(routes which django) path/to/django/code > routes.json
-$ routes viz routes.json
+$ routes viz --browser routes.json
 ```
 
 # Contributing
