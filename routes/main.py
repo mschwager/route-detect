@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 
+from routes import __version__
 from routes import commands
 from routes import rules
 from routes import templates
@@ -19,6 +20,12 @@ def parse_args(args=None):
         "--verbose",
         action="store_true",
         help="Set logging level to debug",
+    )
+    p.add_argument(
+        "-V",
+        "--version",
+        action="store_true",
+        help="Print version information",
     )
 
     subparsers = p.add_subparsers(dest="command", help="Command help")
@@ -64,6 +71,10 @@ def parse_args(args=None):
 
 def main():
     args = parse_args()
+
+    if args.version:
+        print(__version__)
+        return 0
 
     logging.basicConfig(
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
