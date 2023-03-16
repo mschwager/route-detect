@@ -1,5 +1,6 @@
 from django.urls import include, path, re_path
 from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -31,3 +32,34 @@ urlpatterns = [
     # ok: django-route-authenticated
     not_re_path('blog/', include('blog.urls')),
 ]
+
+
+class ProtectedView(TemplateView):
+    template_name = 'secret.html'
+
+    # todoruleid: django-route-authenticated
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+# todoruleid: django-route-authenticated
+@method_decorator(login_required, name='dispatch')
+class ProtectedView(TemplateView):
+    template_name = 'secret.html'
+
+
+decorators = [never_cache, login_required]
+
+
+# todoruleid: django-route-authenticated
+@method_decorator(decorators, name='dispatch')
+class ProtectedView(TemplateView):
+    template_name = 'secret.html'
+
+
+# todoruleid: django-route-authenticated
+@method_decorator(never_cache, name='dispatch')
+@method_decorator(login_required, name='dispatch')
+class ProtectedView(TemplateView):
+    template_name = 'secret.html'

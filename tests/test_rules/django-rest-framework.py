@@ -4,6 +4,8 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from myapp.serializers import UserSerializer, PasswordSerializer
 
+
+# ruleid: django-rest-framework-route-authenticated
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -36,6 +38,34 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+# ruleid: django-rest-framework-route-authenticated
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+    # ruleid: django-rest-framework-route-authenticated
+    @action(detail=True, methods=['post'])
+    def set_password(self, request, pk=None):
+        user = self.get_object()
+        serializer = PasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user.set_password(serializer.validated_data['password'])
+            user.save()
+            return Response({'status': 'password set'})
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+# ruleid: django-rest-framework-route-authenticated
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+
+# ruleid: django-rest-framework-route-authenticated
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -68,10 +98,11 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+# ruleid: django-rest-framework-route-unauthenticated
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsUnauthenticated]
+    permission_classes = [permissions.AllowAny]
 
     # ruleid: django-rest-framework-route-unauthenticated
     @action(detail=True, methods=['post'])
@@ -100,10 +131,11 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+# ruleid: django-rest-framework-route-unauthenticated
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsUnauthenticated,)
+    permission_classes = (permissions.AllowAny,)
 
     # ruleid: django-rest-framework-route-unauthenticated
     @action(detail=True, methods=['post'])
@@ -130,6 +162,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(recent_users, many=True)
         return Response(serializer.data)
+
+
+# ruleid: django-rest-framework-route-unauthenticated
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = []
 
 
 # ruleid: django-rest-framework-route-authenticated

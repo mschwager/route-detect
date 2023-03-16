@@ -12,6 +12,19 @@ rules:
                     ...
                     permission_classes = $PERMISSIONS_CLASSES
                     ...
+          - patterns:
+              - pattern: |
+                  class $CLASS(..., $SUBCLASS, ...):
+                    ...
+                    permission_classes = $PERMISSIONS_CLASSES
+                    ...
+              - metavariable-pattern:
+                  metavariable: $SUBCLASS
+                  pattern-either:
+                    - pattern: rest_framework.viewsets.ViewSet
+                    - pattern: rest_framework.viewsets.GenericViewSet
+                    - pattern: rest_framework.viewsets.ModelViewSet
+                    - pattern: rest_framework.viewsets.ReadOnlyModelViewSet
           - pattern: |
               @rest_framework.decorators.api_view(...)
               @rest_framework.decorators.permission_classes($PERMISSIONS_CLASSES)
@@ -22,6 +35,8 @@ rules:
           pattern-either:
             - pattern: "(..., rest_framework.permissions.IsAuthenticated, ...)"
             - pattern: "[..., rest_framework.permissions.IsAuthenticated, ...]"
+            - pattern: "(..., rest_framework.permissions.IsAdminUser, ...)"
+            - pattern: "[..., rest_framework.permissions.IsAdminUser, ...]"
     message: Found authenticated Django Rest Framework route
     metadata:
       references:
@@ -49,6 +64,47 @@ rules:
                 ...
                 permission_classes = [..., rest_framework.permissions.IsAuthenticated, ...]
                 ...
+          - pattern-not-inside: |
+              class $CLASS:
+                ...
+                permission_classes = (..., rest_framework.permissions.IsAdminUser, ...)
+                ...
+          - pattern-not-inside: |
+              class $CLASS:
+                ...
+                permission_classes = [..., rest_framework.permissions.IsAdminUser, ...]
+                ...
+      - patterns:
+          - pattern: |
+              class $CLASS(..., $SUBCLASS, ...):
+                ...
+          - pattern-not: |
+              class $CLASS(..., $SUBCLASS, ...):
+                ...
+                permission_classes = (..., rest_framework.permissions.IsAuthenticated, ...)
+                ...
+          - pattern-not: |
+              class $CLASS(..., $SUBCLASS, ...):
+                ...
+                permission_classes = [..., rest_framework.permissions.IsAuthenticated, ...]
+                ...
+          - pattern-not: |
+              class $CLASS(..., $SUBCLASS, ...):
+                ...
+                permission_classes = (..., rest_framework.permissions.IsAdminUser, ...)
+                ...
+          - pattern-not: |
+              class $CLASS(..., $SUBCLASS, ...):
+                ...
+                permission_classes = [..., rest_framework.permissions.IsAdminUser, ...]
+                ...
+          - metavariable-pattern:
+              metavariable: $SUBCLASS
+              pattern-either:
+                - pattern: rest_framework.viewsets.ViewSet
+                - pattern: rest_framework.viewsets.GenericViewSet
+                - pattern: rest_framework.viewsets.ModelViewSet
+                - pattern: rest_framework.viewsets.ReadOnlyModelViewSet
       - patterns:
           - pattern: |
               @rest_framework.decorators.api_view(...)
@@ -62,6 +118,16 @@ rules:
           - pattern-not: |
               @rest_framework.decorators.api_view(...)
               @rest_framework.decorators.permission_classes([..., rest_framework.permissions.IsAuthenticated, ...])
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @rest_framework.decorators.api_view(...)
+              @rest_framework.decorators.permission_classes((..., rest_framework.permissions.IsAdminUser, ...))
+              def $FUNC(...):
+                ...
+          - pattern-not: |
+              @rest_framework.decorators.api_view(...)
+              @rest_framework.decorators.permission_classes([..., rest_framework.permissions.IsAdminUser, ...])
               def $FUNC(...):
                 ...
     message: Found unauthenticated Django Rest Framework route
