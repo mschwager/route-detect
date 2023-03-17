@@ -12,6 +12,7 @@ rules:
         - https://symfony.com/doc/current/routing.html
         - https://symfony.com/doc/current/create_framework/routing.html
         - https://symfony.com/doc/current/security.html
+        - https://symfony.com/doc/current/security/access_token.html
       route-detect:
         fill: grey
     languages: [php]
@@ -41,6 +42,7 @@ rules:
         - https://symfony.com/doc/current/routing.html
         - https://symfony.com/doc/current/create_framework/routing.html
         - https://symfony.com/doc/current/security.html
+        - https://symfony.com/doc/current/security/access_token.html
       route-detect:
         fill: grey
     languages: [yaml]

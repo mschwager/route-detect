@@ -23,6 +23,7 @@ rules:
       references:
         - https://book.cakephp.org/4/en/development/routing.html
         - https://book.cakephp.org/authentication/2/en/index.html
+        - https://book.cakephp.org/authentication/2/en/authenticators.html
         - https://book.cakephp.org/authorization/2/en/index.html
       route-detect:
         fill: grey
