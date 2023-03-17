@@ -1,7 +1,60 @@
 rules:
-  - id: react-route
+  - id: react-route-authenticated
     pattern-either:
-      - pattern: <Route ... path=$PATH .../>
+      - pattern: <Route ... path=$PATH ... element={<Protected ...>...</Protected>} .../>
+      - pattern: <Route ... path=$PATH ... element={<RequireAuth ...>...</RequireAuth>} .../>
+      - pattern: <Route ... path=$PATH ... element={<ProtectedRoute ...>...</ProtectedRoute>} .../>
+      - pattern: <Route ... path=$PATH ... element={<AuthenticationGuard ... />} .../>
+      - pattern: <ProtectedRoute ... path=$PATH .../>
+      - patterns:
+          - pattern-either:
+              - pattern-inside: |
+                  import { createBrowserRouter } from "react-router-dom";
+                  ...
+                  createBrowserRouter([...])
+              - pattern-inside: |
+                  import { createMemoryRouter } from "react-router-dom";
+                  ...
+                  createMemoryRouter([...])
+              - pattern-inside: |
+                  import { createHashRouter } from "react-router-dom";
+                  ...
+                  createHashRouter([...])
+              - pattern-inside: |
+                  routes = [...]
+              - pattern-inside: |
+                  routes.push(...)
+          - pattern-either:
+              - pattern: "{..., path: $PATH, ..., element: <Protected ...>...</Protected>, ...}"
+              - pattern: "{..., path: $PATH, ..., element: <RequireAuth ...>...</RequireAuth>, ...}"
+              - pattern: "{..., path: $PATH, ..., element: <ProtectedRoute ...>...</ProtectedRoute>, ...}"
+              - pattern: "{..., path: $PATH, ..., element: <AuthenticationGuard ... />, ...}"
+    message: Found authenticated React route
+    metadata:
+      references:
+        - https://reactrouter.com/en/main/route/route
+        - https://reactrouter.com/en/main/start/tutorial
+        - https://reactrouter.com/en/main/routers/picking-a-router
+        - https://ui.dev/react-router-protected-routes-authentication
+        - https://blog.logrocket.com/complete-guide-authentication-with-react-router-v6/
+        - https://levelup.gitconnected.com/implement-authentication-and-protect-routes-in-react-135a60b1e16f
+        - https://www.robinwieruch.de/react-router-authentication/
+        - https://auth0.com/blog/complete-guide-to-react-user-authentication/#Protecting-Routes
+        - https://developer.auth0.com/resources/guides/spa/react/basic-authentication#add-route-guards-to-react
+        - https://www.makeuseof.com/create-protected-route-in-react/
+        - https://dev.to/collins87mbathi/reactjs-protected-route-m3j
+      route-detect:
+        fill: red
+    languages: [javascript, typescript]
+    severity: INFO
+  - id: react-route-unauthenticated
+    pattern-either:
+      - patterns:
+          - pattern: <Route ... path=$PATH .../>
+          - pattern-not: <Route ... path=$PATH ... element={<Protected ...>...</Protected>} .../>
+          - pattern-not: <Route ... path=$PATH ... element={<RequireAuth ...>...</RequireAuth>} .../>
+          - pattern-not: <Route ... path=$PATH ... element={<ProtectedRoute ...>...</ProtectedRoute>} .../>
+          - pattern-not: <Route ... path=$PATH ... element={<AuthenticationGuard ... />} .../>
       - patterns:
           - pattern-either:
               - pattern-inside: |
@@ -21,13 +74,25 @@ rules:
               - pattern-inside: |
                   routes.push(...)
           - pattern: "{..., path: $PATH, ...}"
-    message: Found React route
+          - pattern-not: "{..., path: $PATH, ..., element: <Protected>...</Protected>, ...}"
+          - pattern-not: "{..., path: $PATH, ..., element: <RequireAuth>...</RequireAuth>, ...}"
+          - pattern-not: "{..., path: $PATH, ..., element: <ProtectedRoute>...</ProtectedRoute>, ...}"
+          - pattern-not: "{..., path: $PATH, ..., element: <AuthenticationGuard ... />, ...}"
+    message: Found unauthenticated React route
     metadata:
       references:
         - https://reactrouter.com/en/main/route/route
         - https://reactrouter.com/en/main/start/tutorial
         - https://reactrouter.com/en/main/routers/picking-a-router
+        - https://ui.dev/react-router-protected-routes-authentication
+        - https://blog.logrocket.com/complete-guide-authentication-with-react-router-v6/
+        - https://levelup.gitconnected.com/implement-authentication-and-protect-routes-in-react-135a60b1e16f
+        - https://www.robinwieruch.de/react-router-authentication/
+        - https://auth0.com/blog/complete-guide-to-react-user-authentication/#Protecting-Routes
+        - https://developer.auth0.com/resources/guides/spa/react/basic-authentication#add-route-guards-to-react
+        - https://www.makeuseof.com/create-protected-route-in-react/
+        - https://dev.to/collins87mbathi/reactjs-protected-route-m3j
       route-detect:
-        fill: grey
+        fill: red
     languages: [javascript, typescript]
     severity: INFO

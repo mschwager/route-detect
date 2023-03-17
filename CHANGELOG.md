@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `sanic_jwt_extended`, `sanic_token_auth`, `sanic_httpauth`, `sanic_auth`, `sanic_beskar`, and `sanicapikey` authn coverage for `sanic`
 - Class-based views support for `flask`
 - `IsAdminUser` and `viewsets` support for `django-rest-framework`
+- Detection of authn and unauthn routes for `react`
 
 ## [0.5.0] - 2023-03-14
 
