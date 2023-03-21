@@ -47,13 +47,82 @@ rules:
         fill: grey
     languages: [yaml]
     severity: INFO
-  - id: symfony-route-annotation
-    pattern: "@Route(...)"
-    message: Found Symfony route
+  - id: symfony-route-yaml-global-authenticated
+    pattern-either:
+      - patterns:
+          - pattern: |
+              security:
+                ...
+                firewalls:
+                  ...
+                  main:
+                    ...
+          - pattern-not: |
+              security:
+                ...
+                firewalls:
+                  ...
+                  main:
+                    ...
+                    pattern: ...
+                    ...
+      - pattern: |
+          security:
+            ...
+            firewalls:
+              ...
+              main:
+                ...
+                pattern: ^/
+    message: Found Symfony global authenticator
+    metadata:
+      references:
+        - https://symfony.com/doc/current/security.html#the-firewall
+      route-detect:
+        type: global
+        fill: green
+    paths:
+      include:
+        - "security.yaml"
+    languages: [yaml]
+    severity: INFO
+  - id: symfony-route-annotation-authorized
+    pattern-either:
+      - pattern: |
+          @Route(...)
+          ...
+          @IsGranted(...)
+      - pattern: |
+          @Route(...)
+          ...
+          @Security(...)
+    message: Found authorized Symfony route
     metadata:
       references:
         - https://symfony.com/doc/4.1/routing.html
+        - https://symfony.com/bundles/SensioFrameworkExtraBundle/current/annotations/security.html
       route-detect:
-        fill: grey
+        fill: yellow
+    languages: [generic]
+    severity: INFO
+  - id: symfony-route-annotation-unauthorized
+    patterns:
+      - pattern: |
+          @Route(...)
+      - pattern-not-inside: |
+          @Route(...)
+          ...
+          @IsGranted(...)
+      - pattern-not-inside: |
+          @Route(...)
+          ...
+          @Security(...)
+    message: Found unauthorized Symfony route
+    metadata:
+      references:
+        - https://symfony.com/doc/4.1/routing.html
+        - https://symfony.com/bundles/SensioFrameworkExtraBundle/current/annotations/security.html
+      route-detect:
+        fill: red
     languages: [generic]
     severity: INFO

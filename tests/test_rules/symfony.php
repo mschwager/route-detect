@@ -9,6 +9,8 @@ use Symfony\Component\Routing\Annotation\Route as RouteAttribute;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class BlogController extends AbstractController
 {
@@ -20,8 +22,28 @@ class BlogController extends AbstractController
     }
 
     /**
-     // ruleid: symfony-route-annotation
+     // ruleid: symfony-route-annotation-unauthorized
      * @Route("/")
+     */
+    public function index()
+    {
+        // ...
+    }
+
+    /**
+     // ruleid: symfony-route-annotation-authorized
+     * @Route("/")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function index()
+    {
+        // ...
+    }
+
+    /**
+     // ruleid: symfony-route-annotation-authorized
+     * @Route("/")
+     * @Security("is_granted('ROLE_ADMIN') and is_granted('ROLE_FRIENDLY_USER')")
      */
     public function index()
     {
