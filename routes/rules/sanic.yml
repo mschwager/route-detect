@@ -144,3 +144,14 @@ rules:
         fill: green
     languages: [python]
     severity: INFO
+  - id: sanic-route-global-authenticated
+    pattern: $APP.ext.openapi.secured(...)
+    message: Found Sanic global authenticator
+    metadata:
+      references:
+        - https://sanic.dev/en/plugins/sanic-ext/openapi/security.html
+      route-detect:
+        type: global
+        fill: green
+    languages: [python]
+    severity: INFO

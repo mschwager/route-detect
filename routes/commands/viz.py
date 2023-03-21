@@ -50,7 +50,26 @@ def get_connectors(connector_results):
     return results
 
 
-def d3ify(parts, output, result, connectors):
+def get_global(global_results):
+    global_locations = " ".join(
+        f"{r.check_id}:{r.path}:{r.start_line}" for r in global_results
+    )
+
+    if len(global_results) > 1:
+        logger.warning(
+            "Multiple global configurations are ambiguous: %s", global_locations
+        )
+        return None
+    elif len(global_results) == 0:
+        logger.info("Found no global configuration")
+        return None
+
+    logger.info("Found global configuration: %s", global_locations)
+
+    return global_results[0]
+
+
+def d3ify(parts, output, result, connectors, _global):
     part = parts.pop(0)
 
     new_node = {"name": part}
@@ -58,7 +77,7 @@ def d3ify(parts, output, result, connectors):
     if parts:
         new_output = []
         new_node["children"] = new_output
-        d3ify(parts, new_output, result, connectors)
+        d3ify(parts, new_output, result, connectors, _global)
     else:
         name = f"ln {result.start_line}: {result.first_line}"
 
@@ -67,6 +86,8 @@ def d3ify(parts, output, result, connectors):
             normalized = normalizer(result)
             connector = connectors.get(normalized)
             fill = connector.rd_fill if connector else result.rd_fill
+        elif _global:
+            fill = _global.rd_fill
         else:
             fill = result.rd_fill
 
@@ -102,6 +123,9 @@ def main(args):
     connector_results = results_by_type.get(types.ResultType.CONNECTOR.value, {})
     connectors = get_connectors(connector_results)
 
+    global_results = results_by_type.get(types.ResultType.GLOBAL.value, {})
+    _global = get_global(global_results)
+
     root_paths = set()
     d3_results = []
     for result in results_by_type.get(types.ResultType.ROUTE.value, []):
@@ -110,7 +134,7 @@ def main(args):
         root, *_ = path.parts
         root_paths.add(root)
         output = []
-        d3ify(list(path.parts), output, result, connectors)
+        d3ify(list(path.parts), output, result, connectors, _global)
         d3_results.append(output)
 
     all_same_root = len(root_paths) == 1

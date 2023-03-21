@@ -6,6 +6,7 @@ import pytest
 
 from routes import commands
 from routes import const
+from routes import types
 
 
 def make_file(data, name):
@@ -26,8 +27,8 @@ def make_result(lines, path, metadata=None):
     }
 
 
-def make_edge_node(name):
-    return {"name": f"ln 0: {name}", "fill": const.DEFAULT_FILL_COLOR}
+def make_edge_node(name, fill=const.DEFAULT_FILL_COLOR):
+    return {"name": f"ln 0: {name}", "fill": fill}
 
 
 @pytest.mark.parametrize(
@@ -162,6 +163,49 @@ def make_edge_node(name):
                 "results": [],
             },
             {},
+        ),
+        (
+            {
+                "results": [
+                    make_result(
+                        "c1",
+                        "a/b.py",
+                        metadata={
+                            "route-detect": {"type": types.ResultType.ROUTE.value}
+                        },
+                    ),
+                    make_result(
+                        "c2",
+                        "a/c.py",
+                        metadata={
+                            "route-detect": {"type": types.ResultType.ROUTE.value}
+                        },
+                    ),
+                    make_result(
+                        "c3",
+                        "a/d.py",
+                        metadata={
+                            "route-detect": {
+                                "type": types.ResultType.GLOBAL.value,
+                                "fill": "testfill",
+                            }
+                        },
+                    ),
+                ],
+            },
+            {
+                "name": "a",
+                "children": [
+                    {
+                        "name": "b.py",
+                        "children": [make_edge_node("c1", fill="testfill")],
+                    },
+                    {
+                        "name": "c.py",
+                        "children": [make_edge_node("c2", fill="testfill")],
+                    },
+                ],
+            },
         ),
     ],
 )

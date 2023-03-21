@@ -6,6 +6,7 @@ from routes import const
 class ResultType(enum.Enum):
     ROUTE = "route"
     CONNECTOR = "connector"
+    GLOBAL = "global"
 
 
 class Framework(enum.Enum):
