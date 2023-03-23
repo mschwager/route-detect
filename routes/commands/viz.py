@@ -35,11 +35,15 @@ def rails_route_to_controller(result):
 NORMALIZERS = {types.Framework.RAILS.value: rails_route_to_controller}
 
 
-def get_connectors(connector_results):
+def get_connectors(connector_results, interprocedural):
+    results = {}
+
+    if not interprocedural:
+        return results
+
     def connector_key(result):
         return result.metavar_content(result.rd_connect_on)
 
-    results = {}
     for key, group in util.sorted_groupby(connector_results, key=connector_key):
         group_list = list(group)
         if len(group_list) > 1:
@@ -50,7 +54,10 @@ def get_connectors(connector_results):
     return results
 
 
-def get_global(global_results):
+def get_global(global_results, _global):
+    if not _global:
+        return None
+
     global_locations = " ".join(
         f"{r.check_id}:{r.path}:{r.start_line}" for r in global_results
     )
@@ -121,10 +128,10 @@ def main(args):
     }
 
     connector_results = results_by_type.get(types.ResultType.CONNECTOR.value, {})
-    connectors = get_connectors(connector_results)
+    connectors = get_connectors(connector_results, args.interprocedural)
 
     global_results = results_by_type.get(types.ResultType.GLOBAL.value, {})
-    _global = get_global(global_results)
+    _global = get_global(global_results, args._global)
 
     root_paths = set()
     d3_results = []

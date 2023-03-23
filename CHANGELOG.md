@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Global authenticator detection for `sanic` OpenAPI extension
 - Global authenticator detection for `symfony` YAML
 - Global authenticator detection for `cakephp` middleware
+- Global authenticator detection for `spring` `SecurityFilterChain` and `configure`
+- `--global` CLI flag for `viz` to enable global authenticator detection
+- `--interprocedural` CLI flag for `viz` to enable interprocedural authenticator detection
 
 ## [0.5.0] - 2023-03-14
 
