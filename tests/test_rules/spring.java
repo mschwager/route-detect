@@ -5,6 +5,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
+
 import javax.annotation.security.RolesAllowed;
 
 @RestController
@@ -67,4 +74,38 @@ public interface ExampleInterface {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @Secured
     void myInterface(@PathParam("id") Long id);
+}
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // ruleid: spring-route-global-authenticated
+        http.authorizeHttpRequests()
+            .requestMatchers("/**")
+            .hasRole("USER")
+            .and()
+            .formLogin();
+
+        return http.build();
+    }
+}
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // ruleid: spring-route-global-authenticated
+        http.authorizeRequests()
+            .anyRequest()
+            .authenticated()
+            .and()
+            .formLogin()
+            .and()
+            .httpBasic();
+    }
 }

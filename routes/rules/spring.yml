@@ -57,6 +57,7 @@ rules:
         - https://www.digitalocean.com/community/tutorials/spring-requestmapping-requestparam-pathvariable-example
         - https://github.com/spring-projects/spring-security/issues/8804
         - https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
+        - https://www.marcobehler.com/guides/spring-security
       route-detect:
         fill: green
     languages: [java]
@@ -118,7 +119,55 @@ rules:
         - https://www.digitalocean.com/community/tutorials/spring-requestmapping-requestparam-pathvariable-example
         - https://github.com/spring-projects/spring-security/issues/8804
         - https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
+        - https://www.marcobehler.com/guides/spring-security
       route-detect:
         fill: red
+    languages: [java]
+    severity: INFO
+  - id: spring-route-global-authenticated
+    pattern-either:
+      - patterns:
+          - pattern-inside: |
+              @org.springframework.context.annotation.Configuration
+              @org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+              public class $CONFIG { ... }
+          - pattern-inside: |
+              @org.springframework.context.annotation.Bean
+              org.springframework.security.web.SecurityFilterChain filterChain(org.springframework.security.config.annotation.web.builders.HttpSecurity $HTTP) { ... }
+          - pattern: $HTTP. ... .$AUTHN(...)
+          - focus-metavariable: $HTTP
+          - metavariable-pattern:
+              metavariable: $AUTHN
+              pattern-either:
+                - pattern: formLogin
+                - pattern: httpBasic
+                - pattern: oauth2Login
+                - pattern: saml2Login
+                - pattern: authenticationManager
+      - patterns:
+          - pattern-inside: |
+              @org.springframework.context.annotation.Configuration
+              @org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+              public class $CONFIG extends org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter { ... }
+          - pattern-inside: |
+              @Override
+              protected void configure(org.springframework.security.config.annotation.web.builders.HttpSecurity $HTTP) { ... }
+          - pattern: $HTTP. ... .$AUTHN(...)
+          - focus-metavariable: $HTTP
+          - metavariable-pattern:
+              metavariable: $AUTHN
+              pattern-either:
+                - pattern: formLogin
+                - pattern: httpBasic
+                - pattern: openidLogin
+    message: Found Spring global authenticator
+    metadata:
+      references:
+        - https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
+        - https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/builders/HttpSecurity.html
+        - https://docs.spring.io/spring-security/site/docs/4.2.8.RELEASE/apidocs/org/springframework/security/config/annotation/web/builders/HttpSecurity.html
+      route-detect:
+        type: global
+        fill: green
     languages: [java]
     severity: INFO
