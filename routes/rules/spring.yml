@@ -26,6 +26,54 @@ rules:
               @javax.annotation.security.RolesAllowed(...)
               @$METHOD(...)
               $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @javax.annotation.security.DenyAll(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @javax.annotation.security.DenyAll(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @javax.annotation.security.DeclareRoles(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @javax.annotation.security.DeclareRoles(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @org.apache.shiro.authz.annotation.RequiresRoles(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresRoles(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @org.apache.shiro.authz.annotation.RequiresUser(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresUser(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
           - patterns:
               - pattern: |
                   @$METHOD(...)
@@ -39,6 +87,24 @@ rules:
                       class $CLASS { ... }
                   - pattern-inside: |
                       @javax.annotation.security.RolesAllowed(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @javax.annotation.security.DenyAll(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @javax.annotation.security.DeclareRoles(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @org.apache.shiro.authz.annotation.RequiresRoles(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @org.apache.shiro.authz.annotation.RequiresUser(...)
                       class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD
@@ -58,6 +124,8 @@ rules:
         - https://github.com/spring-projects/spring-security/issues/8804
         - https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
         - https://www.marcobehler.com/guides/spring-security
+        - https://shiro.apache.org/spring-framework.html
+        - https://shiro.apache.org/java-annotations-list.html
       route-detect:
         fill: green
     languages: [java]
@@ -93,6 +161,54 @@ rules:
                   @javax.annotation.security.RolesAllowed(...)
                   @$METHOD(...)
                   $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @javax.annotation.security.DenyAll(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @javax.annotation.security.DenyAll(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @javax.annotation.security.DeclareRoles(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @javax.annotation.security.DeclareRoles(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @org.apache.shiro.authz.annotation.RequiresRoles(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @org.apache.shiro.authz.annotation.RequiresRoles(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @org.apache.shiro.authz.annotation.RequiresUser(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @org.apache.shiro.authz.annotation.RequiresUser(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
               - pattern-not-inside: |
                   @org.springframework.security.access.prepost.PreAuthorize(...)
                   class $CLASS { ... }
@@ -101,6 +217,24 @@ rules:
                   class $CLASS { ... }
               - pattern-not-inside: |
                   @javax.annotation.security.RolesAllowed(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @javax.annotation.security.DenyAll(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @javax.annotation.security.DeclareRoles(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @org.apache.shiro.authz.annotation.RequiresRoles(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @org.apache.shiro.authz.annotation.RequiresUser(...)
                   class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD
@@ -120,6 +254,8 @@ rules:
         - https://github.com/spring-projects/spring-security/issues/8804
         - https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
         - https://www.marcobehler.com/guides/spring-security
+        - https://shiro.apache.org/spring-framework.html
+        - https://shiro.apache.org/java-annotations-list.html
       route-detect:
         fill: red
     languages: [java]

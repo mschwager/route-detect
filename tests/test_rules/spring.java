@@ -14,6 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import javax.annotation.security.RolesAllowed;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+
 @RestController
 public class ExampleResource {
 
@@ -46,6 +48,13 @@ public class ExampleResource {
     // ruleid: spring-route-authenticated
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @RolesAllowed("role")
+    public Response mySecuredMethod(@PathParam("id") Long id) {
+        return Response.ok().build();
+    }
+
+    // ruleid: spring-route-authenticated
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @RequiresAuthentication
     public Response mySecuredMethod(@PathParam("id") Long id) {
         return Response.ok().build();
     }

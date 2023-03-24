@@ -13,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+
 @Path("/example")
 public class ExampleResource {
 
@@ -36,6 +38,15 @@ public class ExampleResource {
     // ruleid: jaxrs-route-authenticated
     @DELETE
     @RolesAllowed("role")
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response mySecuredMethod(@PathParam("id") Long id) {
+        return Response.ok().build();
+    }
+
+    // ruleid: jaxrs-route-authenticated
+    @DELETE
+    @RequiresAuthentication
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mySecuredMethod(@PathParam("id") Long id) {

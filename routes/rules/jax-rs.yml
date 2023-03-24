@@ -18,6 +18,54 @@ rules:
               @javax.annotation.security.RolesAllowed(...)
               @$METHOD
               $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @javax.annotation.security.DenyAll(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @javax.annotation.security.DenyAll(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @javax.annotation.security.DeclareRoles(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @javax.annotation.security.DeclareRoles(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @org.apache.shiro.authz.annotation.RequiresRoles(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresRoles(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @org.apache.shiro.authz.annotation.RequiresUser(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresUser(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
           - patterns:
               - pattern: |
                   @$METHOD
@@ -30,7 +78,25 @@ rules:
                       @Secured(...)
                       class $CLASS { ... }
                   - pattern-inside: |
-                      @javax.annotation.security.RolesAllowed
+                      @javax.annotation.security.RolesAllowed(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @javax.annotation.security.DenyAll(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @javax.annotation.security.DeclareRoles(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @org.apache.shiro.authz.annotation.RequiresRoles(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @org.apache.shiro.authz.annotation.RequiresUser(...)
                       class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD
@@ -46,6 +112,8 @@ rules:
       references:
         - https://docs.oracle.com/javaee/7/api/javax/ws/rs/package-summary.html
         - https://stackoverflow.com/questions/26777083/how-to-implement-rest-token-based-authentication-with-jax-rs-and-jersey
+        - https://shiro.apache.org/jaxrs.html
+        - https://shiro.apache.org/java-annotations-list.html
       route-detect:
         fill: green
     languages: [java]
@@ -71,6 +139,54 @@ rules:
           @javax.annotation.security.RolesAllowed(...)
           @$METHOD
           $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
+          @javax.annotation.security.DenyAll(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @javax.annotation.security.DenyAll(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
+          @javax.annotation.security.DeclareRoles(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @javax.annotation.security.DeclareRoles(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
+          @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
+          @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
+          @org.apache.shiro.authz.annotation.RequiresRoles(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @org.apache.shiro.authz.annotation.RequiresRoles(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
+          @org.apache.shiro.authz.annotation.RequiresUser(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @org.apache.shiro.authz.annotation.RequiresUser(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
       - pattern-not-inside: |
           @io.swagger.annotations.Api(..., authorizations = $AUTHZ, ...)
           class $CLASS { ... }
@@ -79,6 +195,24 @@ rules:
           class $CLASS { ... }
       - pattern-not-inside: |
           @javax.annotation.security.RolesAllowed(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @javax.annotation.security.DenyAll(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @javax.annotation.security.DeclareRoles(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @org.apache.shiro.authz.annotation.RequiresRoles(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @org.apache.shiro.authz.annotation.RequiresUser(...)
           class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD
@@ -94,6 +228,8 @@ rules:
       references:
         - https://docs.oracle.com/javaee/7/api/javax/ws/rs/package-summary.html
         - https://stackoverflow.com/questions/26777083/how-to-implement-rest-token-based-authentication-with-jax-rs-and-jersey
+        - https://shiro.apache.org/jaxrs.html
+        - https://shiro.apache.org/java-annotations-list.html
       route-detect:
         fill: red
     languages: [java]
