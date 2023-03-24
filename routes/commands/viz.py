@@ -46,9 +46,15 @@ def get_connectors(connector_results, interprocedural):
 
     for key, group in util.sorted_groupby(connector_results, key=connector_key):
         group_list = list(group)
+        group_locations = " ".join(
+            f"{g.check_id}:{g.path}:{g.start_line}" for g in group_list
+        )
+        logger.debug("Found %s in %s", key, group_locations)
+
         if len(group_list) > 1:
             logger.warning("Grouping on %s is ambiguous", key)
             continue
+
         results[key] = group_list[0]
 
     return results
@@ -137,7 +143,7 @@ def main(args):
     d3_results = []
     for result in results_by_type.get(types.ResultType.ROUTE.value, []):
         path = pathlib.PurePath(result.path)
-        logger.debug("Processing %s %s %s", result.check_id, path, result.start_line)
+        logger.debug("Processing %s:%s:%s", result.check_id, path, result.start_line)
         root, *_ = path.parts
         root_paths.add(root)
         output = []
