@@ -142,5 +142,8 @@ func group() {
 		v6.GET("/ping", handlerFn)
 	}
 
+	// todoruleid: gin-route-authenticated, gin-route-unauthenticated
+	router.Group("/").Use(authentication.RequireApplicationToken()).POST("/message", handlerFn)
+
 	router.Run(":8080")
 }
