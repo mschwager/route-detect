@@ -24,6 +24,16 @@ func main() {
 		})
 	})
 
+	handler := func(c *gin.Context) {
+		Auth()
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	}
+
+	// todoruleid: gin-route-authenticated, gin-route-unauthenticated
+	r.GET("/ping", handler)
+
 	r.Run()
 }
 
@@ -39,6 +49,19 @@ func argument(router *gin.RouterGroup) {
 	router.GET("/svg", func(c *gin.Context) {
 		c.Data(http.StatusOK, "image/svg+xml", "data")
 	})
+
+	v1 := router.Group("/v1").Use(authMiddleware.MiddlewareFunc())
+	{
+		// ruleid: gin-route-authenticated
+		v1.GET("/ping", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"message": "pong",
+			})
+		})
+
+		// ruleid: gin-route-authenticated
+		v1.GET("/ping", handlerFn)
+	}
 }
 
 func group() {
@@ -95,7 +118,7 @@ func group() {
 
 	v5 := router.Group("/v5").Use(authMiddleware.MiddlewareFunc())
 	{
-		// todoruleid: gin-route-authenticated, gin-route-unauthenticated
+		// ruleid: gin-route-authenticated
 		v5.GET("/ping", func(c *gin.Context) {
 			c.JSON(200, gin.H{
 				"message": "pong",
