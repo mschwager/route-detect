@@ -31,6 +31,15 @@ rules:
           - pattern-inside: |
               $APP.use(passport.initialize())
               ...
+          - pattern-inside: |
+              $APP.use(auth(...))
+              ...
+          - pattern-inside: |
+              $APP.use(jwt(...))
+              ...
+          - pattern-inside: |
+              $APP.use(expressjwt(...))
+              ...
       - pattern-either:
           # The "delete" operator makes including this in metavariable-pattern impossible
           - pattern: $APP.delete(...)
@@ -54,6 +63,7 @@ rules:
         - https://expressjs.com/en/4x/api.html#app.METHOD
         - https://heynode.com/tutorial/authenticate-users-node-expressjs-and-passportjs/
         - https://www.passportjs.org/concepts/authentication/middleware/
+        - https://auth0.com/blog/complete-guide-to-nodejs-express-user-authentication
       route-detect:
         fill: green
     languages: [javascript, typescript]
@@ -89,6 +99,15 @@ rules:
       - pattern-not-inside: |
           $APP.use(passport.initialize())
           ...
+      - pattern-not-inside: |
+          $APP.use(auth(...))
+          ...
+      - pattern-not-inside: |
+          $APP.use(jwt(...))
+          ...
+      - pattern-not-inside: |
+          $APP.use(expressjwt(...))
+          ...
       - pattern-either:
           # The "delete" operator makes including this in metavariable-pattern impossible
           - pattern: $APP.delete(...)
@@ -112,6 +131,7 @@ rules:
         - https://expressjs.com/en/4x/api.html#app.METHOD
         - https://heynode.com/tutorial/authenticate-users-node-expressjs-and-passportjs/
         - https://www.passportjs.org/concepts/authentication/middleware/
+        - https://auth0.com/blog/complete-guide-to-nodejs-express-user-authentication
       route-detect:
         fill: red
     languages: [javascript, typescript]
