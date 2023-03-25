@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--interprocedural` CLI flag for `viz` to enable interprocedural authenticator detection
 - Apache Shiro authn/authz support for `jax-rs`
 - Apache Shiro authn/authz support for `spring`
+- Passport authn support for `express`
 
 ## [0.5.0] - 2023-03-14
 

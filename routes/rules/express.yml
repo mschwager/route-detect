@@ -1,5 +1,5 @@
 rules:
-  - id: express-route
+  - id: express-route-authenticated
     patterns:
       - pattern-either:
           - pattern-inside: |
@@ -28,6 +28,10 @@ rules:
               $APP = express.Router(...)
               ...
       - pattern-either:
+          - pattern-inside: |
+              $APP.use(passport.initialize())
+              ...
+      - pattern-either:
           # The "delete" operator makes including this in metavariable-pattern impossible
           - pattern: $APP.delete(...)
           - patterns:
@@ -43,13 +47,73 @@ rules:
                     - pattern: put
                     - pattern: all
                     - pattern: route
-    message: Found Express route
+    message: Found authenticated Express route
     metadata:
       references:
         - https://expressjs.com/en/guide/routing.html
         - https://expressjs.com/en/4x/api.html#app.METHOD
+        - https://heynode.com/tutorial/authenticate-users-node-expressjs-and-passportjs/
+        - https://www.passportjs.org/concepts/authentication/middleware/
       route-detect:
-        fill: grey
+        fill: green
+    languages: [javascript, typescript]
+    severity: INFO
+  - id: express-route-unauthenticated
+    patterns:
+      - pattern-either:
+          - pattern-inside: |
+              $EXPRESS = require("express")
+              ...
+              $APP = $EXPRESS(...)
+              ...
+          - pattern-inside: |
+              $EXPRESS = require("express")
+              ...
+              $APP = $EXPRESS.Router(...)
+              ...
+          - pattern-inside: |
+              import express from "express";
+              ...
+              $APP = express.Router(...)
+              ...
+          - pattern-inside: |
+              import { Router } from "express";
+              ...
+              $APP = Router(...)
+              ...
+          - pattern-inside: |
+              import express, { Router } from "express";
+              ...
+              $APP = express.Router(...)
+              ...
+      - pattern-not-inside: |
+          $APP.use(passport.initialize())
+          ...
+      - pattern-either:
+          # The "delete" operator makes including this in metavariable-pattern impossible
+          - pattern: $APP.delete(...)
+          - patterns:
+              - pattern: $APP.$METHOD(...)
+              - metavariable-pattern:
+                  metavariable: $METHOD
+                  pattern-either:
+                    - pattern: get
+                    - pattern: head
+                    - pattern: options
+                    - pattern: patch
+                    - pattern: post
+                    - pattern: put
+                    - pattern: all
+                    - pattern: route
+    message: Found unauthenticated Express route
+    metadata:
+      references:
+        - https://expressjs.com/en/guide/routing.html
+        - https://expressjs.com/en/4x/api.html#app.METHOD
+        - https://heynode.com/tutorial/authenticate-users-node-expressjs-and-passportjs/
+        - https://www.passportjs.org/concepts/authentication/middleware/
+      route-detect:
+        fill: red
     languages: [javascript, typescript]
     severity: INFO
   - id: express-route-payload
@@ -60,6 +124,7 @@ rules:
       - pattern: "{..., path: $PATH, ...}"
       - pattern: "{..., method: $METHOD, ...}"
       - pattern: "{..., handler: $HANDLER, ...}"
+      - focus-metavariable: $PATH
     message: Found Express route
     metadata:
       references:
