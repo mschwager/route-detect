@@ -22,6 +22,7 @@ function authenticated() {
       res.send('POST request to the homepage')
     })
 
+    // https://github.com/returntocorp/semgrep/issues/7290
     // todoruleid: express-route-authenticated
     router1['post']('/', (req, res) => {
       res.send('POST request to the homepage')

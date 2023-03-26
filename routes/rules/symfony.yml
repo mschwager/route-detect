@@ -129,6 +129,7 @@ rules:
     severity: INFO
   - id: symfony-route-attribute-authorized
     pattern-either:
+      # https://github.com/returntocorp/semgrep/issues/7398
       - pattern: |
           #[Route(...)]
           ...
@@ -150,6 +151,7 @@ rules:
     severity: INFO
   - id: symfony-route-attribute-unauthorized
     patterns:
+      # https://github.com/returntocorp/semgrep/issues/7398
       - pattern: |
           #[Route(...)]
       - pattern-not-inside: |
