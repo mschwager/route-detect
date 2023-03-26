@@ -12,10 +12,10 @@ rules:
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @$METHOD
-              @javax.annotation.security.RolesAllowed(...)
+              @javax.annotation.security.RolesAllowed($AUTHZ)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
-              @javax.annotation.security.RolesAllowed(...)
+              @javax.annotation.security.RolesAllowed($AUTHZ)
               @$METHOD
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -28,10 +28,10 @@ rules:
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @$METHOD
-              @javax.annotation.security.DeclareRoles(...)
+              @javax.annotation.security.DeclareRoles($AUTHZ)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
-              @javax.annotation.security.DeclareRoles(...)
+              @javax.annotation.security.DeclareRoles($AUTHZ)
               @$METHOD
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -44,18 +44,18 @@ rules:
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @$METHOD
-              @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+              @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
-              @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+              @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
               @$METHOD
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @$METHOD
-              @org.apache.shiro.authz.annotation.RequiresRoles(...)
+              @org.apache.shiro.authz.annotation.RequiresRoles($AUTHZ)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
-              @org.apache.shiro.authz.annotation.RequiresRoles(...)
+              @org.apache.shiro.authz.annotation.RequiresRoles($AUTHZ)
               @$METHOD
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -78,22 +78,22 @@ rules:
                       @Secured(...)
                       class $CLASS { ... }
                   - pattern-inside: |
-                      @javax.annotation.security.RolesAllowed(...)
+                      @javax.annotation.security.RolesAllowed($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
                       @javax.annotation.security.DenyAll(...)
                       class $CLASS { ... }
                   - pattern-inside: |
-                      @javax.annotation.security.DeclareRoles(...)
+                      @javax.annotation.security.DeclareRoles($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
                       @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
                       class $CLASS { ... }
                   - pattern-inside: |
-                      @org.apache.shiro.authz.annotation.RequiresPermissions(...)
+                      @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
-                      @org.apache.shiro.authz.annotation.RequiresRoles(...)
+                      @org.apache.shiro.authz.annotation.RequiresRoles($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
                       @org.apache.shiro.authz.annotation.RequiresUser(...)

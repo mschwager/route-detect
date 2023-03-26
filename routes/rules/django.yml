@@ -28,7 +28,7 @@ rules:
           - pattern-inside: $URLPATTERNS = [...]
           - pattern-inside: $URLPATTERNS = $SOMETHING + [...]
           - pattern-inside: $URLPATTERNS += [...]
-      - pattern: $FUNC($PATH, django.contrib.auth.decorators.permission_required(...)(...), ...)
+      - pattern: $FUNC($PATH, django.contrib.auth.decorators.permission_required($AUTHZ, ...)(...), ...)
       - metavariable-pattern:
           metavariable: $FUNC
           pattern-either:
@@ -53,7 +53,7 @@ rules:
           - pattern-inside: $URLPATTERNS += [...]
       - pattern: $FUNC($PATH, $VIEW, ...)
       - pattern-not: $FUNC($PATH, django.contrib.auth.decorators.login_required(...), ...)
-      - pattern-not: $FUNC($PATH, django.contrib.auth.decorators.permission_required(...)(...), ...)
+      - pattern-not: $FUNC($PATH, django.contrib.auth.decorators.permission_required($AUTHZ, ...)(...), ...)
       - metavariable-pattern:
           metavariable: $FUNC
           pattern-either:

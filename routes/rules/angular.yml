@@ -2,14 +2,14 @@ rules:
   - id: angular-route-authenticated
     patterns:
       - pattern-either:
-          - pattern: "{..., path: $PATH, ..., canActivate: ..., ...}"
-          - pattern: "{..., path: $PATH, ..., canActivateChild: ..., ...}"
-          - pattern: "{..., path: $PATH, ..., canDeactivate: ..., ...}"
-          - pattern: "{..., path: $PATH, ..., canMatch: ..., ...}"
-          - pattern: "{..., path: $PATH, ..., canLoad: ..., ...}"
+          - pattern: "{..., path: $PATH, ..., canActivate: $AUTHZ, ...}"
+          - pattern: "{..., path: $PATH, ..., canActivateChild: $AUTHZ, ...}"
+          - pattern: "{..., path: $PATH, ..., canDeactivate: $AUTHZ, ...}"
+          - pattern: "{..., path: $PATH, ..., canMatch: $AUTHZ, ...}"
+          - pattern: "{..., path: $PATH, ..., canLoad: $AUTHZ, ...}"
           - patterns:
               - pattern: "{..., path: $PATH, ...}"
-              - pattern-inside: "{..., children: [...], ..., canActivateChild: ..., ...}"
+              - pattern-inside: "{..., children: [...], ..., canActivateChild: $AUTHZ, ...}"
       - focus-metavariable: $PATH
       - pattern-inside: |
           import { Routes } from "@angular/router";

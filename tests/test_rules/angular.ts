@@ -17,7 +17,7 @@ const routes: Routes = [
         // ruleid: angular-route-authenticated
         path: 'home',
         loadChildren: () => import('./+home/home.module').then(m => m.HomeModule),
-        canActivateChild: [ MetaGuard ]
+        canActivateChild: [MetaGuard]
     },
     {
         // todoruleid: angular-route-authenticated, angular-route-unauthenticated

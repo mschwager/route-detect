@@ -65,8 +65,10 @@ rules:
   - id: laravel-route-authorized
     patterns:
       - pattern-either:
-          - pattern: Route::$METHOD(...)->middleware("=~/^can:.*/");
-          - pattern: Route::$METHOD(...)->can(...);
+          - patterns:
+              - pattern: Route::$METHOD(...)->middleware("=~/^can:.*/");
+              - pattern: Route::$METHOD(...)->middleware($AUTHZ);
+          - pattern: Route::$METHOD(...)->can($...AUTHZ);
       - metavariable-pattern:
           metavariable: $METHOD
           pattern-either:
@@ -79,7 +81,7 @@ rules:
             - pattern: match
             - pattern: any
             - pattern: fallback
-    message: Found authenticated Laravel route
+    message: Found authorized Laravel route
     metadata:
       references:
         - https://laravel.com/docs/9.x/routing

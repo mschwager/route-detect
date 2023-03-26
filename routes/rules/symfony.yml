@@ -1,7 +1,6 @@
 rules:
   - id: symfony-route-php
     pattern-either:
-      - pattern: Symfony\Component\Routing\Annotation\Route($PATH, ...)
       - pattern: new Symfony\Component\Routing\Route($PATH, ...)
       - patterns:
           - pattern: $ROUTES->add($NAME, $PATH, ...);
@@ -91,11 +90,13 @@ rules:
       - pattern: |
           @Route(...)
           ...
-          @IsGranted(...)
+          @IsGranted($...AUTHZ)
       - pattern: |
           @Route(...)
           ...
-          @Security(...)
+          @Security($...AUTHZ)
+    options:
+      generic_ellipsis_max_span: 1
     message: Found authorized Symfony route
     metadata:
       references:
@@ -117,6 +118,48 @@ rules:
           @Route(...)
           ...
           @Security(...)
+    message: Found unauthorized Symfony route
+    metadata:
+      references:
+        - https://symfony.com/doc/4.1/routing.html
+        - https://symfony.com/bundles/SensioFrameworkExtraBundle/current/annotations/security.html
+      route-detect:
+        fill: red
+    languages: [generic]
+    severity: INFO
+  - id: symfony-route-attribute-authorized
+    pattern-either:
+      - pattern: |
+          #[Route(...)]
+          ...
+          #[IsGranted($...AUTHZ)]
+      - pattern: |
+          #[Route(...)]
+          ...
+          #[Security($...AUTHZ)]
+    options:
+      generic_ellipsis_max_span: 1
+    message: Found authorized Symfony route
+    metadata:
+      references:
+        - https://symfony.com/doc/4.1/routing.html
+        - https://symfony.com/bundles/SensioFrameworkExtraBundle/current/annotations/security.html
+      route-detect:
+        fill: yellow
+    languages: [generic]
+    severity: INFO
+  - id: symfony-route-attribute-unauthorized
+    patterns:
+      - pattern: |
+          #[Route(...)]
+      - pattern-not-inside: |
+          #[Route(...)]
+          ...
+          #[IsGranted(...)]
+      - pattern-not-inside: |
+          #[Route(...)]
+          ...
+          #[Security(...)]
     message: Found unauthorized Symfony route
     metadata:
       references:
