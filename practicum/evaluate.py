@@ -1,5 +1,8 @@
 import argparse
+import csv
+import functools
 import json
+import multiprocessing
 import os
 import pathlib
 import subprocess
@@ -8,6 +11,7 @@ import time
 from urllib.parse import urlparse
 
 
+ROLE_METAVARIABLE = "$AUTHZ"
 JS_TS_LANGUAGE = "JavaScript/TypeScript"
 
 HARNESS = {
@@ -104,15 +108,18 @@ HARNESS = {
 }
 
 
+stderr = functools.partial(print, file=sys.stderr)
+
+
 def run_cmd(*args, cwd=None):
     try:
         proc = subprocess.run(args, capture_output=True, encoding="utf-8", cwd=cwd)
     except FileNotFoundError:
-        print(f"Failed to run {args[0]}, please install {args[0]} and try again")
+        stderr(f"Failed to run {args[0]}, please install {args[0]} and try again")
         sys.exit(1)
 
     if proc.returncode != os.EX_OK:
-        print(
+        stderr(
             f"Running {args} returned code {proc.returncode} and stderr {proc.stderr}"
         )
         sys.exit(1)
@@ -121,6 +128,8 @@ def run_cmd(*args, cwd=None):
 
 
 def process_output(filepath):
+    stderr(f"Processing {filepath}")
+
     data = json.load(filepath.open())
 
     languages = (
@@ -133,14 +142,47 @@ def process_output(filepath):
         for language in languages
         for key in ["blanks", "code", "comments"]
     )
-    output = [
+    route_count = sum(
+        int("-route" in result["check_id"]) for result in data["semgrep"]["results"]
+    )
+    authenticated_count = sum(
+        int("-authenticated" in result["check_id"])
+        for result in data["semgrep"]["results"]
+    )
+    unauthenticated_count = sum(
+        int("-unauthenticated" in result["check_id"])
+        for result in data["semgrep"]["results"]
+    )
+    authorized_count = sum(
+        int("-authorized" in result["check_id"])
+        for result in data["semgrep"]["results"]
+    )
+    unauthorized_count = sum(
+        int("-unauthorized" in result["check_id"])
+        for result in data["semgrep"]["results"]
+    )
+    role_count = len(
+        {
+            result["extra"]["metavars"][ROLE_METAVARIABLE]["abstract_content"]
+            for result in data["semgrep"]["results"]
+            if ROLE_METAVARIABLE in result["extra"]["metavars"]
+        }
+    )
+
+    return [
         data["repository"],
         data["hash"],
         data["framework"],
         data["language"],
         str(language_loc),
+        str(data["runtime"]),
+        str(route_count),
+        str(authenticated_count),
+        str(unauthenticated_count),
+        str(authorized_count),
+        str(unauthorized_count),
+        str(role_count),
     ]
-    print(",".join(output))
 
 
 def analyze_repository(harness_dir, output_dir, language, framework, repository):
@@ -150,18 +192,18 @@ def analyze_repository(harness_dir, output_dir, language, framework, repository)
     target_abs = target_dir.resolve(strict=True)
 
     if not target_dir.exists():
-        print(f"Cloning repository {repository}")
+        stderr(f"Cloning repository {repository}")
         harness_abs = harness_dir.resolve(strict=True)
         run_cmd("git", "clone", repository, cwd=harness_abs)
 
     repository_hash = run_cmd("git", "rev-parse", "HEAD", cwd=target_abs).strip()
-    print(f"Repository hash {repository_hash}")
+    stderr(f"Repository hash {repository_hash}")
 
     tokei_output = run_cmd("tokei", "--output", "json", cwd=target_abs)
     tokei_json = json.loads(tokei_output)
     semgrep_config = run_cmd("routes", "which", framework)
 
-    print(f"Running Semgrep against {target_abs} with framework {framework}")
+    stderr(f"Running Semgrep against {target_abs} with framework {framework}")
     start_time = time.monotonic()
     semgrep_output = run_cmd(
         "semgrep", "--json", "--config", semgrep_config, target_abs
@@ -169,7 +211,7 @@ def analyze_repository(harness_dir, output_dir, language, framework, repository)
     end_time = time.monotonic()
     runtime = round(end_time - start_time, 2)
     semgrep_json = json.loads(semgrep_output)
-    print(f"Finished Semgrep in {runtime}s, received {len(semgrep_output)} bytes")
+    stderr(f"Finished Semgrep in {runtime}s, received {len(semgrep_output)} bytes")
 
     output_file = f"{git_dir}.{framework}.json"
     output_path = output_dir / output_file
@@ -229,18 +271,39 @@ def main():
 
     if args.analyze:
         for language, frameworks in HARNESS.items():
-            print(f"Processing language {language}")
+            stderr(f"Processing language {language}")
             for framework, repositories in frameworks.items():
-                print(f"Processing framework {framework}")
+                stderr(f"Processing framework {framework}")
                 for repository in repositories:
-                    print(f"Analyzing repository {repository}")
+                    stderr(f"Analyzing repository {repository}")
                     analyze_repository(
                         harness_dir, output_dir, language, framework, repository
                     )
     elif args.process:
-        for filepath in output_dir.glob("*.json"):
-            print(f"Processing {filepath}")
-            process_output(filepath)
+        with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
+            results = pool.map(process_output, output_dir.glob("*.json"))
+
+        headers = [
+            "Repository",
+            "Commit hash",
+            "Framework",
+            "Language",
+            "Lines of code",
+            "Semgrep runtime",
+            "Route count",
+            "Authn route count",
+            "Unauthn route count",
+            "Authz route count",
+            "Unauthz route count",
+            "Role count",
+        ]
+        mismatch = any(len(headers) != len(result) for result in results)
+        if mismatch:
+            stderr("CSV header/row mismatch")
+            return 1
+
+        csv_out = csv.writer(sys.stdout)
+        csv_out.writerows([headers] + results)
     else:
         raise ValueError("Missing required action argument")
 
