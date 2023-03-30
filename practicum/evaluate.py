@@ -4,8 +4,11 @@ import os
 import pathlib
 import subprocess
 import sys
+import time
 from urllib.parse import urlparse
 
+
+JS_TS_LANGUAGE = "JavaScript/TypeScript"
 
 HARNESS = {
     "Python": {
@@ -82,7 +85,7 @@ HARNESS = {
             "https://github.com/cloudfoundry/korifi",
         ],
     },
-    "JavaScript": {
+    JS_TS_LANGUAGE: {
         "express": [
             "https://github.com/payloadcms/payload",
             "https://github.com/directus/directus",
@@ -117,27 +120,69 @@ def run_cmd(*args, cwd=None):
     return proc.stdout
 
 
-def process_repository(harness_dir, language, framework, repository):
+def process_output(filepath):
+    data = json.load(filepath.open())
+
+    languages = (
+        ["JavaScript", "TypeScript"]
+        if data["language"] == JS_TS_LANGUAGE
+        else [data["language"]]
+    )
+    language_loc = sum(
+        data["tokei"][language][key]
+        for language in languages
+        for key in ["blanks", "code", "comments"]
+    )
+    output = [
+        data["repository"],
+        data["hash"],
+        data["framework"],
+        data["language"],
+        str(language_loc),
+    ]
+    print(",".join(output))
+
+
+def analyze_repository(harness_dir, output_dir, language, framework, repository):
     url = urlparse(repository)
     _, _, git_dir = url.path.split("/")
-    full_dir = harness_dir / git_dir
-    full_abs = full_dir.resolve(strict=True)
+    target_dir = harness_dir / git_dir
+    target_abs = target_dir.resolve(strict=True)
 
-    if not full_dir.exists():
+    if not target_dir.exists():
         print(f"Cloning repository {repository}")
         harness_abs = harness_dir.resolve(strict=True)
         run_cmd("git", "clone", repository, cwd=harness_abs)
 
-    repository_hash = run_cmd("git", "rev-parse", "HEAD", cwd=full_abs).strip()
+    repository_hash = run_cmd("git", "rev-parse", "HEAD", cwd=target_abs).strip()
     print(f"Repository hash {repository_hash}")
 
-    tokei_output = json.loads(run_cmd("tokei", "--output", "json", cwd=full_abs))
-    language_loc = (
-        tokei_output[language]["blanks"]
-        + tokei_output[language]["code"]
-        + tokei_output[language]["comments"]
+    tokei_output = run_cmd("tokei", "--output", "json", cwd=target_abs)
+    tokei_json = json.loads(tokei_output)
+    semgrep_config = run_cmd("routes", "which", framework)
+
+    print(f"Running Semgrep against {target_abs} with framework {framework}")
+    start_time = time.monotonic()
+    semgrep_output = run_cmd(
+        "semgrep", "--json", "--config", semgrep_config, target_abs
     )
-    print(f"Language LoC {language_loc}")
+    end_time = time.monotonic()
+    runtime = round(end_time - start_time, 2)
+    semgrep_json = json.loads(semgrep_output)
+    print(f"Finished Semgrep in {runtime}s, received {len(semgrep_output)} bytes")
+
+    output_file = f"{git_dir}.{framework}.json"
+    output_path = output_dir / output_file
+    output = {
+        "language": language,
+        "framework": framework,
+        "repository": repository,
+        "hash": repository_hash,
+        "tokei": tokei_json,
+        "semgrep": semgrep_json,
+        "runtime": runtime,
+    }
+    json.dump(output, output_path.open(mode="w"))
 
 
 def parse_args():
@@ -151,6 +196,24 @@ def parse_args():
         default="harness",
         help="Clone test harness code to this directory",
     )
+    p.add_argument(
+        "--output-dir",
+        action="store",
+        default="output",
+        help="Output Semgrep results to this directory",
+    )
+
+    action_group = p.add_mutually_exclusive_group(required=True)
+    action_group.add_argument(
+        "--analyze",
+        action="store_true",
+        help="Clone dependent repositories and run analysis against each",
+    )
+    action_group.add_argument(
+        "--process",
+        action="store_true",
+        help="Process analysis results and output evaluation metrics",
+    )
 
     return p.parse_args()
 
@@ -161,14 +224,28 @@ def main():
     harness_dir = pathlib.Path(args.harness_dir)
     harness_dir.mkdir(exist_ok=True)
 
-    for language, frameworks in HARNESS.items():
-        print(f"Processing language {language}")
-        for framework, repositories in frameworks.items():
-            print(f"Processing framework {framework}")
-            for repository in repositories:
-                print(f"Processing repository {repository}")
-                process_repository(harness_dir, language, framework, repository)
+    output_dir = pathlib.Path(args.output_dir)
+    output_dir.mkdir(exist_ok=True)
+
+    if args.analyze:
+        for language, frameworks in HARNESS.items():
+            print(f"Processing language {language}")
+            for framework, repositories in frameworks.items():
+                print(f"Processing framework {framework}")
+                for repository in repositories:
+                    print(f"Analyzing repository {repository}")
+                    analyze_repository(
+                        harness_dir, output_dir, language, framework, repository
+                    )
+    elif args.process:
+        for filepath in output_dir.glob("*.json"):
+            print(f"Processing {filepath}")
+            process_output(filepath)
+    else:
+        raise ValueError("Missing required action argument")
+
+    return os.EX_OK
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
