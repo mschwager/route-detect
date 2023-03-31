@@ -104,7 +104,7 @@ def d3ify(parts, output, result, connectors, _global):
         else:
             fill = result.rd_fill
 
-        check_node = {"name": name, "fill": fill}
+        check_node = {"name": name, "fill": fill, "title": result.lines}
         new_node.setdefault("children", []).append(check_node)
 
     output.append(new_node)

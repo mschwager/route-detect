@@ -28,7 +28,7 @@ def make_result(lines, path, metadata=None):
 
 
 def make_edge_node(name, fill=const.DEFAULT_FILL_COLOR):
-    return {"name": f"ln 0: {name}", "fill": fill}
+    return {"name": f"ln 0: {name}", "fill": fill, "title": name}
 
 
 @pytest.mark.parametrize(
