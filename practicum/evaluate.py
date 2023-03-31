@@ -11,7 +11,7 @@ import time
 from urllib.parse import urlparse
 
 
-ROLE_METAVARIABLE = "$AUTHZ"
+ROLE_METAVARIABLES = ["$AUTHZ", "$...AUTHZ"]
 JS_TS_LANGUAGE = "JavaScript/TypeScript"
 
 HARNESS = {
@@ -163,9 +163,10 @@ def process_output(filepath):
     )
     role_count = len(
         {
-            result["extra"]["metavars"][ROLE_METAVARIABLE]["abstract_content"]
+            result["extra"]["metavars"][metavariable]["abstract_content"]
             for result in data["semgrep"]["results"]
-            if ROLE_METAVARIABLE in result["extra"]["metavars"]
+            for metavariable in ROLE_METAVARIABLES
+            if metavariable in result["extra"]["metavars"]
         }
     )
 
@@ -282,6 +283,9 @@ def main():
     elif args.process:
         with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
             results = pool.map(process_output, output_dir.glob("*.json"))
+
+        # Sort on language then framework
+        results.sort(key=lambda r: r[3] + r[2])
 
         headers = [
             "Repository",

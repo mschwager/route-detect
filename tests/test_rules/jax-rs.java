@@ -35,7 +35,7 @@ public class ExampleResource {
         return Response.ok().build();
     }
 
-    // ruleid: jaxrs-route-authenticated
+    // ruleid: jaxrs-route-authorized
     @DELETE
     @RolesAllowed("role")
     @Path("{id}")
@@ -58,7 +58,7 @@ public class ExampleResource {
 @Api(value = "path", authorizations = @Authorization(value = "X-Api-Key"))
 public class ExampleResource extends AbstractExampleResource {
 
-    // ruleid: jaxrs-route-authenticated
+    // ruleid: jaxrs-route-authorized
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)

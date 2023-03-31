@@ -1,5 +1,5 @@
 rules:
-  - id: angular-route-authenticated
+  - id: angular-route-authorized
     patterns:
       - pattern-either:
           - pattern: "{..., path: $PATH, ..., canActivate: $AUTHZ, ...}"
@@ -24,7 +24,7 @@ rules:
         fill: green
     languages: [javascript, typescript]
     severity: INFO
-  - id: angular-route-unauthenticated
+  - id: angular-route-unauthorized
     patterns:
       - pattern: "{..., path: $PATH, ...}"
       - pattern-not: "{..., path: $PATH, ..., canActivate: ..., ...}"

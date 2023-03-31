@@ -45,7 +45,7 @@ public class ExampleResource {
         return Response.ok().build();
     }
 
-    // ruleid: spring-route-authenticated
+    // ruleid: spring-route-authorized
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @RolesAllowed("role")
     public Response mySecuredMethod(@PathParam("id") Long id) {
@@ -59,7 +59,7 @@ public class ExampleResource {
         return Response.ok().build();
     }
 
-    // ruleid: spring-route-authenticated
+    // ruleid: spring-route-authorized
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @PreAuthorize("#oauth2.hasScope('server')")
     public Response mySecuredMethod(@PathParam("id") Long id) {
@@ -70,7 +70,7 @@ public class ExampleResource {
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class ExampleResource {
 
-    // ruleid: spring-route-authenticated
+    // ruleid: spring-route-authorized
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public Response mySecuredMethod(@PathParam("id") Long id) {
         return Response.ok().build();

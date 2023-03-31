@@ -4,26 +4,10 @@ rules:
       - pattern-either:
           - pattern: |
               @$METHOD(...)
-              @org.springframework.security.access.prepost.PreAuthorize($AUTHZ)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @org.springframework.security.access.prepost.PreAuthorize($AUTHZ)
-              @$METHOD(...)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @$METHOD(...)
               @Secured(...)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @Secured(...)
-              @$METHOD(...)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @$METHOD(...)
-              @javax.annotation.security.RolesAllowed($AUTHZ)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @javax.annotation.security.RolesAllowed($AUTHZ)
               @$METHOD(...)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -36,34 +20,10 @@ rules:
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @$METHOD(...)
-              @javax.annotation.security.DeclareRoles($AUTHZ)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @javax.annotation.security.DeclareRoles($AUTHZ)
-              @$METHOD(...)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @$METHOD(...)
               @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
-              @$METHOD(...)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @$METHOD(...)
-              @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
-              @$METHOD(...)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @$METHOD(...)
-              @org.apache.shiro.authz.annotation.RequiresRoles($AUTHZ)
-              $RETURNTYPE $FUNC(...) { ... }
-          - pattern: |
-              @org.apache.shiro.authz.annotation.RequiresRoles($AUTHZ)
               @$METHOD(...)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -80,31 +40,103 @@ rules:
                   $RETURNTYPE $FUNC(...) { ... }
               - pattern-either:
                   - pattern-inside: |
-                      @org.springframework.security.access.prepost.PreAuthorize($AUTHZ)
-                      class $CLASS { ... }
-                  - pattern-inside: |
                       @Secured(...)
-                      class $CLASS { ... }
-                  - pattern-inside: |
-                      @javax.annotation.security.RolesAllowed($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
                       @javax.annotation.security.DenyAll(...)
                       class $CLASS { ... }
                   - pattern-inside: |
-                      @javax.annotation.security.DeclareRoles($AUTHZ)
+                      @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
                       class $CLASS { ... }
                   - pattern-inside: |
-                      @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
+                      @org.apache.shiro.authz.annotation.RequiresUser(...)
+                      class $CLASS { ... }
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: RequestMapping
+            - pattern: DeleteMapping
+            - pattern: GetMapping
+            - pattern: PatchMapping
+            - pattern: PostMapping
+            - pattern: PutMapping
+    message: Found authenticated Spring route
+    metadata:
+      references:
+        - https://www.baeldung.com/spring-security-method-security
+        - https://www.baeldung.com/spring-security-prefilter-postfilter
+        - https://www.digitalocean.com/community/tutorials/spring-requestmapping-requestparam-pathvariable-example
+        - https://github.com/spring-projects/spring-security/issues/8804
+        - https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
+        - https://www.marcobehler.com/guides/spring-security
+        - https://shiro.apache.org/spring-framework.html
+        - https://shiro.apache.org/java-annotations-list.html
+      route-detect:
+        fill: yellow
+    languages: [java]
+    severity: INFO
+  - id: spring-route-authorized
+    patterns:
+      - pattern-either:
+          - pattern: |
+              @$METHOD(...)
+              @org.springframework.security.access.prepost.PreAuthorize($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.springframework.security.access.prepost.PreAuthorize($AUTHZ)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @javax.annotation.security.RolesAllowed($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @javax.annotation.security.RolesAllowed($AUTHZ)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @javax.annotation.security.DeclareRoles($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @javax.annotation.security.DeclareRoles($AUTHZ)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @org.apache.shiro.authz.annotation.RequiresRoles($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @org.apache.shiro.authz.annotation.RequiresRoles($AUTHZ)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - patterns:
+              - pattern: |
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-either:
+                  - pattern-inside: |
+                      @org.springframework.security.access.prepost.PreAuthorize($AUTHZ)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @javax.annotation.security.RolesAllowed($AUTHZ)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @javax.annotation.security.DeclareRoles($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
                       @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
                       @org.apache.shiro.authz.annotation.RequiresRoles($AUTHZ)
-                      class $CLASS { ... }
-                  - pattern-inside: |
-                      @org.apache.shiro.authz.annotation.RequiresUser(...)
                       class $CLASS { ... }
       - metavariable-pattern:
           metavariable: $METHOD

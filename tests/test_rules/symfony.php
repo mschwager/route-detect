@@ -93,6 +93,36 @@ class BlogController extends AbstractController
     }
 }
 
+/**
+ * @IsGranted("ROLE_ADMIN")
+ */
+class BlogController extends AbstractController
+{
+    /**
+     // todoruleid: symfony-route-annotation-authorized, symfony-route-annotation-unauthorized
+     * @Route("/")
+     */
+    public function list(): Response
+    {
+        // ...
+    }
+}
+
+/**
+ * @Security("is_granted('ROLE_ADMIN') and is_granted('ROLE_FRIENDLY_USER')")
+ */
+class BlogController extends AbstractController
+{
+    /**
+     // todoruleid: symfony-route-annotation-authorized, symfony-route-annotation-unauthorized
+     * @Route("/")
+     */
+    public function list(): Response
+    {
+        // ...
+    }
+}
+
 function (RoutingConfigurator $routes) {
     // ruleid: symfony-route-php
     $routes->add('api_post_show', '/api/posts/{id}')
