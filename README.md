@@ -18,7 +18,7 @@ Web application HTTP route authn and authz bugs are some of the most common secu
 - #21 most CVEs by CWE - [CWE-284: Access Control (Authorization) Issues](https://www.cvedetails.com/cwe-definitions.php)
 - #47 most CVEs by CWE - [CWE-639: Access Control Bypass Through User-Controlled Key](https://www.cvedetails.com/cwe-definitions.php)
 
-![Routes demo](routes-demo.png?raw=true)
+![Routes demo](https://raw.githubusercontent.com/mschwager/route-detect/main/routes-demo.png)
 
 <p align="center">
     <i>Routes from <code><a href="https://github.com/koel/koel">koel<a></code> streaming server</i>
