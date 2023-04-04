@@ -1,5 +1,9 @@
 # route-detect
 
+[![CI](https://github.com/mschwager/route-detect/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mschwager/route-detect/actions/workflows/ci.yml)
+[![Python Versions](https://img.shields.io/pypi/pyversions/route-detect.svg)](https://pypi.org/project/route-detect/)
+[![PyPI Version](https://img.shields.io/pypi/v/route-detect.svg)](https://pypi.org/project/route-detect/)
+
 Find authentication (authn) and authorization (authz) security bugs in web application routes.
 
 Web application HTTP route authn and authz bugs are some of the most common security issues found today. These industry standard resources highlight the severity of the issue:
