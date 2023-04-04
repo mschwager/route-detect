@@ -61,19 +61,25 @@ Ran 1 rule on 1 file: 1 finding.
 
 # Using
 
-`route-detect` uses [`semgrep`](https://github.com/returntocorp/semgrep) to search for routes.
+`route-detect` provides the `routes` CLI command and uses [`semgrep`](https://github.com/returntocorp/semgrep) to search for routes.
 
-Use the `which` command to point `semgrep` at the correct web application rules:
+Use the `which` subcommand to point `semgrep` at the correct web application rules:
 
 ```
 $ semgrep --config $(routes which django) path/to/django/code
 ```
 
-Use the `viz` command to visualize route information in your browser:
+Use the `viz` subcommand to visualize route information in your browser:
 
 ```
 $ semgrep --json --config $(routes which django) --output routes.json path/to/django/code
 $ routes viz --browser routes.json
+```
+
+If you're not sure which framework to look for, you can use the special `all` ID to check everything:
+
+```
+$ semgrep --json --config $(routes which all) --output routes.json path/to/code
 ```
 
 If you have custom authn or authz logic, you can copy `route-detect`'s rules:

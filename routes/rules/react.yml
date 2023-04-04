@@ -29,6 +29,7 @@ rules:
               - pattern: "{..., path: $PATH, ..., element: <RequireAuth ...>...</RequireAuth>, ...}"
               - pattern: "{..., path: $PATH, ..., element: <ProtectedRoute ...>...</ProtectedRoute>, ...}"
               - pattern: "{..., path: $PATH, ..., element: <AuthenticationGuard ... />, ...}"
+          - focus-metavariable: $PATH
     message: Found authenticated React route
     metadata:
       references:
@@ -78,6 +79,7 @@ rules:
           - pattern-not: "{..., path: $PATH, ..., element: <RequireAuth>...</RequireAuth>, ...}"
           - pattern-not: "{..., path: $PATH, ..., element: <ProtectedRoute>...</ProtectedRoute>, ...}"
           - pattern-not: "{..., path: $PATH, ..., element: <AuthenticationGuard ... />, ...}"
+          - focus-metavariable: $PATH
     message: Found unauthenticated React route
     metadata:
       references:

@@ -3,23 +3,23 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, createRoutesFromElements } from "react-router-dom";
 
 const router = createBrowserRouter([
-  // ruleid: react-route-unauthenticated
   {
+    // ruleid: react-route-unauthenticated
     path: "/",
     element: <div>Hello world!</div>,
   },
-  // ruleid: react-route-authenticated
   {
+    // ruleid: react-route-authenticated
     path: "/",
     element: <ProtectedRoute><div>Hello world!</div></ProtectedRoute>,
   },
-  // ruleid: react-route-authenticated
   {
+    // ruleid: react-route-authenticated
     path: "/",
     element: <RequireAuth><div>Hello world!</div></RequireAuth>,
   },
-  // ruleid: react-route-authenticated
   {
+    // ruleid: react-route-authenticated
     path: "/",
     element: <AuthenticationGuard component={ProfilePage} />,
   },
