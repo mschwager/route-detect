@@ -1,6 +1,6 @@
 # route-detect
 
-[![CI](https://github.com/mschwager/route-detect/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mschwager/route-detect/actions/workflows/ci.yml)
+[![CI](https://github.com/mschwager/route-detect/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mschwager/route-detect/actions/workflows/ci.yml)
 [![Python Versions](https://img.shields.io/pypi/pyversions/route-detect.svg)](https://pypi.org/project/route-detect/)
 [![PyPI Version](https://img.shields.io/pypi/v/route-detect.svg)](https://pypi.org/project/route-detect/)
 
