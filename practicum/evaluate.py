@@ -187,6 +187,8 @@ def process_output(filepath):
 
 
 def analyze_repository(harness_dir, output_dir, language, framework, repository):
+    stderr(f"Analyzing {language}, {framework}, {repository}")
+
     url = urlparse(repository)
     _, _, git_dir = url.path.split("/")
     target_dir = harness_dir / git_dir
@@ -206,7 +208,7 @@ def analyze_repository(harness_dir, output_dir, language, framework, repository)
 
     # Create an empty ignore file so we don't skip files (e.g. tests)
     semgrepignore_path = target_abs / ".semgrepignore"
-    run_cmd("touch", semgrepignore_path.resolve(strict=True))
+    run_cmd("touch", semgrepignore_path.resolve())
 
     stderr(f"Running Semgrep against {target_abs} with framework {framework}")
     start_time = time.monotonic()
@@ -249,6 +251,13 @@ def parse_args():
         default="output",
         help="Output Semgrep results to this directory",
     )
+    p.add_argument(
+        "-r",
+        "--repos",
+        action="store",
+        nargs="+",
+        help="Only include matching repositories",
+    )
 
     action_group = p.add_mutually_exclusive_group(required=True)
     action_group.add_argument(
@@ -275,18 +284,28 @@ def main():
     output_dir.mkdir(exist_ok=True)
 
     if args.analyze:
-        for language, frameworks in HARNESS.items():
-            stderr(f"Processing language {language}")
-            for framework, repositories in frameworks.items():
-                stderr(f"Processing framework {framework}")
-                for repository in repositories:
-                    stderr(f"Analyzing repository {repository}")
-                    analyze_repository(
-                        harness_dir, output_dir, language, framework, repository
-                    )
+        analyses = [
+            (language, framework, repository)
+            for language, frameworks in HARNESS.items()
+            for framework, repositories in frameworks.items()
+            for repository in repositories
+            if not args.repos or any(repo in repository for repo in args.repos)
+        ]
+        # No need for multiprocessing here, Semgrep will already saturate the CPU
+        for language, framework, repository in analyses:
+            analyze_repository(harness_dir, output_dir, language, framework, repository)
     elif args.process:
+        outputs = output_dir.glob("*.json")
+
+        if args.repos:
+            outputs = [
+                output
+                for output in outputs
+                if any(repo in output for repo in args.repos)
+            ]
+
         with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
-            results = pool.map(process_output, output_dir.glob("*.json"))
+            results = pool.map(process_output, outputs)
 
         # Sort on language then framework
         results.sort(key=lambda r: r[3] + r[2])
