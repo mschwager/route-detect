@@ -153,7 +153,6 @@ rules:
             - pattern: Static
             - pattern: StaticFS
             - pattern: StaticFile
-            - pattern: Handle
             - pattern: DELETE
             - pattern: GET
             - pattern: HEAD
@@ -558,7 +557,6 @@ rules:
             - pattern: Static
             - pattern: StaticFS
             - pattern: StaticFile
-            - pattern: Handle
             - pattern: DELETE
             - pattern: GET
             - pattern: HEAD

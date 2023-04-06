@@ -1,10 +1,6 @@
 rules:
   - id: django-route-authenticated
     patterns:
-      - pattern-either:
-          - pattern-inside: $URLPATTERNS = [...]
-          - pattern-inside: $URLPATTERNS = $SOMETHING + [...]
-          - pattern-inside: $URLPATTERNS += [...]
       - pattern: $FUNC($PATH, django.contrib.auth.decorators.login_required(...), ...)
       - metavariable-pattern:
           metavariable: $FUNC
@@ -24,10 +20,6 @@ rules:
     severity: INFO
   - id: django-route-authorized
     patterns:
-      - pattern-either:
-          - pattern-inside: $URLPATTERNS = [...]
-          - pattern-inside: $URLPATTERNS = $SOMETHING + [...]
-          - pattern-inside: $URLPATTERNS += [...]
       - pattern: $FUNC($PATH, django.contrib.auth.decorators.permission_required($AUTHZ, ...)(...), ...)
       - metavariable-pattern:
           metavariable: $FUNC
@@ -47,10 +39,6 @@ rules:
     severity: INFO
   - id: django-route-unauthenticated
     patterns:
-      - pattern-either:
-          - pattern-inside: $URLPATTERNS = [...]
-          - pattern-inside: $URLPATTERNS = $SOMETHING + [...]
-          - pattern-inside: $URLPATTERNS += [...]
       - pattern: $FUNC($PATH, $VIEW, ...)
       - pattern-not: $FUNC($PATH, django.contrib.auth.decorators.login_required(...), ...)
       - pattern-not: $FUNC($PATH, django.contrib.auth.decorators.permission_required($AUTHZ, ...)(...), ...)

@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for `grape` authorized and unauthenticated routes
+
 ## [0.6.0] - 2023-04-04
+
+- Class-based views support for `flask`
 
 ### Added
 

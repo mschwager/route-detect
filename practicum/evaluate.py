@@ -204,10 +204,14 @@ def analyze_repository(harness_dir, output_dir, language, framework, repository)
     tokei_json = json.loads(tokei_output)
     semgrep_config = run_cmd("routes", "which", framework)
 
+    # Create an empty ignore file so we don't skip files (e.g. tests)
+    semgrepignore_path = target_abs / ".semgrepignore"
+    run_cmd("touch", semgrepignore_path.resolve(strict=True))
+
     stderr(f"Running Semgrep against {target_abs} with framework {framework}")
     start_time = time.monotonic()
     semgrep_output = run_cmd(
-        "semgrep", "--json", "--config", semgrep_config, target_abs
+        "semgrep", "--json", "--config", semgrep_config, cwd=target_abs
     )
     end_time = time.monotonic()
     runtime = round(end_time - start_time, 2)

@@ -3,24 +3,45 @@ rules:
     patterns:
       - pattern-either:
           - patterns:
-              - pattern: $FUNC ...
-              - pattern-inside: |
-                  class $CLASS < $PARENT
-                    ...
-                    before do
-                      ...
-                      $BEFORE_FUNC(...)
-                      ...
-                    end
-                    ...
-                  end
-          - patterns:
               - pattern: |
                   $FUNC ... do
                     ...
-                    $BEFORE_FUNC(...)
-                    ...
                   end
+              - pattern-either:
+                  - pattern-inside: |
+                      class $CLASS < $PARENT
+                        ...
+                        before do
+                          ...
+                          authenticate!(...)
+                          ...
+                        end
+                        ...
+                      end
+                  - pattern-inside: |
+                      class $CLASS < $PARENT
+                        ...
+                        before do
+                          ...
+                          authenticate_locomotive_account!(...)
+                          ...
+                        end
+                        ...
+                      end
+          - patterns:
+              - pattern-either:
+                  - pattern: |
+                      $FUNC ... do
+                        ...
+                        authenticate!(...)
+                        ...
+                      end
+                  - pattern: |
+                      $FUNC ... do
+                        ...
+                        authenticate_locomotive_account!(...)
+                        ...
+                      end
               - pattern-inside: |
                   class $CLASS < $PARENT
                     ...
@@ -28,8 +49,6 @@ rules:
       - metavariable-pattern:
           metavariable: $FUNC
           pattern-either:
-            - pattern: resource
-            - pattern: resources
             - pattern: get
             - pattern: patch
             - pattern: put
@@ -41,14 +60,179 @@ rules:
             - pattern: Grape::API
             - pattern: Grape::API::Instance
             - pattern: ::API::Base
-      - metavariable-regex:
-          metavariable: $BEFORE_FUNC
-          regex: ".*authenticate.*"
+            - pattern: APIBase
     message: Found authenticated Grape route
     metadata:
       references:
         - https://github.com/ruby-grape/grape
       route-detect:
         fill: green
+    languages: [ruby]
+    severity: INFO
+  - id: grape-route-authorized
+    patterns:
+      - pattern-either:
+          - patterns:
+              - pattern: |
+                  $FUNC ... do
+                    ...
+                  end
+              - pattern-not-inside: |
+                  class $CLASS < $PARENT
+                    ...
+                    before do
+                      ...
+                      authenticate!(...)
+                      ...
+                    end
+                    ...
+                  end
+              - pattern-not-inside: |
+                  class $CLASS < $PARENT
+                    ...
+                    before do
+                      ...
+                      authenticate_locomotive_account!(...)
+                      ...
+                    end
+                    ...
+                  end
+              - pattern-either:
+                  - pattern-inside: |
+                      class $CLASS < $PARENT
+                        ...
+                        before do
+                          ...
+                          authorize!(...)
+                          ...
+                        end
+                        ...
+                      end
+          - patterns:
+              - pattern-either:
+                  - pattern: |
+                      $FUNC ... do
+                        ...
+                        authorize!(...)
+                        ...
+                      end
+              - pattern-not: |
+                  $FUNC ... do
+                    ...
+                    authenticate!(...)
+                    ...
+                  end
+              - pattern-not: |
+                  $FUNC ... do
+                    ...
+                    authenticate_locomotive_account!(...)
+                    ...
+                  end
+              - pattern-inside: |
+                  class $CLASS < $PARENT
+                    ...
+                  end
+      - metavariable-pattern:
+          metavariable: $FUNC
+          pattern-either:
+            - pattern: get
+            - pattern: patch
+            - pattern: put
+            - pattern: post
+            - pattern: delete
+      - metavariable-pattern:
+          metavariable: $PARENT
+          pattern-either:
+            - pattern: Grape::API
+            - pattern: Grape::API::Instance
+            - pattern: ::API::Base
+            - pattern: APIBase
+    message: Found authorized Grape route
+    metadata:
+      references:
+        - https://github.com/ruby-grape/grape
+      route-detect:
+        fill: yellow
+    languages: [ruby]
+    severity: INFO
+  - id: grape-route-unauthenticated
+    patterns:
+      - pattern: |
+          $FUNC ... do
+            ...
+          end
+      - pattern-not: |
+          $FUNC ... do
+            ...
+            authenticate!(...)
+            ...
+          end
+      - pattern-not: |
+          $FUNC ... do
+            ...
+            authenticate_locomotive_account!(...)
+            ...
+          end
+      - pattern-not: |
+          $FUNC ... do
+            ...
+            authorize!(...)
+            ...
+          end
+      - pattern-inside: |
+          class $CLASS < $PARENT
+            ...
+          end
+      - pattern-not-inside: |
+          class $CLASS < $PARENT
+            ...
+            before do
+              ...
+              authenticate!(...)
+              ...
+            end
+            ...
+          end
+      - pattern-not-inside: |
+          class $CLASS < $PARENT
+            ...
+            before do
+              ...
+              authenticate_locomotive_account!(...)
+              ...
+            end
+            ...
+          end
+      - pattern-not-inside: |
+          class $CLASS < $PARENT
+            ...
+            before do
+              ...
+              authorize!(...)
+              ...
+            end
+            ...
+          end
+      - metavariable-pattern:
+          metavariable: $FUNC
+          pattern-either:
+            - pattern: get
+            - pattern: patch
+            - pattern: put
+            - pattern: post
+            - pattern: delete
+      - metavariable-pattern:
+          metavariable: $PARENT
+          pattern-either:
+            - pattern: Grape::API
+            - pattern: Grape::API::Instance
+            - pattern: ::API::Base
+            - pattern: APIBase
+    message: Found unauthenticated Grape route
+    metadata:
+      references:
+        - https://github.com/ruby-grape/grape
+      route-detect:
+        fill: red
     languages: [ruby]
     severity: INFO
