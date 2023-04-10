@@ -6,6 +6,14 @@ This directory includes files relevant to that course.
 
 # Evaluation
 
+First, analyze the dependent codebases:
+
 ```
-$ python evaluation.py
+$ python evaluation.py --analyze
+```
+
+Then, process the results:
+
+```
+$ python evaluation.py --process
 ```
