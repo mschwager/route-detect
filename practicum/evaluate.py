@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 
 ROLE_METAVARIABLES = ["$AUTHZ", "$...AUTHZ"]
 JS_TS_LANGUAGE = "JavaScript/TypeScript"
+SHORT_HASH_LEN = 7
 
 HARNESS = {
     "Python": {
@@ -127,6 +128,12 @@ def run_cmd(*args, cwd=None):
     return proc.stdout
 
 
+def get_org_repo(url):
+    parsed = urlparse(url)
+    _, org, repo = parsed.path.split("/")
+    return org, repo
+
+
 def process_output(filepath):
     stderr(f"Processing {filepath}")
 
@@ -170,9 +177,12 @@ def process_output(filepath):
         }
     )
 
+    name = "/".join(get_org_repo(data["repository"]))
+    commit_hash = data["hash"][:SHORT_HASH_LEN]
+
     return [
-        data["repository"],
-        data["hash"],
+        name,
+        commit_hash,
         data["framework"],
         data["language"],
         str(language_loc),
@@ -189,9 +199,8 @@ def process_output(filepath):
 def analyze_repository(harness_dir, output_dir, language, framework, repository):
     stderr(f"Analyzing {language}, {framework}, {repository}")
 
-    url = urlparse(repository)
-    _, _, git_dir = url.path.split("/")
-    target_dir = harness_dir / git_dir
+    org, repo = get_org_repo(repository)
+    target_dir = harness_dir / repo
     target_abs = target_dir.resolve(strict=True)
 
     if not target_dir.exists():
@@ -220,7 +229,7 @@ def analyze_repository(harness_dir, output_dir, language, framework, repository)
     semgrep_json = json.loads(semgrep_output)
     stderr(f"Finished Semgrep in {runtime}s, received {len(semgrep_output)} bytes")
 
-    output_file = f"{git_dir}.{framework}.json"
+    output_file = f"{repo}.{framework}.json"
     output_path = output_dir / output_file
     output = {
         "language": language,
