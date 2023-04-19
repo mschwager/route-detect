@@ -21,6 +21,11 @@ module Twitter
         Status.limit(20)
       end
 
+      # ruleid: grape-route-unauthenticated
+      route :get, 'status' do
+        Status.limit(20)
+      end
+
       desc 'Return a personal timeline.'
       # ruleid: grape-route-authenticated
       get :home_timeline do

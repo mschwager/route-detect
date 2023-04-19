@@ -54,6 +54,7 @@ rules:
             - pattern: put
             - pattern: post
             - pattern: delete
+            - pattern: route
       - metavariable-pattern:
           metavariable: $PARENT
           pattern-either:
@@ -140,6 +141,7 @@ rules:
             - pattern: put
             - pattern: post
             - pattern: delete
+            - pattern: route
       - metavariable-pattern:
           metavariable: $PARENT
           pattern-either:
@@ -221,6 +223,7 @@ rules:
             - pattern: put
             - pattern: post
             - pattern: delete
+            - pattern: route
       - metavariable-pattern:
           metavariable: $PARENT
           pattern-either:
