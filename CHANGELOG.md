@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Support for `grape` authorized and unauthenticated routes
+- `route` function detection for `grape`
+- Doorkeeper authz support for `grape`
 
 ## [0.6.0] - 2023-04-04
 

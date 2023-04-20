@@ -48,6 +48,13 @@ module Twitter
         current_user.statuses.limit(20)
       end
 
+      desc 'Return a personal timeline.'
+      # ruleid: grape-route-authorized
+      get :home_timeline do
+        doorkeeper_authorize!
+        current_user.statuses.limit(20)
+      end
+
       desc 'Return a status.'
       params do
         requires :id, type: Integer, desc: 'Status ID.'

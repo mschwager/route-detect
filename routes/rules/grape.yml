@@ -66,6 +66,7 @@ rules:
     metadata:
       references:
         - https://github.com/ruby-grape/grape
+        - https://doorkeeper.gitbook.io/guides/grape/grape
       route-detect:
         fill: green
     languages: [ruby]
@@ -109,12 +110,28 @@ rules:
                         end
                         ...
                       end
+                  - pattern-inside: |
+                      class $CLASS < $PARENT
+                        ...
+                        before do
+                          ...
+                          doorkeeper_authorize!($...AUTHZ)
+                          ...
+                        end
+                        ...
+                      end
           - patterns:
               - pattern-either:
                   - pattern: |
                       $FUNC ... do
                         ...
                         authorize!($...AUTHZ)
+                        ...
+                      end
+                  - pattern: |
+                      $FUNC ... do
+                        ...
+                        doorkeeper_authorize!($...AUTHZ)
                         ...
                       end
               - pattern-not: |
@@ -153,6 +170,7 @@ rules:
     metadata:
       references:
         - https://github.com/ruby-grape/grape
+        - https://doorkeeper.gitbook.io/guides/grape/grape
       route-detect:
         fill: yellow
     languages: [ruby]
@@ -179,6 +197,12 @@ rules:
           $FUNC ... do
             ...
             authorize!(...)
+            ...
+          end
+      - pattern-not: |
+          $FUNC ... do
+            ...
+            doorkeeper_authorize!(...)
             ...
           end
       - pattern-inside: |
@@ -215,6 +239,16 @@ rules:
             end
             ...
           end
+      - pattern-not-inside: |
+          class $CLASS < $PARENT
+            ...
+            before do
+              ...
+              doorkeeper_authorize!(...)
+              ...
+            end
+            ...
+          end
       - metavariable-pattern:
           metavariable: $FUNC
           pattern-either:
@@ -235,6 +269,7 @@ rules:
     metadata:
       references:
         - https://github.com/ruby-grape/grape
+        - https://doorkeeper.gitbook.io/guides/grape/grape
       route-detect:
         fill: red
     languages: [ruby]
