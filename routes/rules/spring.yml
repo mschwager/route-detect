@@ -147,7 +147,7 @@ rules:
             - pattern: PatchMapping
             - pattern: PostMapping
             - pattern: PutMapping
-    message: Found authenticated Spring route
+    message: Found authorized Spring route
     metadata:
       references:
         - https://www.baeldung.com/spring-security-method-security
