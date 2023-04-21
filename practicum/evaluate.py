@@ -17,94 +17,220 @@ SHORT_HASH_LEN = 7
 
 HARNESS = {
     "Python": {
-        "django": [
-            "https://github.com/DefectDojo/django-DefectDojo",
-            "https://github.com/saleor/saleor",
-            "https://github.com/wagtail/wagtail",
-        ],
-        "django-rest-framework": [
-            "https://github.com/DefectDojo/django-DefectDojo",
-        ],
-        "flask": [
-            "https://github.com/apache/airflow",
-            "https://github.com/flaskbb/flaskbb",
-            "https://github.com/getredash/redash",
-        ],
-        "sanic": [
-            "https://github.com/howie6879/owllook",
-            "https://github.com/jacebrowning/memegen",
-        ],
+        "django": {
+            "repos": [
+                "https://github.com/DefectDojo/django-DefectDojo",
+                "https://github.com/saleor/saleor",
+                "https://github.com/wagtail/wagtail",
+            ],
+            "regexes": [
+                ["-g", "*.py", r"\b(path|re_path)\("],
+            ],
+        },
+        "django-rest-framework": {
+            "repos": [
+                "https://github.com/DefectDojo/django-DefectDojo",
+            ],
+            "regexes": [
+                ["-g", "*.py", r"\b(action|api_view)\("],
+            ],
+        },
+        "flask": {
+            "repos": [
+                "https://github.com/apache/airflow",
+                "https://github.com/flaskbb/flaskbb",
+                "https://github.com/getredash/redash",
+            ],
+            "regexes": [
+                ["-g", "*.py", r"\.route\("],
+            ],
+        },
+        "sanic": {
+            "repos": [
+                "https://github.com/howie6879/owllook",
+                "https://github.com/jacebrowning/memegen",
+            ],
+            "regexes": [
+                ["-g", "*.py", r"\.(route|get|post|options|head|put|delete)\("],
+            ],
+        },
     },
     "PHP": {
-        "laravel": [
-            "https://github.com/monicahq/monica",
-            "https://github.com/koel/koel",
-            "https://github.com/BookStackApp/BookStack",
-        ],
-        "symfony": [
-            "https://github.com/Sylius/Sylius",
-            "https://github.com/sulu/sulu",
-            "https://github.com/bolt/core",
-        ],
-        "cakephp": [
-            "https://github.com/passbolt/passbolt_api",
-            "https://github.com/croogo/croogo",
-        ],
+        "laravel": {
+            "repos": [
+                "https://github.com/monicahq/monica",
+                "https://github.com/koel/koel",
+                "https://github.com/BookStackApp/BookStack",
+            ],
+            "regexes": [
+                [
+                    "-g",
+                    "*.php",
+                    r"Route::(get|post|put|patch|delete|options|fallback)\(",
+                ],
+            ],
+        },
+        "symfony": {
+            "repos": [
+                "https://github.com/Sylius/Sylius",
+                "https://github.com/sulu/sulu",
+                "https://github.com/bolt/core",
+            ],
+            "regexes": [
+                ["-g", "*.php", r"\bRoute\("],
+                ["-g", "*.yml", r"\bpath:"],
+            ],
+        },
+        "cakephp": {
+            "repos": [
+                "https://github.com/passbolt/passbolt_api",
+                "https://github.com/croogo/croogo",
+            ],
+            "regexes": [
+                [
+                    "-g",
+                    "*.php",
+                    r"(get|post|put|patch|delete|options|head|fallbacks)\(",
+                ],
+            ],
+        },
     },
     "Ruby": {
-        "rails": [
-            "https://github.com/discourse/discourse",
-            "https://github.com/gitlabhq/gitlabhq",
-            "https://github.com/diaspora/diaspora",
-        ],
-        "grape": [
-            "https://github.com/locomotivecms/engine",
-            "https://github.com/gitlabhq/gitlabhq",
-            "https://github.com/Mapotempo/optimizer-api",
-        ],
+        "rails": {
+            "repos": [
+                "https://github.com/discourse/discourse",
+                "https://github.com/gitlabhq/gitlabhq",
+                "https://github.com/diaspora/diaspora",
+            ],
+            "regexes": [
+                [
+                    "-g",
+                    "*.rb",
+                    r"\b(resource|resources|get|patch|put|post|delete|match)\b",
+                ],
+            ],
+        },
+        "grape": {
+            "repos": [
+                "https://github.com/locomotivecms/engine",
+                "https://github.com/gitlabhq/gitlabhq",
+                "https://github.com/Mapotempo/optimizer-api",
+            ],
+            "regexes": [
+                ["-g", "*.rb", r"\b(resource|resources|get|patch|put|post|delete)\b"],
+            ],
+        },
     },
     "Java": {
-        "spring": [
-            "https://github.com/thingsboard/thingsboard",
-            "https://github.com/macrozheng/mall",
-            "https://github.com/sqshq/piggymetrics",
-        ],
-        "jax-rs": [
-            "https://github.com/DependencyTrack/dependency-track",
-            "https://github.com/eclipse/kura",
-            "https://github.com/eclipse/kapua",
-        ],
+        "spring": {
+            "repos": [
+                "https://github.com/thingsboard/thingsboard",
+                "https://github.com/macrozheng/mall",
+                "https://github.com/sqshq/piggymetrics",
+            ],
+            "regexes": [
+                [
+                    "-g",
+                    "*.java",
+                    r"@(RequestMapping|DeleteMapping|GetMapping|PatchMapping|PostMapping|PutMapping)",
+                ],
+            ],
+        },
+        "jax-rs": {
+            "repos": [
+                "https://github.com/DependencyTrack/dependency-track",
+                "https://github.com/eclipse/kura",
+                "https://github.com/eclipse/kapua",
+            ],
+            "regexes": [
+                ["-g", "*.java", r"@(GET|HEAD|DELETE|OPTIONS|POST|PUT)"],
+            ],
+        },
     },
     "Go": {
-        "gorilla": [
-            "https://github.com/portainer/portainer",
-            "https://github.com/google/exposure-notifications-server",
-        ],
-        "gin": [
-            "https://github.com/photoprism/photoprism",
-            "https://github.com/go-admin-team/go-admin",
-            "https://github.com/gotify/server",
-        ],
-        "chi": [
-            "https://github.com/dhax/go-base",
-            "https://github.com/cloudfoundry/korifi",
-        ],
+        "gorilla": {
+            "repos": [
+                "https://github.com/portainer/portainer",
+                "https://github.com/google/exposure-notifications-server",
+            ],
+            "regexes": [
+                ["-g", "*.go", r"\.(Handle|Handler|HandleFunc|HandlerFunc)\("],
+            ],
+        },
+        "gin": {
+            "repos": [
+                "https://github.com/photoprism/photoprism",
+                "https://github.com/go-admin-team/go-admin",
+                "https://github.com/gotify/server",
+            ],
+            "regexes": [
+                [
+                    "-g",
+                    "*.go",
+                    r"\.(Any|Handle|Static|StaticFS|StaticFile|DELETE|GET|HEAD|OPTIONS|PATCH|POST|PUT)\(",
+                ],
+            ],
+        },
+        "chi": {
+            "repos": [
+                "https://github.com/dhax/go-base",
+                "https://github.com/cloudfoundry/korifi",
+            ],
+            "regexes": [
+                [
+                    "-g",
+                    "*.go",
+                    r"\.(Handle|HandleFunc|Method|MethodFunc|Connect|Delete|Get|Head|Options|Patch|Post|Put|Trace)\(",
+                ],
+            ],
+        },
     },
     JS_TS_LANGUAGE: {
-        "express": [
-            "https://github.com/payloadcms/payload",
-            "https://github.com/directus/directus",
-        ],
-        "react": [
-            "https://github.com/elastic/kibana",
-            "https://github.com/mattermost/mattermost-webapp",
-            "https://github.com/apache/superset",
-        ],
-        "angular": [
-            "https://github.com/Chocobozzz/PeerTube",
-            "https://github.com/bitwarden/clients",
-            "https://github.com/ever-co/ever-demand",
-        ],
+        "express": {
+            "repos": [
+                "https://github.com/payloadcms/payload",
+                "https://github.com/directus/directus",
+            ],
+            "regexes": [
+                [
+                    "-g",
+                    "*.js",
+                    "-g",
+                    "*.ts",
+                    r"\.(get|delete|head|options|patch|post|put|all|route)\(",
+                ],
+            ],
+        },
+        "react": {
+            "repos": [
+                "https://github.com/elastic/kibana",
+                "https://github.com/mattermost/mattermost-webapp",
+                "https://github.com/apache/superset",
+            ],
+            "regexes": [
+                ["-g", "*.js", "-g", "*.ts", "-g", "*.jsx", "-g", "*.tsx", r"<Route\b"],
+            ],
+        },
+        "angular": {
+            "repos": [
+                "https://github.com/Chocobozzz/PeerTube",
+                "https://github.com/bitwarden/clients",
+                "https://github.com/ever-co/ever-demand",
+            ],
+            "regexes": [
+                [
+                    "-g",
+                    "*.js",
+                    "-g",
+                    "*.ts",
+                    "-g",
+                    "*.jsx",
+                    "-g",
+                    "*.tsx",
+                    r"\bpath:\s?",
+                ],
+            ],
+        },
     },
 }
 
@@ -112,14 +238,17 @@ HARNESS = {
 stderr = functools.partial(print, file=sys.stderr)
 
 
-def run_cmd(*args, cwd=None):
+def run_cmd(*args, cwd=None, ok_returncodes=None):
+    if ok_returncodes is None:
+        ok_returncodes = [os.EX_OK]
+
     try:
         proc = subprocess.run(args, capture_output=True, encoding="utf-8", cwd=cwd)
     except FileNotFoundError:
         stderr(f"Failed to run {args[0]}, please install {args[0]} and try again")
         sys.exit(1)
 
-    if proc.returncode != os.EX_OK:
+    if proc.returncode not in ok_returncodes:
         stderr(
             f"Running {args} returned code {proc.returncode} and stderr {proc.stderr}"
         )
@@ -243,6 +372,30 @@ def analyze_repository(harness_dir, output_dir, language, framework, repository)
     json.dump(output, output_path.open(mode="w"))
 
 
+def regex_repository(harness_dir, language, framework, regexes, repository):
+    stderr(f"Performing regex analysis of {repository}")
+
+    org, repo = get_org_repo(repository)
+    target_dir = harness_dir / repo
+    target_abs = target_dir.resolve(strict=True)
+    name = "/".join([org, repo])
+
+    def line_count(output):
+        lines = output.strip().split("\n")
+        return 0 if lines == [""] else len(lines)
+
+    # 0 -> results, 1 -> no results, 2 -> error
+    ok_returncodes = [0, 1]
+
+    total_line_count = sum(
+        line_count(run_cmd("rg", *regex, cwd=target_abs, ok_returncodes=ok_returncodes))
+        for regex in regexes
+    )
+    stderr(f"Found {total_line_count} results")
+
+    return [name, framework, language, total_line_count]
+
+
 def parse_args():
     p = argparse.ArgumentParser(
         description="Evaluate route-detect against dependent codebases",
@@ -279,6 +432,11 @@ def parse_args():
         action="store_true",
         help="Process analysis results and output evaluation metrics",
     )
+    action_group.add_argument(
+        "--regex",
+        action="store_true",
+        help="Perform regex analysis against dependent repositories",
+    )
 
     return p.parse_args()
 
@@ -297,7 +455,7 @@ def main():
             (language, framework, repository)
             for language, frameworks in HARNESS.items()
             for framework, repositories in frameworks.items()
-            for repository in repositories
+            for repository in repositories["repos"]
             if not args.repos or any(repo in repository for repo in args.repos)
         ]
         # No need for multiprocessing here, Semgrep will already saturate the CPU
@@ -316,8 +474,8 @@ def main():
         with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
             results = pool.map(process_output, outputs)
 
-        # Sort on language then framework
-        results.sort(key=lambda r: r[3] + r[2])
+        # Sort on language then framework then name
+        results.sort(key=lambda r: r[3] + r[2] + r[0])
 
         headers = [
             "Repository",
@@ -332,6 +490,37 @@ def main():
             "Authz route count",
             "Unauthz route count",
             "Role count",
+        ]
+        mismatch = any(len(headers) != len(result) for result in results)
+        if mismatch:
+            stderr("CSV header/row mismatch")
+            return 1
+
+        csv_out = csv.writer(sys.stdout)
+        csv_out.writerows([headers] + results)
+    elif args.regex:
+        analyses = [
+            (language, framework, repositories["regexes"], repository)
+            for language, frameworks in HARNESS.items()
+            for framework, repositories in frameworks.items()
+            for repository in repositories["repos"]
+            if not args.repos or any(repo in repository for repo in args.repos)
+        ]
+
+        # No need for multiprocessing here, rg will already saturate the CPU
+        results = [
+            regex_repository(harness_dir, language, framework, regexes, repository)
+            for language, framework, regexes, repository in analyses
+        ]
+
+        # Sort on language then framework then name
+        results.sort(key=lambda r: r[2] + r[1] + r[0])
+
+        headers = [
+            "Repository",
+            "Framework",
+            "Language",
+            "Regex count",
         ]
         mismatch = any(len(headers) != len(result) for result in results)
         if mismatch:
