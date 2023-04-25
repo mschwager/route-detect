@@ -297,6 +297,13 @@ def process_output(filepath):
         int("-unauthorized" in result["check_id"])
         for result in data["semgrep"]["results"]
     )
+    unknown_count = (
+        route_count
+        - authenticated_count
+        - unauthenticated_count
+        - authorized_count
+        - unauthorized_count
+    )
     role_count = len(
         {
             result["extra"]["metavars"][metavariable]["abstract_content"]
@@ -321,6 +328,7 @@ def process_output(filepath):
         str(unauthenticated_count),
         str(authorized_count),
         str(unauthorized_count),
+        str(unknown_count),
         str(role_count),
     ]
 
@@ -489,6 +497,7 @@ def main():
             "Unauthn route count",
             "Authz route count",
             "Unauthz route count",
+            "Unknown route count",
             "Role count",
         ]
         mismatch = any(len(headers) != len(result) for result in results)
