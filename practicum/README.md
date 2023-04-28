@@ -17,3 +17,9 @@ Then, process the results:
 ```
 $ python evaluation.py --process
 ```
+
+Perform regular expression based evaluation:
+
+```
+$ python evaluation.py --regex
+```
