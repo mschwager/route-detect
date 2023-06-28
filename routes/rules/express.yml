@@ -136,21 +136,3 @@ rules:
         fill: red
     languages: [javascript, typescript]
     severity: INFO
-  - id: express-route-payload
-    patterns:
-      - pattern-either:
-          - pattern-inside: $ARR.push(...)
-          - pattern-inside: $ARR.concat(...)
-      - pattern: "{..., path: $PATH, ...}"
-      - pattern: "{..., method: $METHOD, ...}"
-      - pattern: "{..., handler: $HANDLER, ...}"
-      - focus-metavariable: $PATH
-    message: Found Express route
-    metadata:
-      references:
-        - https://expressjs.com/en/guide/routing.html
-        - https://expressjs.com/en/4x/api.html#app.METHOD
-      route-detect:
-        fill: grey
-    languages: [javascript, typescript]
-    severity: INFO

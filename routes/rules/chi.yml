@@ -180,25 +180,3 @@ rules:
         fill: red
     languages: [go]
     severity: INFO
-  - id: chi-route-korifi-authenticated
-    patterns:
-      - pattern-inside: "func AuthenticatedRoutes(...) { ... }"
-      - pattern-inside: "[]routing.Route{ ... }"
-      - pattern: "{ ..., Pattern: $PATTERN, ... }"
-    message: Found Chi route
-    metadata:
-      route-detect:
-        fill: green
-    languages: [go]
-    severity: INFO
-  - id: chi-route-korifi-unauthenticated
-    patterns:
-      - pattern-inside: "func UnauthenticatedRoutes(...) { ... }"
-      - pattern-inside: "[]routing.Route{ ... }"
-      - pattern: "{ ..., Pattern: $PATTERN, ... }"
-    message: Found Chi route
-    metadata:
-      route-detect:
-        fill: red
-    languages: [go]
-    severity: INFO

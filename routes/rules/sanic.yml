@@ -36,11 +36,6 @@ rules:
                 ...
           - pattern-not: |
               @$APP.$METHOD($PATH, ...)
-              @owllook.fetcher.decorators.authenticator(...)
-              async def $FUNC(...):
-                ...
-          - pattern-not: |
-              @$APP.$METHOD($PATH, ...)
               @sanic_ext.openapi.secured(...)
               async def $FUNC(...):
                 ...
@@ -108,7 +103,6 @@ rules:
             - pattern: sanicjwt.protected
             - pattern: sanic_jwt_extended.jwt_required
             - pattern: sanic_security.authentication.requires_authentication
-            - pattern: owllook.fetcher.decorators.authenticator
             - pattern: sanic_ext.openapi.secured
             - pattern: sanic_ext.openapi.definition
             - pattern: $AUTH.auth_required

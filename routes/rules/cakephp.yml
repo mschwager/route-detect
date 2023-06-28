@@ -2,22 +2,19 @@ rules:
   - id: cakephp-route
     patterns:
       - pattern-inside: function (Cake\Routing\RouteBuilder $ROUTES) { ... };
-      - pattern-either:
-          - pattern: Croogo\Core\Router::build($ROUTES, $PATH, ...);
-          - patterns:
-              - pattern: $ROUTES->$METHOD($PATH, ...);
-              - metavariable-pattern:
-                  metavariable: $METHOD
-                  pattern-either:
-                    - pattern: connect
-                    - pattern: get
-                    - pattern: post
-                    - pattern: put
-                    - pattern: patch
-                    - pattern: delete
-                    - pattern: options
-                    - pattern: head
-                    - pattern: fallbacks
+      - pattern: $ROUTES->$METHOD($PATH, ...);
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: connect
+            - pattern: get
+            - pattern: post
+            - pattern: put
+            - pattern: patch
+            - pattern: delete
+            - pattern: options
+            - pattern: head
+            - pattern: fallbacks
     message: Found CakePHP route
     metadata:
       references:
