@@ -850,15 +850,15 @@ files = [
 
 [[package]]
 name = "semgrep"
-version = "1.27.0"
+version = "1.30.0"
 description = "Lightweight static analysis for many languages. Find bug variants with patterns that look like source code."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "semgrep-1.27.0-cp37.cp38.cp39.py37.py38.py39-none-any.whl", hash = "sha256:7118fcd5d5e9004e92d045da8ec46290e2003f39547f8d858620c25a3bfec194"},
-    {file = "semgrep-1.27.0-cp37.cp38.cp39.py37.py38.py39-none-macosx_10_14_x86_64.whl", hash = "sha256:8ea7c6559185fc31605e4afb91083a432a8410b4abf00284dc66bc9137ed9c86"},
-    {file = "semgrep-1.27.0-cp37.cp38.cp39.py37.py38.py39-none-macosx_11_0_arm64.whl", hash = "sha256:7bfb8249131d6d50f496f73486e91b894ce17aa44d2088752e032ae807bb2582"},
-    {file = "semgrep-1.27.0.tar.gz", hash = "sha256:c8796d290e497bd2e7f1fc2a415d89a7ab90a2509d9fc5b912053e557a7d7057"},
+    {file = "semgrep-1.30.0-cp37.cp38.cp39.cp310.cp311.py37.py38.py39.py310.py311-none-any.whl", hash = "sha256:e0c91a5d0e797dbb3ff714c0282bbf8f035f21897bf4cfd015f039c7d549ae21"},
+    {file = "semgrep-1.30.0-cp37.cp38.cp39.cp310.cp311.py37.py38.py39.py310.py311-none-macosx_10_14_x86_64.whl", hash = "sha256:478ff7dac08791b9e6b1ed9db8358b65bb8337009c7756b2cc2f74138b3f99f3"},
+    {file = "semgrep-1.30.0-cp37.cp38.cp39.cp310.cp311.py37.py38.py39.py310.py311-none-macosx_11_0_arm64.whl", hash = "sha256:43efa2fbce6c87be3eb6b751abff81c01faee51b2c25301f6c59576453e156e2"},
+    {file = "semgrep-1.30.0.tar.gz", hash = "sha256:603d1b59fe2368f52ed1bf569f072bfe3aac8e54da2d180fefe0b03564005bb6"},
 ]
 
 [package.dependencies]
@@ -913,13 +913,13 @@ files = [
 
 [[package]]
 name = "typing-extensions"
-version = "4.6.3"
+version = "4.7.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "typing_extensions-4.6.3-py3-none-any.whl", hash = "sha256:88a4153d8505aabbb4e13aacb7c486c2b4a33ca3b3f807914a9b4c844c471c26"},
-    {file = "typing_extensions-4.6.3.tar.gz", hash = "sha256:d91d5919357fe7f681a9f2b5b4cb2a5f1ef0a1e9f59c4d8ff0d3491e05c0ffd5"},
+    {file = "typing_extensions-4.7.0-py3-none-any.whl", hash = "sha256:5d8c9dac95c27d20df12fb1d97b9793ab8b2af8a3a525e68c80e21060c161771"},
+    {file = "typing_extensions-4.7.0.tar.gz", hash = "sha256:935ccf31549830cda708b42289d44b6f74084d616a00be651601a4f968e77c82"},
 ]
 
 [[package]]
@@ -1065,4 +1065,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "0b84a721aa33fe032517a6c45af6457e28177f35b64470f80398cd0ec890dc17"
+content-hash = "26ce6bf1c363bebfb01925732cead280db941bcf0c08a79248f139dbf948dd25"

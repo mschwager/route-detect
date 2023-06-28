@@ -6,7 +6,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
+          # - macos-latest https://github.com/returntocorp/semgrep/issues/8120
         python-version:
           - "3.7"
           - "3.8"
