@@ -31,6 +31,7 @@ func main() {
 		})
 	}
 
+	// https://github.com/returntocorp/semgrep/issues/8173
 	// todoruleid: gin-route-authenticated, gin-route-unauthenticated
 	r.GET("/ping", handler)
 
