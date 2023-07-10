@@ -12,9 +12,10 @@ Web application HTTP route authn and authz bugs are some of the most common secu
 - 2021 OWASP Top 10 #7 - [Identification and Authentication Failures](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/) (formerly Broken Authentication)
 - 2019 OWASP API Top 10 #2 - [Broken User Authentication](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa2-broken-user-authentication.md)
 - 2019 OWASP API Top 10 #5 - [Broken Function Level Authorization](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa5-broken-function-level-authorization.md)
-- 2022 CWE Top 25 #14 - [CWE-287: Improper Authentication](https://cwe.mitre.org/data/definitions/1387.html)
-- 2022 CWE Top 25 #16 - [CWE-862: Missing Authorization](https://cwe.mitre.org/data/definitions/1387.html)
-- 2022 CWE Top 25 #18 - [CWE-306: Missing Authentication for Critical Function](https://cwe.mitre.org/data/definitions/1387.html)
+- 2023 CWE Top 25 #11 - [CWE-862: Missing Authorization](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
+- 2023 CWE Top 25 #13 - [CWE-287: Improper Authentication](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
+- 2023 CWE Top 25 #20 - [CWE-306: Missing Authentication for Critical Function](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
+- 2023 CWE Top 25 #24 - [CWE-863: Incorrect Authorization](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
 - #21 most CVEs by CWE - [CWE-284: Access Control (Authorization) Issues](https://www.cvedetails.com/cwe-definitions.php)
 - #47 most CVEs by CWE - [CWE-639: Access Control Bypass Through User-Controlled Key](https://www.cvedetails.com/cwe-definitions.php)
 
