@@ -16,8 +16,6 @@ Web application HTTP route authn and authz bugs are some of the most common secu
 - 2023 CWE Top 25 #13 - [CWE-287: Improper Authentication](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
 - 2023 CWE Top 25 #20 - [CWE-306: Missing Authentication for Critical Function](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
 - 2023 CWE Top 25 #24 - [CWE-863: Incorrect Authorization](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
-- #21 most CVEs by CWE - [CWE-284: Access Control (Authorization) Issues](https://www.cvedetails.com/cwe-definitions.php)
-- #47 most CVEs by CWE - [CWE-639: Access Control Bypass Through User-Controlled Key](https://www.cvedetails.com/cwe-definitions.php)
 
 ![Routes demo](https://raw.githubusercontent.com/mschwager/route-detect/main/routes-demo.png)
 
