@@ -4,24 +4,25 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/route-detect.svg)](https://pypi.org/project/route-detect/)
 [![PyPI Version](https://img.shields.io/pypi/v/route-detect.svg)](https://pypi.org/project/route-detect/)
 
-Find authentication (authn) and authorization (authz) security bugs in web application routes.
-
-Web application HTTP route authn and authz bugs are some of the most common security issues found today. These industry standard resources highlight the severity of the issue:
-
-- 2021 OWASP Top 10 #1 - [Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
-- 2021 OWASP Top 10 #7 - [Identification and Authentication Failures](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/) (formerly Broken Authentication)
-- 2019 OWASP API Top 10 #2 - [Broken User Authentication](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa2-broken-user-authentication.md)
-- 2019 OWASP API Top 10 #5 - [Broken Function Level Authorization](https://github.com/OWASP/API-Security/blob/master/2019/en/src/0xa5-broken-function-level-authorization.md)
-- 2023 CWE Top 25 #11 - [CWE-862: Missing Authorization](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
-- 2023 CWE Top 25 #13 - [CWE-287: Improper Authentication](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
-- 2023 CWE Top 25 #20 - [CWE-306: Missing Authentication for Critical Function](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
-- 2023 CWE Top 25 #24 - [CWE-863: Incorrect Authorization](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
+Find authentication (authn) and authorization (authz) security bugs in web application routes:
 
 ![Routes demo](https://raw.githubusercontent.com/mschwager/route-detect/main/routes-demo.png)
 
 <p align="center">
     <i>Routes from <code><a href="https://github.com/koel/koel">koel<a></code> streaming server</i>
 </p>
+
+Web application HTTP route authn and authz bugs are some of the most common security issues found today. These industry standard resources highlight the severity of the issue:
+
+- 2021 OWASP Top 10 #1 - [Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+- 2021 OWASP Top 10 #7 - [Identification and Authentication Failures](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/) (formerly Broken Authentication)
+- 2023 OWASP API Top 10 #1 - [Broken Object Level Authorization](https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/)
+- 2023 OWASP API Top 10 #2 - [Broken Authentication](https://owasp.org/API-Security/editions/2023/en/0xa2-broken-authentication/)
+- 2023 OWASP API Top 10 #5 - [Broken Function Level Authorization](https://owasp.org/API-Security/editions/2023/en/0xa5-broken-function-level-authorization/)
+- 2023 CWE Top 25 #11 - [CWE-862: Missing Authorization](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
+- 2023 CWE Top 25 #13 - [CWE-287: Improper Authentication](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
+- 2023 CWE Top 25 #20 - [CWE-306: Missing Authentication for Critical Function](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
+- 2023 CWE Top 25 #24 - [CWE-863: Incorrect Authorization](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
 
 Supported web frameworks (`route-detect` IDs in parentheses):
 
