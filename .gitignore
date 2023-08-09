@@ -130,3 +130,6 @@ dmypy.json
 
 # Test harness repositories
 harness/
+
+# VSCode
+.vscode/

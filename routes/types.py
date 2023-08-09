@@ -19,6 +19,7 @@ class Framework(enum.Enum):
     CAKEPHP = "cakephp"
     RAILS = "rails"
     GRAPE = "grape"
+    SPRING = "spring"
 
 
 class SemgrepResult:
@@ -65,6 +66,16 @@ class SemgrepResult:
     def rd_type(self):
         return self.rd_metadata.get("type", ResultType.ROUTE.value)
 
+    # Try to extract a route from the result, it's not in the metadata and has to be parsed from the line
+    @property
+    def rd_route(self):
+        if "$PATH" in self.metavars: #For some rules we have extracted a path in the $PATH metavar
+            return "{} {}".format(self.metavars['$METHOD']['abstract_content'], self.metavars['$PATH']['abstract_content'])
+        elif self.rd_type == ResultType.ROUTE.value:
+            return self.first_line
+        else:
+            return None
+    
     @property
     def rd_normalizer(self):
         return self.rd_metadata.get("normalizer")
