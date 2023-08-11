@@ -70,12 +70,17 @@ class SemgrepResult:
     @property
     def rd_route(self):
         if "$PATH" in self.metavars: #For some rules we have extracted a path in the $PATH metavar
-            return "{} {}".format(self.metavars['$METHOD']['abstract_content'], self.metavars['$PATH']['abstract_content'])
+            return "{} {}".format(self.rd_method, self.metavars['$PATH']['abstract_content'])
         elif self.rd_type == ResultType.ROUTE.value:
             return self.first_line
         else:
             return None
     
+    @property
+    def rd_method(self):
+        # split by space and deduplicate and return first element
+        return list(set(self.metavars['$METHOD']['abstract_content'].split(' ')))[0]
+
     @property
     def rd_normalizer(self):
         return self.rd_metadata.get("normalizer")

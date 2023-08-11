@@ -150,7 +150,8 @@ rules:
     patterns:
       - pattern: |
           @$METHOD
-          $RETURNTYPE $FUNC(...) { ... }
+          @Path($PATH)
+          $RETURNTYPE $FUNC(...)
       - pattern-not: |
           @$METHOD
           @Secured
