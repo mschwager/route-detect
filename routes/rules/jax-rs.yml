@@ -20,6 +20,14 @@ rules:
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @$METHOD
+              @jakarta.annotation.security.DenyAll(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @jakarta.annotation.security.DenyAll(...)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
               @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -46,6 +54,9 @@ rules:
                       @javax.annotation.security.DenyAll(...)
                       class $CLASS { ... }
                   - pattern-inside: |
+                      @jakarta.annotation.security.DenyAll(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
                       @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
                       class $CLASS { ... }
                   - pattern-inside: |
@@ -60,6 +71,12 @@ rules:
             - pattern: javax.ws.rs.OPTIONS
             - pattern: javax.ws.rs.POST
             - pattern: javax.ws.rs.PUT
+            - pattern: jakarta.ws.rs.GET
+            - pattern: jakarta.ws.rs.HEAD
+            - pattern: jakarta.ws.rs.DELETE
+            - pattern: jakarta.ws.rs.OPTIONS
+            - pattern: jakarta.ws.rs.POST
+            - pattern: jakarta.ws.rs.PUT
     message: Found authenticated JAX-RS route
     metadata:
       references:
@@ -88,6 +105,22 @@ rules:
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @javax.annotation.security.DeclareRoles($AUTHZ)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @jakarta.annotation.security.RolesAllowed($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @jakarta.annotation.security.RolesAllowed($AUTHZ)
+              @$METHOD
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD
+              @jakarta.annotation.security.DeclareRoles($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @jakarta.annotation.security.DeclareRoles($AUTHZ)
               @$METHOD
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -121,6 +154,12 @@ rules:
                       @javax.annotation.security.DeclareRoles($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
+                      @jakarta.annotation.security.RolesAllowed($AUTHZ)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @jakarta.annotation.security.DeclareRoles($AUTHZ)
+                      class $CLASS { ... }
+                  - pattern-inside: |
                       @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
@@ -135,6 +174,12 @@ rules:
             - pattern: javax.ws.rs.OPTIONS
             - pattern: javax.ws.rs.POST
             - pattern: javax.ws.rs.PUT
+            - pattern: jakarta.ws.rs.GET
+            - pattern: jakarta.ws.rs.HEAD
+            - pattern: jakarta.ws.rs.DELETE
+            - pattern: jakarta.ws.rs.OPTIONS
+            - pattern: jakarta.ws.rs.POST
+            - pattern: jakarta.ws.rs.PUT
     message: Found authorized JAX-RS route
     metadata:
       references:
@@ -185,6 +230,30 @@ rules:
           $RETURNTYPE $FUNC(...) { ... }
       - pattern-not: |
           @$METHOD
+          @jakarta.annotation.security.RolesAllowed(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @jakarta.annotation.security.RolesAllowed(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
+          @jakarta.annotation.security.DenyAll(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @jakarta.annotation.security.DenyAll(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
+          @jakarta.annotation.security.DeclareRoles(...)
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @jakarta.annotation.security.DeclareRoles(...)
+          @$METHOD
+          $RETURNTYPE $FUNC(...) { ... }
+      - pattern-not: |
+          @$METHOD
           @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
           $RETURNTYPE $FUNC(...) { ... }
       - pattern-not: |
@@ -231,6 +300,15 @@ rules:
           @javax.annotation.security.DeclareRoles(...)
           class $CLASS { ... }
       - pattern-not-inside: |
+          @jakarta.annotation.security.RolesAllowed(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @jakarta.annotation.security.DenyAll(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
+          @jakarta.annotation.security.DeclareRoles(...)
+          class $CLASS { ... }
+      - pattern-not-inside: |
           @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
           class $CLASS { ... }
       - pattern-not-inside: |
@@ -251,6 +329,12 @@ rules:
             - pattern: javax.ws.rs.OPTIONS
             - pattern: javax.ws.rs.POST
             - pattern: javax.ws.rs.PUT
+            - pattern: jakarta.ws.rs.GET
+            - pattern: jakarta.ws.rs.HEAD
+            - pattern: jakarta.ws.rs.DELETE
+            - pattern: jakarta.ws.rs.OPTIONS
+            - pattern: jakarta.ws.rs.POST
+            - pattern: jakarta.ws.rs.PUT
     message: Found unauthenticated JAX-RS route
     metadata:
       references:

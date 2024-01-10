@@ -3,7 +3,6 @@ package test.routes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.Authorization;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -37,7 +36,16 @@ public class ExampleResource {
 
     // ruleid: jaxrs-route-authorized
     @DELETE
-    @RolesAllowed("role")
+    @javax.annotation.security.RolesAllowed("role")
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response mySecuredMethod(@PathParam("id") Long id) {
+        return Response.ok().build();
+    }
+
+    // ruleid: jaxrs-route-authorized
+    @DELETE
+    @jakarta.annotation.security.RolesAllowed("role")
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response mySecuredMethod(@PathParam("id") Long id) {

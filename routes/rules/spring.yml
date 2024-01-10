@@ -20,6 +20,14 @@ rules:
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @$METHOD(...)
+              @jakarta.annotation.security.DenyAll(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @jakarta.annotation.security.DenyAll(...)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
               @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -44,6 +52,9 @@ rules:
                       class $CLASS { ... }
                   - pattern-inside: |
                       @javax.annotation.security.DenyAll(...)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @jakarta.annotation.security.DenyAll(...)
                       class $CLASS { ... }
                   - pattern-inside: |
                       @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
@@ -104,6 +115,22 @@ rules:
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
               @$METHOD(...)
+              @jakarta.annotation.security.RolesAllowed($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @jakarta.annotation.security.RolesAllowed($AUTHZ)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
+              @jakarta.annotation.security.DeclareRoles($AUTHZ)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @jakarta.annotation.security.DeclareRoles($AUTHZ)
+              @$METHOD(...)
+              $RETURNTYPE $FUNC(...) { ... }
+          - pattern: |
+              @$METHOD(...)
               @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
               $RETURNTYPE $FUNC(...) { ... }
           - pattern: |
@@ -131,6 +158,12 @@ rules:
                       class $CLASS { ... }
                   - pattern-inside: |
                       @javax.annotation.security.DeclareRoles($AUTHZ)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @jakarta.annotation.security.RolesAllowed($AUTHZ)
+                      class $CLASS { ... }
+                  - pattern-inside: |
+                      @jakarta.annotation.security.DeclareRoles($AUTHZ)
                       class $CLASS { ... }
                   - pattern-inside: |
                       @org.apache.shiro.authz.annotation.RequiresPermissions($AUTHZ)
@@ -211,6 +244,30 @@ rules:
                   $RETURNTYPE $FUNC(...) { ... }
               - pattern-not: |
                   @$METHOD(...)
+                  @jakarta.annotation.security.RolesAllowed(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @jakarta.annotation.security.RolesAllowed(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @jakarta.annotation.security.DenyAll(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @jakarta.annotation.security.DenyAll(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
+                  @jakarta.annotation.security.DeclareRoles(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @jakarta.annotation.security.DeclareRoles(...)
+                  @$METHOD(...)
+                  $RETURNTYPE $FUNC(...) { ... }
+              - pattern-not: |
+                  @$METHOD(...)
                   @org.apache.shiro.authz.annotation.RequiresAuthentication(...)
                   $RETURNTYPE $FUNC(...) { ... }
               - pattern-not: |
@@ -255,6 +312,15 @@ rules:
                   class $CLASS { ... }
               - pattern-not-inside: |
                   @javax.annotation.security.DeclareRoles(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @jakarta.annotation.security.RolesAllowed(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @jakarta.annotation.security.DenyAll(...)
+                  class $CLASS { ... }
+              - pattern-not-inside: |
+                  @jakarta.annotation.security.DeclareRoles(...)
                   class $CLASS { ... }
               - pattern-not-inside: |
                   @org.apache.shiro.authz.annotation.RequiresAuthentication(...)

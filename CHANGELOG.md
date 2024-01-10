@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Support for Express routes defined on the app ([#16](https://github.com/mschwager/route-detect/issues/16))
+- Support for Java Jakarta namespace ([#15](https://github.com/mschwager/route-detect/issues/15))
 
 ## [0.7.0] - 2023-06-28
 
