@@ -1,7 +1,7 @@
 exclude: "^tests/test_rules/"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.4.0"
+    rev: "v4.5.0"
     hooks:
       - id: check-yaml
       - id: check-json
@@ -12,17 +12,17 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
   - repo: https://github.com/asottile/reorder_python_imports
-    rev: "v3.9.0"
+    rev: "v3.12.0"
     hooks:
       - id: reorder-python-imports
         args:
-          - "--py37-plus"
+          - "--py38-plus"
   - repo: https://github.com/psf/black
-    rev: "22.12.0"
+    rev: "23.12.1"
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
-    rev: "5.0.4"
+    rev: "7.0.0"
     hooks:
       - id: flake8
   - repo: https://github.com/pre-commit/mirrors-prettier
