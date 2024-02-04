@@ -200,7 +200,7 @@ rules:
       - pattern-either:
           - patterns:
               - pattern: |
-                  @$METHOD(...)
+                  @$METHOD(..., path = $PATH, ...)
                   $RETURNTYPE $FUNC(...) { ... }
               - pattern-not: |
                   @$METHOD(...)
