@@ -7,6 +7,7 @@ FLASK = CURDIR / "flask.yml"
 DJANGO = CURDIR / "django.yml"
 DJANGO_REST_FRAMEWORK = CURDIR / "django-rest-framework.yml"
 SANIC = CURDIR / "sanic.yml"
+FASTAPI = CURDIR / "fastapi.yml"
 LARAVEL = CURDIR / "laravel.yml"
 SYMFONY = CURDIR / "symfony.yml"
 CAKEPHP = CURDIR / "cakephp.yml"
@@ -33,6 +34,7 @@ ALL_RULES = {
             DJANGO,
             DJANGO_REST_FRAMEWORK,
             SANIC,
+            FASTAPI,
             LARAVEL,
             SYMFONY,
             CAKEPHP,

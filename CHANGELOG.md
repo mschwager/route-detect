@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for Express routes defined on the app ([#16](https://github.com/mschwager/route-detect/issues/16))
 - Support for Java Jakarta namespace ([#15](https://github.com/mschwager/route-detect/issues/15))
 - Official support for Python 3.12
+- Support for Python FastAPI (`fastapi`)
 
 ### Removed
 
