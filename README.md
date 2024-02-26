@@ -26,7 +26,7 @@ Web application HTTP route authn and authz bugs are some of the most common secu
 
 Supported web frameworks (`route-detect` IDs in parentheses):
 
-- Python: Django (`django`, `django-rest-framework`), Flask (`flask`), Sanic (`sanic`)
+- Python: Django (`django`, `django-rest-framework`), Flask (`flask`), Sanic (`sanic`), FastAPI (`fastapi`)
 - PHP: Laravel (`laravel`), Symfony (`symfony`), CakePHP (`cakephp`)
 - Ruby: Rails\* (`rails`), Grape (`grape`)
 - Java: JAX-RS (`jax-rs`), Spring (`spring`)

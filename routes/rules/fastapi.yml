@@ -1,0 +1,80 @@
+rules:
+  - id: fastapi-route-authenticated
+    patterns:
+      - pattern-either:
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              def $FUNC(..., token, ...):
+                ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              def $FUNC(..., current_user, ...):
+                ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              def $FUNC(..., auth_result, ...):
+                ...
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: websocket
+            - pattern: get
+            - pattern: put
+            - pattern: post
+            - pattern: delete
+            - pattern: options
+            - pattern: head
+            - pattern: patch
+            - pattern: trace
+    message: Found authenticated FastAPI route
+    metadata:
+      references:
+        - https://fastapi.tiangolo.com/reference/apirouter
+        - https://fastapi.tiangolo.com/tutorial/security/first-steps/
+        - https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
+        - https://auth0.com/blog/build-and-secure-fastapi-server-with-auth0/
+      route-detect:
+        fill: green
+    languages: [python]
+    severity: INFO
+  - id: fastapi-route-unauthenticated
+    patterns:
+      - pattern: |
+          @$APP.$METHOD($PATH, ...)
+          def $FUNC(...):
+            ...
+      - pattern-not: |
+          @$APP.$METHOD($PATH, ...)
+          def $FUNC(..., token, ...):
+            ...
+      - pattern-not: |
+          @$APP.$METHOD($PATH, ...)
+          def $FUNC(..., current_user, ...):
+            ...
+      - pattern-not: |
+          @$APP.$METHOD($PATH, ...)
+          def $FUNC(..., auth_result, ...):
+            ...
+      - metavariable-pattern:
+          metavariable: $METHOD
+          pattern-either:
+            - pattern: websocket
+            - pattern: get
+            - pattern: put
+            - pattern: post
+            - pattern: delete
+            - pattern: options
+            - pattern: head
+            - pattern: patch
+            - pattern: trace
+    message: Found unauthenticated FastAPI route
+    metadata:
+      references:
+        - https://fastapi.tiangolo.com/reference/apirouter
+        - https://fastapi.tiangolo.com/tutorial/security/first-steps/
+        - https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/
+        - https://auth0.com/blog/build-and-secure-fastapi-server-with-auth0/
+      route-detect:
+        fill: red
+    languages: [python]
+    severity: INFO
