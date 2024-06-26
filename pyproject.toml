@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "route-detect"
-version = "0.7.0"
+version = "0.8.0"
 description = "Find authentication (authn) and authorization (authz) security bugs in web application routes."
 authors = []
 license = "BSD-3-Clause"

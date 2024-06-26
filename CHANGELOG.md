@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2024-06-26
+
 ### Added
 
 - Support for Express routes defined on the app ([#16](https://github.com/mschwager/route-detect/issues/16))
