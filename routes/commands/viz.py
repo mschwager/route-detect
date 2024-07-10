@@ -99,6 +99,9 @@ def d3ify(parts, output, result, connectors, _global):
             normalized = normalizer(result)
             connector = connectors.get(normalized)
             fill = connector.rd_fill if connector else result.rd_fill
+        if result.rd_route:
+            name = f"ln {result.start_line}: {result.rd_route}"
+            fill = result.rd_fill
         elif _global:
             fill = _global.rd_fill
         else:

@@ -15,14 +15,17 @@ def make_file(data, name):
     return result
 
 
-def make_result(lines, path, metadata=None):
+def make_result(lines, path, metadata=None, metavars=None):
     if metadata is None:
         metadata = {}
 
+    if metavars is None:
+        metavars = {}
+    
     return {
         "check_id": "test_check_id",
         "path": path,
-        "extra": {"metadata": metadata, "lines": lines},
+        "extra": {"metadata": metadata, "metavars": metavars, "lines": lines},
         "start": {"line": 0},
     }
 
