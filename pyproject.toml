@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "route-detect"
-version = "0.8.0"
+version = "0.8.1"
 description = "Find authentication (authn) and authorization (authz) security bugs in web application routes."
 authors = []
 license = "BSD-3-Clause"
@@ -11,7 +11,7 @@ packages = [{include = "routes"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-semgrep = "^1.36.0"
+semgrep = "<1.97.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.1"
@@ -23,6 +23,11 @@ optional = true
 
 [tool.poetry.scripts]
 routes = "routes.main:main"
+
+[[tool.poetry.source]]
+name = "foo"
+url = "https://foo.bar/simple/"
+priority = "secondary"
 
 [tool.coverage.run]
 source = ["routes"]

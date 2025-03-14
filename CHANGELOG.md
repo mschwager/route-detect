@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2025-03-14
+
+### Fixed
+
+- Restrict Semgrep versions to `<1.97.0` to support code snippets [#10762](https://github.com/semgrep/semgrep/issues/10762)
+
 ## [0.8.0] - 2024-06-26
 
 ### Added

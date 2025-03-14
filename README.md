@@ -6,6 +6,9 @@
 
 Find authentication (authn) and authorization (authz) security bugs in web application routes:
 
+> [!IMPORTANT]
+> The Semgrep functionality `route-detect` depends on to display code snippets has been moved behind their cloud app. For more information see [#10762](https://github.com/semgrep/semgrep/issues/10762). However, earlier versions of Semgrep still support this behavior. When using `route-detect`, make sure to install a version of Semgrep before `1.97.0`. This can be accomplished with the following command: `python -m pip install 'semgrep<1.97.0'`.
+
 ![Routes demo](https://raw.githubusercontent.com/mschwager/route-detect/main/routes-demo.png)
 
 <p align="center">
