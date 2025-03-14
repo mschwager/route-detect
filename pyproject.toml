@@ -1,17 +1,24 @@
-[tool.poetry]
+[project]
 name = "route-detect"
 version = "0.8.1"
 description = "Find authentication (authn) and authorization (authz) security bugs in web application routes."
-authors = []
 license = "BSD-3-Clause"
 readme = "README.md"
-repository = "https://github.com/mschwager/route-detect"
-homepage = "https://github.com/mschwager/route-detect"
-packages = [{include = "routes"}]
+requires-python = ">=3.8,<4"
+authors = []
+dependencies = [
+    "semgrep (>=1.36.0,<1.97.0)"
+]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-semgrep = "<1.97.0"
+[project.urls]
+homepage = "https://github.com/mschwager/route-detect"
+repository = "https://github.com/mschwager/route-detect"
+
+[project.scripts]
+routes = "routes.main:main"
+
+[tool.poetry]
+packages = [{include = "routes"}]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.1"
@@ -20,9 +27,6 @@ pre-commit = "<3.6.0" # 3.6.0 requires Python 3.9
 
 [tool.poetry.group.dev]
 optional = true
-
-[tool.poetry.scripts]
-routes = "routes.main:main"
 
 [tool.coverage.run]
 source = ["routes"]
