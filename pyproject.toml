@@ -4,7 +4,7 @@ version = "0.8.1"
 description = "Find authentication (authn) and authorization (authz) security bugs in web application routes."
 license = "BSD-3-Clause"
 readme = "README.md"
-requires-python = ">=3.8,<4"
+requires-python = ">=3.9,<4"
 authors = []
 dependencies = [
     "semgrep (>=1.36.0,<1.97.0)"
@@ -21,9 +21,9 @@ routes = "routes.main:main"
 packages = [{include = "routes"}]
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.2.1"
-pytest-cov = "^4.0"
-pre-commit = "<3.6.0" # 3.6.0 requires Python 3.9
+pytest = "^8.0.0"
+pytest-cov = "^6.0.0"
+pre-commit = "^4.0.0"
 
 [tool.poetry.group.dev]
 optional = true
