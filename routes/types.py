@@ -8,18 +8,6 @@ class ResultType(enum.Enum):
     GLOBAL = "global"
 
 
-class Framework(enum.Enum):
-    FLASK = "flask"
-    DJANGO = "django"
-    DJANGO_REST_FRAMEWORK = "django-rest-framework"
-    SANIC = "sanic"
-    LARAVEL = "laravel"
-    SYMFONY = "symfony"
-    CAKEPHP = "cakephp"
-    RAILS = "rails"
-    GRAPE = "grape"
-
-
 class SemgrepResult:
     def __init__(self, result):
         self.result = result
