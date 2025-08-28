@@ -2,38 +2,38 @@ rules:
   - id: fastapi-route-authenticated
     patterns:
       - pattern-either:
-        - pattern: |
-            @$APP.$METHOD($PATH, ...)
-            def $FUNC(..., token, ...):
-              ...
-        - pattern: |
-            @$APP.$METHOD($PATH, ...)
-            def $FUNC(..., current_user, ...):
-              ...
-        - pattern: |
-            @$APP.$METHOD($PATH, ...)
-            def $FUNC(..., auth_result, ...):
-              ...
-        - pattern: |
-            @$APP.$METHOD($PATH, ...)
-            @auth_required
-            def $FUNC(...):
-              ...
-        - pattern: |
-            @$APP.$METHOD($PATH, ...)
-            @login_required
-            def $FUNC(...):
-              ...
-        - pattern: |
-            @$APP.$METHOD($PATH, ...)
-            @requires_authentication
-            def $FUNC(...):
-              ...
-        - pattern: |
-            @$APP.$METHOD($PATH, ...)
-            @jwt_required
-            def $FUNC(...):
-              ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              def $FUNC(..., token, ...):
+                ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              def $FUNC(..., current_user, ...):
+                ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              def $FUNC(..., auth_result, ...):
+                ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              @auth_required
+              def $FUNC(...):
+                ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              @login_required
+              def $FUNC(...):
+                ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              @requires_authentication
+              def $FUNC(...):
+                ...
+          - pattern: |
+              @$APP.$METHOD($PATH, ...)
+              @jwt_required
+              def $FUNC(...):
+                ...
       - metavariable-pattern:
           metavariable: $METHOD
           pattern-either:
