@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Official support for Python 3.13
+
+### Removed
+
+- Official support for Python 3.8
+- "Connector" functionality (only used in Rails functionality)
+
 ## [0.8.1] - 2025-03-14
 
 ### Fixed
