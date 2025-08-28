@@ -5,7 +5,6 @@ from routes import const
 
 class ResultType(enum.Enum):
     ROUTE = "route"
-    CONNECTOR = "connector"
     GLOBAL = "global"
 
 
@@ -66,13 +65,5 @@ class SemgrepResult:
         return self.rd_metadata.get("type", ResultType.ROUTE.value)
 
     @property
-    def rd_normalizer(self):
-        return self.rd_metadata.get("normalizer")
-
-    @property
     def rd_fill(self):
         return self.rd_metadata.get("fill", const.DEFAULT_FILL_COLOR)
-
-    @property
-    def rd_connect_on(self):
-        return self.rd_metadata["connect-on"]

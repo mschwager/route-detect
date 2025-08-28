@@ -2,7 +2,6 @@ import collections
 import json
 import logging
 import pathlib
-import re
 import webbrowser
 
 from routes import const
@@ -10,54 +9,6 @@ from routes import types
 from routes import util
 
 logger = logging.getLogger(__name__)
-
-RAIL_SYMBOL_RE = re.compile(r":(?P<name>[a-z_]+)")
-RAIL_CONTROLLER_RE = re.compile(r"(?P<controller>[a-z_]+)#(?P<action>[a-z_]+)")
-
-
-def rails_route_to_controller(result):
-    content = result.metavar_content(result.rd_connect_on)
-
-    # Symbol route, e.g. ":user"
-    symbol_match = re.match(RAIL_SYMBOL_RE, content)
-    if symbol_match is not None:
-        return util.pascal_case(symbol_match.group("name")) + "Controller"
-
-    # Controller name, e.g. "user#action"
-    controller_match = re.search(RAIL_CONTROLLER_RE, content)
-    if controller_match is not None:
-        return util.pascal_case(controller_match.group("controller")) + "Controller"
-
-    # Else try content itself even though it's unlikely to work
-    return content
-
-
-NORMALIZERS = {types.Framework.RAILS.value: rails_route_to_controller}
-
-
-def get_connectors(connector_results, interprocedural):
-    results = {}
-
-    if not interprocedural:
-        return results
-
-    def connector_key(result):
-        return result.metavar_content(result.rd_connect_on)
-
-    for key, group in util.sorted_groupby(connector_results, key=connector_key):
-        group_list = list(group)
-        group_locations = " ".join(
-            f"{g.check_id}:{g.path}:{g.start_line}" for g in group_list
-        )
-        logger.debug("Found %s in %s", key, group_locations)
-
-        if len(group_list) > 1:
-            logger.warning("Grouping on %s is ambiguous", key)
-            continue
-
-        results[key] = group_list[0]
-
-    return results
 
 
 def get_global(global_results, _global):
@@ -82,7 +33,7 @@ def get_global(global_results, _global):
     return global_results[0]
 
 
-def d3ify(parts, output, result, connectors, _global):
+def d3ify(parts, output, result, _global):
     part = parts.pop(0)
 
     new_node = {"name": part}
@@ -90,16 +41,11 @@ def d3ify(parts, output, result, connectors, _global):
     if parts:
         new_output = []
         new_node["children"] = new_output
-        d3ify(parts, new_output, result, connectors, _global)
+        d3ify(parts, new_output, result, _global)
     else:
         name = f"ln {result.start_line}: {result.first_line}"
 
-        if result.rd_normalizer:
-            normalizer = NORMALIZERS.get(result.rd_normalizer)
-            normalized = normalizer(result)
-            connector = connectors.get(normalized)
-            fill = connector.rd_fill if connector else result.rd_fill
-        elif _global:
+        if _global:
             fill = _global.rd_fill
         else:
             fill = result.rd_fill
@@ -133,9 +79,6 @@ def main(args):
         for key, group in util.sorted_groupby(semgrep_results, key=lambda r: r.rd_type)
     }
 
-    connector_results = results_by_type.get(types.ResultType.CONNECTOR.value, {})
-    connectors = get_connectors(connector_results, args.interprocedural)
-
     global_results = results_by_type.get(types.ResultType.GLOBAL.value, {})
     _global = get_global(global_results, args._global)
 
@@ -147,7 +90,7 @@ def main(args):
         root, *_ = path.parts
         root_paths.add(root)
         output = []
-        d3ify(list(path.parts), output, result, connectors, _global)
+        d3ify(list(path.parts), output, result, _global)
         d3_results.append(output)
 
     all_same_root = len(root_paths) == 1

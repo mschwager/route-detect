@@ -36,7 +36,6 @@ rules:
         type: route
         normalizer: rails
         fill: grey
-        connect-on: $CONTROLLER
     languages: [ruby]
     severity: INFO
   - id: rails-controller-authenticated
@@ -73,9 +72,7 @@ rules:
         - https://medium.com/rubyinside/a-deep-dive-into-routing-and-controller-dispatch-in-rails-8bf58c2cf3b5
         - https://gist.github.com/iangreenleaf/b206d09c587e8fc6399e#controllers
       route-detect:
-        type: connector
         fill: green
-        connect-on: $CLASSNAME
     languages: [ruby]
     severity: INFO
   - id: rails-controller-unauthenticated
@@ -116,8 +113,6 @@ rules:
         - https://medium.com/rubyinside/a-deep-dive-into-routing-and-controller-dispatch-in-rails-8bf58c2cf3b5
         - https://gist.github.com/iangreenleaf/b206d09c587e8fc6399e#controllers
       route-detect:
-        type: connector
         fill: red
-        connect-on: $CLASSNAME
     languages: [ruby]
     severity: INFO
