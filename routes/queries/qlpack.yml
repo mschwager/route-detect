@@ -1,0 +1,7 @@
+---
+name: route-detect/rails
+authors: route-detect
+version: 0.0.1
+library: false
+dependencies:
+  codeql/ruby-all: "*"
