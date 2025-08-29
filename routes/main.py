@@ -66,15 +66,16 @@ def parse_args(args=None):
         help="Open HTML output file in browser",
     )
     viz_parser.add_argument(
+        "-c",
+        "--codeql",
+        action="store_true",
+        help="Parse input file as CodeQL SARIF format",
+    )
+    viz_parser.add_argument(
         "--global",
         dest="_global",
         action="store_true",
         help="Expiremental: enable global security configuration detection",
-    )
-    viz_parser.add_argument(
-        "--interprocedural",
-        action="store_true",
-        help="Expiremental: enable interprocedural security configuration detection",
     )
 
     return p.parse_args(args=args)

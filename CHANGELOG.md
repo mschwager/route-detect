@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Official support for Python 3.13
+- CodeQL SARIF file support, pass `--codeql` to `viz`
 
 ### Removed
 

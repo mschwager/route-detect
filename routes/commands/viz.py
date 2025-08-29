@@ -1,5 +1,4 @@
 import collections
-import json
 import logging
 import pathlib
 import webbrowser
@@ -16,7 +15,7 @@ def get_global(global_results, _global):
         return None
 
     global_locations = " ".join(
-        f"{r.check_id}:{r.path}:{r.start_line}" for r in global_results
+        f"{r.id}:{r.path}:{r.start_line}" for r in global_results
     )
 
     if len(global_results) > 1:
@@ -44,12 +43,7 @@ def d3ify(parts, output, result, _global):
         d3ify(parts, new_output, result, _global)
     else:
         name = f"ln {result.start_line}: {result.first_line}"
-
-        if _global:
-            fill = _global.rd_fill
-        else:
-            fill = result.rd_fill
-
+        fill = _global.rd_fill if _global else result.rd_fill
         check_node = {"name": name, "fill": fill, "title": result.lines}
         new_node.setdefault("children", []).append(check_node)
 
@@ -66,17 +60,18 @@ def merge_d3_results(d1s, d2s):
 
 
 def main(args):
-    logger.info("Reading input file %s", args.input.name)
-    data = json.load(args.input)
+    logger.info("Processing input file %s", args.input.name)
 
-    semgrep_results = [types.SemgrepResult(r) for r in data["results"]]
-    counts = collections.Counter([r.check_id for r in semgrep_results])
-    count_output = " ".join(f"{k}={v}" for k, v in counts.items())
-    logger.info("Finding rule counts: %s", count_output)
+    output_cls = types.CodeQLOutput if args.codeql else types.SemgrepOutput
+    output = output_cls.from_fd(args.input)
+    results = output.results
+
+    for result_id, count in collections.Counter([r.id for r in results]).items():
+        logger.info("Found %d results for id %s", count, result_id)
 
     results_by_type = {
         key: list(group)
-        for key, group in util.sorted_groupby(semgrep_results, key=lambda r: r.rd_type)
+        for key, group in util.sorted_groupby(results, key=lambda r: r.rd_type)
     }
 
     global_results = results_by_type.get(types.ResultType.GLOBAL.value, {})
@@ -86,7 +81,7 @@ def main(args):
     d3_results = []
     for result in results_by_type.get(types.ResultType.ROUTE.value, []):
         path = pathlib.PurePath(result.path)
-        logger.debug("Processing %s:%s:%s", result.check_id, path, result.start_line)
+        logger.debug("Processing %s:%s:%s", result.id, path, result.start_line)
         root, *_ = path.parts
         root_paths.add(root)
         output = []

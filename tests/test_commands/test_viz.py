@@ -218,7 +218,7 @@ def test_viz_basic(data, expected):
         output=output,
         template=template,
         browser=False,
-        interprocedural=True,
+        codeql=False,
         _global=True,
     )
 
@@ -249,7 +249,7 @@ def test_viz_multiple_root():
         output=output,
         template=template,
         browser=False,
-        interprocedural=True,
+        codeql=False,
         _global=True,
     )
 
