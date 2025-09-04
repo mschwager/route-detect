@@ -1,7 +1,9 @@
 ---
-name: route-detect/rails
+name: route-detect/rails-queries
 authors: route-detect
 version: 0.0.1
 library: false
+extractor: ruby
 dependencies:
   codeql/ruby-all: "*"
+  route-detect/rails-lib: "*"

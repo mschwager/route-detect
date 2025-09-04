@@ -1,0 +1,7 @@
+---
+name: route-detect/rails-tests
+authors: route-detect
+extractor: ruby
+tests: .
+dependencies:
+  route-detect/rails-queries: "*"

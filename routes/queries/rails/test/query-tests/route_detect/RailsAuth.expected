@@ -1,0 +1,3 @@
+| app/config/routes.rb:2:3:2:43 | call to resources | Found authed Rails route, method=get path=widgets controller=widgets action=index |
+| app/config/routes.rb:2:3:2:43 | call to resources | Found authed Rails route, method=get path=widgets/:id controller=widgets action=show |
+| app/config/routes.rb:4:3:4:41 | call to resources | Found authed Rails route, method=get path=posts/:id controller=posts action=show |
