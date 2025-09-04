@@ -6,9 +6,6 @@
 
 Find authentication (authn) and authorization (authz) security bugs in web application routes:
 
-> [!IMPORTANT]
-> The Semgrep functionality `route-detect` depends on to display code snippets has been moved behind their cloud app. For more information see [#10762](https://github.com/semgrep/semgrep/issues/10762). However, earlier versions of Semgrep still support this behavior. When using `route-detect`, make sure to install a version of Semgrep before `1.97.0`. This can be accomplished with the following command: `python -m pip install 'semgrep<1.97.0'`.
-
 ![Routes demo](https://raw.githubusercontent.com/mschwager/route-detect/main/routes-demo.png)
 
 <p align="center">
@@ -27,16 +24,28 @@ Web application HTTP route authn and authz bugs are some of the most common secu
 - 2023 CWE Top 25 #20 - [CWE-306: Missing Authentication for Critical Function](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
 - 2023 CWE Top 25 #24 - [CWE-863: Incorrect Authorization](https://cwe.mitre.org/top25/archive/2023/2023_top25_list.html)
 
-Supported web frameworks (`route-detect` IDs in parentheses):
+## Supported web frameworks
 
-- Python: Django (`django`, `django-rest-framework`), Flask (`flask`), Sanic (`sanic`), FastAPI (`fastapi`)
-- PHP: Laravel (`laravel`), Symfony (`symfony`), CakePHP (`cakephp`)
-- Ruby: Rails\* (`rails`), Grape (`grape`)
-- Java: JAX-RS (`jax-rs`), Spring (`spring`)
-- Go: Gorilla (`gorilla`), Gin (`gin`), Chi (`chi`)
-- JavaScript/TypeScript: Express (`express`), React (`react`), Angular (`angular`)
-
-\*_Rails support is limited. Please see [this issue](https://github.com/mschwager/route-detect/issues/8) for more information._
+| Language              | Framework             | Semgrep | CodeQL |
+| --------------------- | --------------------- | ------- | ------ |
+| Python                | Django                | ✅      | ❌     |
+| Python                | Django REST framework | ✅      | ❌     |
+| Python                | Flask                 | ✅      | ❌     |
+| Python                | Sanic                 | ✅      | ❌     |
+| Python                | FastAPI               | ✅      | ❌     |
+| PHP                   | Laravel               | ✅      | ❌     |
+| PHP                   | Symfony               | ✅      | ❌     |
+| PHP                   | CakePHP               | ✅      | ❌     |
+| Ruby                  | Rails                 | ❌      | ✅     |
+| Ruby                  | Grape                 | ✅      | ❌     |
+| Java                  | JAX-RS                | ✅      | ❌     |
+| Java                  | Spring                | ✅      | ❌     |
+| Go                    | Gorilla               | ✅      | ❌     |
+| Go                    | Gin                   | ✅      | ❌     |
+| Go                    | Chi                   | ✅      | ❌     |
+| JavaScript/TypeScript | Express               | ✅      | ❌     |
+| JavaScript/TypeScript | React                 | ✅      | ❌     |
+| JavaScript/TypeScript | Angular               | ✅      | ❌     |
 
 # Installing
 
@@ -66,7 +75,18 @@ Ran 1 rule on 1 file: 1 finding.
 
 # Using
 
-`route-detect` provides the `routes` CLI command and uses [`semgrep`](https://github.com/returntocorp/semgrep) to search for routes.
+`route-detect` uses the `routes` CLI command and provides the following command tree:
+
+- `routes`
+  - `which`
+  - `viz`
+
+## Semgrep
+
+First, ensure you have `semgrep` installed and included on your `PATH`.
+
+> [!IMPORTANT]
+> The Semgrep functionality `route-detect` depends on to display code snippets has been moved behind their cloud app. For more information see [#10762](https://github.com/semgrep/semgrep/issues/10762). However, earlier versions of Semgrep still support this behavior. When using `route-detect`, make sure to install a version of Semgrep before `1.97.0`. This can be accomplished with the following command: `python -m pip install 'semgrep<1.97.0'`.
 
 Use the `which` subcommand to point `semgrep` at the correct web application rules:
 
@@ -100,6 +120,29 @@ $ semgrep --json --config my-django.yml --output routes.json path/to/django/code
 $ routes viz --browser routes.json
 ```
 
+## CodeQL
+
+First, ensure you have `codeql` installed and included on your `PATH`.
+
+Use the `which` subcommand to point `codeql` at the correct web application queries:
+
+```
+$ codeql database analyze \
+    --output routes.sarif \
+    --format sarif-latest \
+    --sarif-add-file-contents \
+    --no-group-results \
+    -- \
+    /path/to/codeql/db \
+    $(routes which --codeql rails)
+```
+
+Use the `viz` subcommand to visualize route information in your browser:
+
+```
+$ routes viz --codeql --browser routes.sarif
+```
+
 # Contributing
 
 `route-detect` uses [`poetry`](https://python-poetry.org/) for dependency and configuration management.
@@ -130,4 +173,10 @@ Run Semgrep rule tests with the following command:
 
 ```
 $ poetry run semgrep --test --config routes/rules/ tests/test_rules/
+```
+
+Run CodeQL query tests with the following command:
+
+```
+$ codeql test run routes/queries/rails/test/
 ```
