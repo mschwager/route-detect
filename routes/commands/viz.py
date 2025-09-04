@@ -79,7 +79,11 @@ def main(args):
 
     root_paths = set()
     d3_results = []
-    for result in results_by_type.get(types.ResultType.ROUTE.value, []):
+    sorted_results = sorted(
+        results_by_type.get(types.ResultType.ROUTE.value, []),
+        key=lambda r: r.start_line,
+    )
+    for result in sorted_results:
         path = pathlib.PurePath(result.path)
         logger.debug("Processing %s:%s:%s", result.id, path, result.start_line)
         root, *_ = path.parts

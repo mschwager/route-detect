@@ -51,12 +51,14 @@ class BaseResult(abc.ABC):
         pass
 
     @property
+    @abc.abstractmethod
     def rd_type(self):
-        return ResultType.ROUTE.value
+        pass
 
     @property
+    @abc.abstractmethod
     def rd_fill(self):
-        return const.DEFAULT_FILL_COLOR
+        pass
 
 
 class SemgrepResult(BaseResult):
@@ -127,6 +129,10 @@ class CodeQLResult(BaseResult):
         return self.result["rule"]["id"]
 
     @property
+    def rule_index(self):
+        return self.result["rule"]["index"]
+
+    @property
     def path(self):
         # TODO find more robust way to ensure all result paths have a single root directory
         return "repo" + "/" + self.location["artifactLocation"]["uri"]
@@ -166,6 +172,30 @@ class CodeQLResult(BaseResult):
         # We provide 1 line of context above and below the result's line, so
         # the result's line should be the middle list index of 3 elements
         return self.lines.split("\n")[1]
+
+    @property
+    def rule(self):
+        return self.output.first_run["tool"]["driver"]["rules"][self.rule_index]
+
+    @property
+    def tags(self):
+        return self.rule["properties"]["tags"]
+
+    def _get_tag(self, key, default=None):
+        for tag in self.tags:
+            if tag.startswith(f"{key}="):
+                _, value = tag.split("=")
+                return value
+
+        return default
+
+    @property
+    def rd_type(self):
+        return self._get_tag("rd_type", ResultType.ROUTE.value)
+
+    @property
+    def rd_fill(self):
+        return self._get_tag("rd_fill", const.DEFAULT_FILL_COLOR)
 
 
 class CodeQLOutput(BaseOutput):
