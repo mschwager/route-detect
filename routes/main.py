@@ -4,10 +4,13 @@ import sys
 
 from routes import __version__
 from routes import commands
+from routes import queries
 from routes import rules
 from routes import templates
 
 logger = logging.getLogger(__name__)
+
+ALL_RULE_CHOICES = list(set(rules.ALL_RULES.keys()) | set(queries.ALL_QUERIES.keys()))
 
 
 def parse_args(args=None):
@@ -31,10 +34,16 @@ def parse_args(args=None):
     subparsers = p.add_subparsers(dest="command", help="Command help")
 
     which_parser = subparsers.add_parser(
-        "which", help="Output path of supported Semgrep rule"
+        "which", help="Output path of supported static analysis rule"
     )
     which_parser.add_argument(
-        "rule", choices=list(rules.ALL_RULES.keys()), help="Semgrep rule"
+        "-c",
+        "--codeql",
+        action="store_true",
+        help="Parse input file as CodeQL SARIF format",
+    )
+    which_parser.add_argument(
+        "rule", choices=ALL_RULE_CHOICES, help="Static analysis rule"
     )
 
     viz_parser = subparsers.add_parser("viz", help="Route visualization tool")
@@ -42,7 +51,7 @@ def parse_args(args=None):
         "input",
         action="store",
         type=argparse.FileType("r"),
-        help="Semgrep JSON output file",
+        help="Static analysis output file",
     )
     viz_parser.add_argument(
         "-o",
