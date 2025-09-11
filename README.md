@@ -124,7 +124,11 @@ $ routes viz --browser routes.json
 
 First, ensure you have `codeql` installed and included on your `PATH`.
 
-Use the `which` subcommand to point `codeql` at the correct web application queries:
+Use the `which` subcommand to first install the pack's dependencies, then run the appropriate queries:
+
+```
+$ codeql pack install $(poetry run routes which -c rails)
+```
 
 ```
 $ codeql database analyze \
