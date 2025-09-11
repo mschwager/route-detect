@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2025-09-11
+
 ### Added
 
 - Official support for Python 3.13
 - CodeQL SARIF file support, pass `--codeql` to `viz`
+- CodeQL query and pack support, pass `--codeql` to `which`
+- Rails CodeQL support, with support for Rails 8 authentication, Devise, Doorkeeper, CanCanCan, and Pundit
 
 ### Removed
 
